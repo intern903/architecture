@@ -213,7 +213,6 @@
 
   <div class="tabs">
     <button id="b-e2e" class="active" onclick="show('e2e')">End-to-End Flow</button>
-    <button id="b-agents" onclick="show('agents')">⚙ Agents</button>
     <button id="b-lp" onclick="show('lp')">Life Purpose</button>
     <button id="b-vis" onclick="show('vis')">Visions</button>
     <button id="b-val" onclick="show('val')">Values &amp; Qualities</button>
@@ -1287,7 +1286,7 @@ const MODULES={
 };
 
 /* =================== RENDER =================== */
-const TABS=['e2e','agents','lp','vis','val','dec','poss','cho','rg','wb','gl','close','proj','goal','hab','recar','supp'];
+const TABS=['e2e','lp','vis','val','dec','poss','cho','rg','wb','gl','close','proj','goal','hab','recar','supp'];
 
 /* =================== AGENT PROMPT BOXES =================== */
 const AGENTS=[
@@ -1316,21 +1315,26 @@ const AGENTS=[
 
 /* ---- storage: backend when available, localStorage always as mirror/fallback ---- */
 const LS_KEY='bridge_agent_prompts_v1';
-let STORE_MODE='local'; // 'cloud' once backend responds ok
+let STORE_MODE='local';     // 'cloud' once backend responds ok
+let PROMPTS=null;           // cached { "tab::agent": {value,updated} }
+let PROMPTS_LOADING=null;   // in-flight load promise
 function lsRead(){try{return JSON.parse(localStorage.getItem(LS_KEY)||'{}');}catch(e){return {};}}
 function lsWrite(o){try{localStorage.setItem(LS_KEY,JSON.stringify(o));}catch(e){}}
-async function loadPrompts(){
+function ensurePrompts(){
+  if(PROMPTS) return Promise.resolve(PROMPTS);
+  if(PROMPTS_LOADING) return PROMPTS_LOADING;
   const local=lsRead();
-  try{
-    const r=await fetch('/api/prompts',{method:'GET'});
-    if(r.ok){const j=await r.json();
-      if(j&&j.configured){STORE_MODE='cloud';return {...local,...(j.prompts||{})};}
-    }
-  }catch(e){/* offline / static host — fall back */}
-  return local;
+  PROMPTS_LOADING=fetch('/api/prompts',{method:'GET'})
+    .then(r=>r.ok?r.json():null)
+    .then(j=>{ if(j&&j.configured){STORE_MODE='cloud';PROMPTS={...local,...(j.prompts||{})};}
+              else{PROMPTS=local;} return PROMPTS; })
+    .catch(()=>{ PROMPTS=local; return PROMPTS; });
+  return PROMPTS_LOADING;
 }
 async function savePrompt(key,value){
-  const all=lsRead();all[key]={value,updated:Date.now()};lsWrite(all);
+  const rec={value,updated:Date.now()};
+  const all=lsRead();all[key]=rec;lsWrite(all);
+  if(PROMPTS) PROMPTS[key]=rec;
   try{
     const r=await fetch('/api/prompts',{method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({key,value})});
@@ -1340,26 +1344,24 @@ async function savePrompt(key,value){
 }
 function fmtTime(ts){if(!ts)return '';const d=new Date(ts);
   return d.toLocaleDateString(undefined,{month:'short',day:'numeric'})+' '+d.toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit'});}
+function storePillText(){return STORE_MODE==='cloud'?'saved to the cloud':'saved on this device';}
 
-async function renderAgents(){
-  const mount=document.getElementById('mount');mount.innerHTML='';
-  document.getElementById('legend').style.display='none';
-  const intro=el('div','mintro');
-  intro.innerHTML='<span class="layerTag" style="color:#5a8a6a;background:#e6f1ea">The agents · editable</span><div class="mt">Agent prompt boxes</div><div class="md">One box per agent. Type a system prompt or note into any box and hit Save — it’s stored and comes back next time you open the page. The prompt acts as that agent’s standing instruction / comment.</div>';
-  mount.appendChild(intro);
-
-  const banner=el('div','abanner');
-  banner.innerHTML='<b>How storage works.</b> <span id="storepill" class="astorepill local">saved on this device</span><br>'+
-    'When a backend (Vercel KV) is connected, prompts are saved to the cloud and shared across everyone who opens the page. Until then they’re saved in this browser via localStorage — nothing is lost, it just doesn’t sync across devices yet. See <b>README.md</b> for the one-time Vercel setup.';
-  mount.appendChild(banner);
-
-  const saved=await loadPrompts();
-  document.getElementById('storepill').className='astorepill '+(STORE_MODE==='cloud'?'cloud':'local');
-  document.getElementById('storepill').textContent=STORE_MODE==='cloud'?'saved to the cloud':'saved on this device';
-
+/* Agent prompt boxes, scoped to one tab — appended to the bottom of every tab. */
+function renderAgentBoxes(tabKey){
+  const mount=document.getElementById('mount');
+  const wrap=el('details','ph flowph');wrap.open=true;wrap.style.marginTop='22px';
+  const sum=el('summary');
+  sum.innerHTML='<span class="chev"></span><span class="phname">✎ AGENT PROMPTS &amp; NOTES — this tab</span>'+
+    '<span class="phmeta"><span class="astorepill local" id="storepill-'+tabKey+'">saved on this device</span></span>';
+  wrap.appendChild(sum);
+  const body=el('div','phbody');
+  const hint=el('div','abanner');
+  hint.innerHTML='<b>Write a message / prompt for each agent, just for this tab.</b> Type into any box and hit Save — it’s stored and comes back next time. Each tab keeps its own set, so an agent can have different instructions per module.';
+  body.appendChild(hint);
   const grid=el('div','agrid');
+
+  const controls=[];
   AGENTS.forEach(a=>{
-    const rec=saved[a.k]||{};
     const box=el('div','abox '+a.cls);
     const stateCls=a.state==='built'?'built':'sketch';
     const stateTxt=a.state==='built'?'in use':'sketch';
@@ -1367,28 +1369,39 @@ async function renderAgents(){
       `<div class="aboxtop"><span class="acode">${a.code}</span><span class="aname">${a.name}</span>`+
       `<span class="astate ${stateCls}">${stateTxt}</span></div>`+
       `<div class="adesc">${a.desc}</div>`+
-      `<div class="albl">System prompt <span class="hint">— stored, acts as this agent’s comment</span></div>`;
-    const ta=el('textarea');ta.placeholder=a.placeholder;ta.value=rec.value||'';
+      `<div class="albl">Message / prompt <span class="hint">— stored, acts as this agent’s comment</span></div>`;
+    const ta=el('textarea');ta.placeholder=a.placeholder;
     box.appendChild(ta);
     const row=el('div','abtnrow');
-    const btn=el('button','asave');btn.textContent='Save';
-    const status=el('span','asaved');status.innerHTML=rec.updated?`saved · ${fmtTime(rec.updated)}`:'not saved yet';
-    row.appendChild(btn);row.appendChild(status);
-    box.appendChild(row);
+    const btn=el('button','asave');btn.textContent='Save';btn.disabled=true;
+    const status=el('span','asaved');status.textContent='loading…';
+    row.appendChild(btn);row.appendChild(status);box.appendChild(row);
 
-    let dirty=false;
-    ta.addEventListener('input',()=>{dirty=true;status.textContent='unsaved changes';btn.disabled=false;});
+    const storeKey=tabKey+'::'+a.k;
+    ta.addEventListener('input',()=>{status.textContent='unsaved changes';btn.disabled=false;});
     btn.addEventListener('click',async()=>{
       btn.disabled=true;status.textContent='saving…';
-      const ok=await savePrompt(a.k,ta.value);
+      const ok=await savePrompt(storeKey,ta.value);
       status.innerHTML=`<b>saved</b> · ${fmtTime(Date.now())}${ok?'':' (this device)'}`;
-      document.getElementById('storepill').className='astorepill '+(STORE_MODE==='cloud'?'cloud':'local');
-      document.getElementById('storepill').textContent=STORE_MODE==='cloud'?'saved to the cloud':'saved on this device';
-      dirty=false;
+      const pill=document.getElementById('storepill-'+tabKey);
+      if(pill){pill.className='astorepill '+(STORE_MODE==='cloud'?'cloud':'local');pill.textContent=storePillText();}
     });
+    controls.push({a,ta,btn,status,storeKey});
     grid.appendChild(box);
   });
-  mount.appendChild(grid);
+  body.appendChild(grid);wrap.appendChild(body);mount.appendChild(wrap);
+
+  // fill values once storage resolves
+  ensurePrompts().then(saved=>{
+    controls.forEach(c=>{
+      const rec=saved[c.storeKey]||{};
+      c.ta.value=rec.value||'';
+      c.btn.disabled=true;
+      c.status.innerHTML=rec.updated?`saved · ${fmtTime(rec.updated)}`:'not saved yet';
+    });
+    const pill=document.getElementById('storepill-'+tabKey);
+    if(pill){pill.className='astorepill '+(STORE_MODE==='cloud'?'cloud':'local');pill.textContent=storePillText();}
+  });
 }
 function renderLegend(){
   const L=document.getElementById('legend');L.style.display='flex';L.innerHTML='';
@@ -1468,9 +1481,9 @@ function renderModule(key){
 
 function show(k){
   TABS.forEach(x=>{document.getElementById('b-'+x).className=(x===k)?'active':'';});
-  if(k==='agents'){renderAgents();return;}
   renderLegend();
   if(k==='e2e')renderE2E(); else renderModule(k);
+  renderAgentBoxes(k);
 }
 
 document.getElementById('foot').innerHTML=
