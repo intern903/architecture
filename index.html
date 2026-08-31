@@ -1389,7 +1389,11 @@ function renderAgentBoxes(tabKey){
     controls.push({a,ta,btn,status,storeKey});
     grid.appendChild(box);
   });
-  body.appendChild(grid);wrap.appendChild(body);mount.appendChild(wrap);
+  body.appendChild(grid);wrap.appendChild(body);
+  // place the boxes at the TOP of the tab (right under the intro) so they're visible without scrolling
+  const intro=mount.querySelector('.mintro');
+  if(intro&&intro.nextSibling){mount.insertBefore(wrap,intro.nextSibling);}
+  else{mount.appendChild(wrap);}
 
   // fill values once storage resolves
   ensurePrompts().then(saved=>{
