@@ -1,0 +1,1482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Bridge to "I" — Real Flow · five agents (CAA · CCA · CGA · COS · CIT)</title>
+<style>
+  :root{
+    --bg:#f4f2ee; --ink:#2b2521; --muted:#7a7067; --line:#e3ddd4; --line2:#d8d0c5;
+    --client:#b07d2c; --coach:#7a5fb0; --caa:#4f7a48; --cca:#a35a8c; --system:#2f7d8f; --notion:#3a6e9e; --gate:#b0562c;
+    --clientbg:#faf4ea; --coachbg:#f2ecfa; --caabg:#eef4ec; --ccabg:#f7ecf3; --systembg:#e5f0f1; --notionbg:#eaf1f7; --gatebg:#f8e9df;
+    --read:#35618f; --write:#9a5a12; --gold:#8a6113; --accent:#c58a1e;
+    --new:#1f7a4d; --newbg:#e2f3ea; --cos:#a8823a;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,Roboto,Helvetica,Arial,sans-serif;line-height:1.5}
+  .wrap{max-width:1080px;margin:0 auto;padding:26px 20px 70px}
+  h1{font-size:20px;font-weight:400;color:var(--muted);margin:0 0 6px}
+  h1 b{font-weight:800;color:var(--ink);letter-spacing:.05em;margin-right:8px}
+  .sub{color:var(--muted);font-size:13.5px;margin:0 0 10px;max-width:880px}
+  .wip{display:inline-block;font-size:11px;font-weight:700;color:#8a6113;background:#fdf1e4;
+    border:1px solid #f0d6b3;border-radius:6px;padding:3px 9px;margin-bottom:16px}
+
+  .tabs{display:flex;flex-wrap:wrap;border:1px solid var(--line2);border-radius:9px;overflow:hidden;margin:0 0 18px}
+  .tabs button{border:none;background:#fff;cursor:pointer;font-family:inherit;font-size:13px;font-weight:600;
+    color:var(--muted);padding:10px 15px;border-right:1px solid var(--line2)}
+  .tabs button:last-child{border-right:none}
+  .tabs button.active{background:#2b241f;color:#fff}
+
+  .legend{background:#fff;border:1px solid var(--line);border-radius:10px;padding:11px 15px;margin-bottom:16px;
+    display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;font-size:12px}
+  .legend .grp{display:inline-flex;align-items:center;gap:7px;color:#4a4038;font-weight:600}
+  .legend i{width:13px;height:13px;border-radius:3px;display:inline-block;flex:none}
+  .legsep{width:1px;height:16px;background:var(--line2)}
+  .chip{font-family:ui-monospace,monospace;font-size:9.5px;border-radius:4px;padding:1px 6px;white-space:nowrap;
+    border:1px solid var(--line);color:var(--muted);background:#f7f4ef}
+  .chip.r{color:var(--read);background:#e7eef6;border-color:#cfddec}
+  .chip.w{color:var(--write);background:#f8ecd8;border-color:#e6d4b4}
+  .chip.sf{color:#5b5248;background:#f0ece5}
+  .chip.dec{color:var(--gold);background:#fbeed6;border-color:#eed7b1}
+  .chip.gate{color:var(--gate);background:var(--gatebg);border-color:#e6c3a8}
+  .chip.note{color:var(--ai);background:#e6f0e3;border-color:#cfe2c9}
+  .chip.loop{color:var(--ai);background:#e6f0e3;border-color:#cfe2c9}
+  .chip.man{color:#6b5f4f;background:#efe6d8;border-color:#ddceb6}
+  .chip.db{color:var(--notion);background:var(--notionbg);border-color:#cbdcec}
+
+  .mintro{margin:2px 0 14px}
+  .layerTag{display:inline-block;font-size:10.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;
+    padding:2px 8px;border-radius:5px;margin-bottom:6px}
+  .mintro .mt{font-size:18px;font-weight:800;color:var(--ink)}
+  .mintro .md{font-size:13px;color:var(--muted);margin-top:3px;max-width:880px}
+
+  .notebox{width:100%;max-width:640px;background:#fbf6ee;border:1px solid #ecdcbf;border-left:3px solid var(--accent);
+    border-radius:9px;padding:10px 14px;font-size:12px;color:#6b5f4f;line-height:1.55;margin:8px auto}
+  .notebox b{color:var(--ink)}
+  .notebox .nlbl{font-size:9.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);display:block;margin-bottom:3px}
+  .cosnote{width:100%;max-width:640px;background:#fdfaf3;border:1px dashed #d9c078;border-left:3px solid var(--cos);
+    border-radius:9px;padding:10px 14px;font-size:12px;color:#6b5f4f;line-height:1.55;margin:8px auto}
+  .cosnote b{color:var(--ink)}
+  .cosnote .nlbl{font-size:9.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--cos);display:block;margin-bottom:3px}
+  .citmark{width:100%;max-width:560px;display:flex;align-items:center;gap:8px;margin:6px auto;padding:6px 4px;
+    border-top:1px dashed #d9c078;border-bottom:1px dashed #d9c078;font-size:11px;color:#8a743f;text-align:center;justify-content:center}
+  .citmark b{color:#6b5620}
+
+  .e2e{display:flex;flex-direction:column;align-items:center}
+  .band{width:100%;display:flex;align-items:center;gap:10px;margin:20px 0 10px}
+  .band .bn{font-size:12.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--ink);white-space:nowrap}
+  .band .bs{font-size:12px;color:var(--muted)}
+  .band::before{content:"";flex:none;width:14px;height:2px;background:var(--accent)}
+  .band::after{content:"";flex:1;height:1px;background:var(--line2)}
+  .estep{width:100%;max-width:560px;background:#fff;border:1px solid var(--line);border-left:3px solid var(--ac);border-radius:9px;padding:10px 14px}
+  .estep.system{--ac:var(--system)} .estep.client{--ac:var(--client)} .estep.coach{--ac:var(--coach)}
+  .estep.caa{--ac:var(--caa)} .estep.cca{--ac:var(--cca)} .estep.notion{--ac:var(--notion)} .estep.gate{--ac:var(--gate);background:#fdf4ee;border-color:#eecdb6}
+  .estep.cos{--ac:var(--cos);background:#fdfaf3;border-style:dashed;border-color:#e2cf9a;opacity:.92}
+  .etop{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:2px}
+  .atag{font-size:9px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;padding:1px 6px;border-radius:4px}
+  .atag.system{color:var(--system);background:#dcecee} .atag.client{color:var(--client);background:#f6e9d3}
+  .atag.coach{color:var(--coach);background:#eae1f6} .atag.caa{color:var(--caa);background:#e2eede} .atag.cca{color:var(--cca);background:var(--ccabg)}
+  .atag.notion{color:var(--notion);background:#dfeaf4} .atag.gate{color:var(--gate);background:#f4ddcc}
+  .atag.cos{color:var(--cos);background:#f5edd8;border:1px dashed #d9c078}
+  .futuretag{font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;color:#a8823a;background:#fff;border:1px solid #e2cf9a;border-radius:4px;padding:1px 5px;margin-left:5px}
+  .cgatag{font-size:9px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;padding:1px 6px;border-radius:4px;color:var(--gate);background:#fff;border:1px solid var(--gate);margin-left:5px}
+  .newpill{font-size:8.5px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;color:var(--new);background:var(--newbg);
+    border:1px solid #b7ddc7;border-radius:999px;padding:1px 7px;margin-left:6px;vertical-align:middle}
+  .etitle{font-size:13.5px;font-weight:700;color:var(--ink)}
+  .edesc{font-size:12px;color:var(--muted);margin-top:2px;line-height:1.45}
+  .echips{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+  .earw{width:2px;height:20px;background:var(--line2);position:relative;margin:3px 0}
+  .earw::after{content:"";position:absolute;bottom:-1px;left:50%;transform:translateX(-50%);
+    border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid var(--line2)}
+  .edece{width:100%;max-width:400px;background:#211c19;border-radius:11px;padding:12px 14px;text-align:center;margin:2px 0}
+  .edece .q{color:#f0d68a;font-weight:800;font-size:13px}
+  .ebranches{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:8px 0 0;width:100%;max-width:520px}
+  .ebr{flex:1;min-width:150px;text-align:center;font-size:11.5px;font-weight:700;border-radius:8px;padding:7px 10px}
+  .ebr.yes{color:#4f7a48;background:#e6f0e3;border:1px solid #cfe2c9}
+  .ebr.no{color:#a23b2f;background:#f6e3df;border:1px solid #e6c3bb}
+  .eloop{width:100%;max-width:520px;text-align:center;font-size:12px;font-weight:800;color:#4f7a48;background:#e9f2e6;
+    border:1.5px dashed var(--ai);border-radius:999px;padding:8px 16px;margin:4px 0}
+  .eend{width:100%;max-width:600px;background:linear-gradient(#f4efe6,#efe9df);border:1px dashed var(--accent);
+    border-radius:10px;padding:12px 15px;text-align:center;font-size:12.5px;color:#6b5f4f;margin-top:14px}
+  .eend b{color:var(--ink)}
+
+  .ph{border:1px solid var(--line);border-radius:10px;background:#fff;margin-bottom:10px;overflow:hidden}
+  .ph>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;padding:11px 15px;background:#efe9e0;border-bottom:1px solid var(--line);user-select:none}
+  .ph>summary::-webkit-details-marker{display:none}
+  .ph>summary:hover{background:#e9e2d7}
+  .flowph>summary{background:#f1ece2}
+  .chev{flex:none;width:0;height:0;border-left:6px solid #8a7f72;border-top:5px solid transparent;border-bottom:5px solid transparent;transition:transform .15s}
+  .ph[open]>summary .chev{transform:rotate(90deg)}
+  .phname{font-size:12.5px;font-weight:800;color:#3f372f;letter-spacing:.04em}
+  .phmeta{margin-left:auto;font-size:11px;font-weight:600;color:#9a8f82}
+  .phbody{padding:6px 12px 14px}
+  .flowbody{padding:12px 12px 16px}
+  .flowbox{display:flex;flex-direction:column;align-items:center}
+  .fnode{background:#fff;border:1px solid var(--line2);border-radius:9px;padding:9px 14px;text-align:center;font-size:12.5px;font-weight:700;color:var(--ink);max-width:360px}
+  .fnode.small{font-weight:600;font-size:11px;padding:7px 9px}
+  .fnode.anchor{border-color:#b07d2c;background:#f6e9d3;color:#7a5615}
+  .fnode.db{border-color:var(--notion);background:var(--notionbg);color:#2a5578}
+  .farrow{text-align:center;color:#c3b8a8;font-size:13px;line-height:1;margin:3px 0}
+  .flabel{text-align:center;font-size:10.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin:9px 0 2px}
+  .tree-row{display:grid;grid-template-columns:repeat(var(--tcols,3),1fr);gap:10px;position:relative;margin-top:16px;width:100%;max-width:640px}
+  .tree-row::before{content:'';position:absolute;top:-16px;left:var(--tside,16.666%);right:var(--tside,16.666%);height:2px;background:var(--line2)}
+  .tree-col{position:relative;display:flex;flex-direction:column;align-items:stretch;gap:4px;padding-top:16px}
+  .tree-col::before{content:'';position:absolute;top:0;left:50%;width:2px;height:16px;background:var(--line2);transform:translateX(-50%)}
+  .tree-col .fnode{max-width:100%}
+
+  .lanehead{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;position:sticky;top:0;z-index:5;background:var(--bg);padding:8px 0 6px}
+  .lh{border-radius:8px 8px 0 0;padding:8px 10px;text-align:center;border:1px solid var(--line);border-bottom:2px solid var(--lc)}
+  .lh .lhn{font-size:12.5px;font-weight:800;letter-spacing:.04em;color:var(--lc)}
+  .lh .lhs{font-size:10.5px;color:var(--muted);margin-top:1px}
+  .lh.client{background:var(--clientbg);--lc:var(--client)} .lh.coach{background:var(--coachbg);--lc:var(--coach)}
+  .lh.caa{background:var(--caabg);--lc:var(--caa)} .lh.cca{background:var(--ccabg);--lc:var(--cca)} .lh.notion{background:var(--notionbg);--lc:var(--notion)}
+  .srow{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+  .sc{border-radius:8px;min-height:8px}
+  .sc.client{background:var(--clientbg)} .sc.coach{background:var(--coachbg)} .sc.caa{background:var(--caabg)} .sc.cca{background:var(--ccabg)} .sc.notion{background:var(--notionbg)}
+  .sc.empty{opacity:.5}
+  .conn{display:flex;justify-content:center;color:#c3b8a8;font-size:11px;margin:2px 0}
+  .card{background:#fff;border:1px solid var(--line);border-left:3px solid var(--cc);border-radius:7px;padding:9px 11px;margin:4px}
+  .card.client{--cc:var(--client)} .card.coach{--cc:var(--coach)} .card.caa{--cc:var(--caa)} .card.cca{--cc:var(--cca)} .card.notion{--cc:var(--notion)}
+  .card.planned{border-style:dashed;background:#fdfaf3;opacity:.93}
+  .plannedtag{font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;color:#a8823a;background:#fff;border:1px solid #e2cf9a;border-radius:4px;padding:1px 5px;margin-left:5px}
+  .reftbl th{background:var(--coach)} .reftbl td:first-child{font-weight:700;color:var(--coach);white-space:nowrap}
+  details.refdetails summary{background:#f3ece0}
+  .ctop{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:2px}
+  .lane-tag{font-size:9px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;padding:1px 6px;border-radius:4px}
+  .lt.client{color:var(--client);background:#f6e9d3} .lt.coach{color:var(--coach);background:#eae1f6}
+  .lt.caa{color:var(--caa);background:#e2eede} .lt.cca{color:var(--cca);background:var(--ccabg)} .lt.notion{color:var(--notion);background:#dfeaf4}
+  .cnum{font-size:10px;font-weight:800;color:#b7ab9c;font-family:ui-monospace,monospace}
+  .ctitle{font-size:13px;font-weight:700;color:var(--ink)}
+  .cdesc{font-size:11.5px;color:var(--muted);margin-top:2px;line-height:1.45}
+  .cchips{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+
+  .tbl{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-top:6px}
+  .tbl th{text-align:left;font-size:10.5px;font-weight:800;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;background:#f3efe8;padding:8px 10px;border-bottom:1px solid var(--line)}
+  .tbl td{font-size:12px;color:#4a4038;padding:7px 10px;border-bottom:1px solid #f0ece5;vertical-align:top}
+  .tbl tr:last-child td{border-bottom:none}
+  .tbl td:first-child{font-weight:600;color:var(--ink)}
+  .rd{color:var(--read);font-family:ui-monospace,monospace;font-size:11px}
+  .wr{color:var(--write);font-family:ui-monospace,monospace;font-size:11px}
+  .sech{font-size:14px;font-weight:800;color:var(--ink);margin:22px 0 8px;display:flex;align-items:center;gap:8px}
+  .sech::before{content:"";width:16px;height:2px;background:var(--accent)}
+
+  footer{margin-top:30px;padding-top:14px;border-top:1px solid var(--line);font-size:11.5px;color:#9a8f82;line-height:1.7}
+  footer b{color:var(--muted)}
+  .whatsnew{background:#eef6f0;border:1px solid #c7e3d0;border-left:4px solid var(--new);border-radius:10px;
+    padding:16px 18px;margin:0 0 20px;font-size:12.5px;color:#3a4f42;line-height:1.6}
+  .whatsnew .wnlbl{font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--new);display:block;margin-bottom:6px}
+  .whatsnew h4{margin:10px 0 3px;font-size:12.5px;color:var(--ink)}
+  .whatsnew ul{margin:2px 0 8px;padding-left:18px}
+  .whatsnew li{margin-bottom:3px}
+  /* ---- Agent prompt boxes ---- */
+  .agrid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:6px}
+  .abox{background:#fff;border:1px solid var(--line);border-top:3px solid var(--ac,var(--muted));border-radius:11px;
+    padding:13px 15px 14px;display:flex;flex-direction:column;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+  .abox.caa{--ac:var(--caa)} .abox.cca{--ac:var(--cca)} .abox.cos{--ac:var(--cos)}
+  .abox.cit{--ac:#5b7fb0} .abox.cga{--ac:var(--gate)} .abox.auto{--ac:#5a8a6a} .abox.bot{--ac:#7a5fb0}
+  .aboxtop{display:flex;align-items:center;gap:9px;margin-bottom:3px}
+  .acode{font-family:ui-monospace,monospace;font-size:12px;font-weight:800;letter-spacing:.05em;color:#fff;
+    background:var(--ac,var(--muted));border-radius:6px;padding:3px 9px;flex:none}
+  .aname{font-size:13.5px;font-weight:700;color:var(--ink)}
+  .astate{margin-left:auto;font-size:8.5px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;
+    border-radius:999px;padding:2px 8px;border:1px solid var(--line2);color:var(--muted);background:#f7f4ef;white-space:nowrap}
+  .astate.built{color:var(--new);background:var(--newbg);border-color:#b7ddc7}
+  .astate.sketch{color:#a8823a;background:#fdf7e8;border-color:#e2cf9a}
+  .adesc{font-size:11.5px;color:var(--muted);line-height:1.45;margin:2px 0 9px}
+  .albl{font-size:9.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;display:flex;align-items:center;gap:6px}
+  .albl .hint{font-weight:600;letter-spacing:0;text-transform:none;color:#b0a596;font-size:10px}
+  .abox textarea{width:100%;min-height:120px;resize:vertical;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+    font-size:12px;line-height:1.5;color:var(--ink);background:#fbfaf7;border:1px solid var(--line2);border-radius:8px;
+    padding:9px 11px;outline:none}
+  .abox textarea:focus{border-color:var(--ac,var(--accent));background:#fff;box-shadow:0 0 0 3px rgba(197,138,30,.10)}
+  .abtnrow{display:flex;align-items:center;gap:10px;margin-top:9px}
+  .asave{border:none;cursor:pointer;font-family:inherit;font-size:12px;font-weight:700;color:#fff;
+    background:var(--ac,#2b241f);border-radius:7px;padding:8px 16px}
+  .asave:hover{filter:brightness(1.06)} .asave:disabled{opacity:.5;cursor:default;filter:none}
+  .asaved{font-size:11px;color:var(--muted)} .asaved b{color:var(--new)}
+  .abanner{background:#fff;border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:10px;
+    padding:12px 15px;margin-bottom:16px;font-size:12.5px;color:#6b5f4f;line-height:1.55}
+  .abanner b{color:var(--ink)}
+  .astorepill{font-size:10.5px;font-weight:700;border-radius:999px;padding:2px 10px;margin-left:6px;white-space:nowrap}
+  .astorepill.cloud{color:var(--new);background:var(--newbg);border:1px solid #b7ddc7}
+  .astorepill.local{color:#a8823a;background:#fdf7e8;border:1px solid #e2cf9a}
+  @media(max-width:720px){.lanehead,.srow{grid-template-columns:1fr 1fr}.tree-row{grid-template-columns:1fr}.tree-row::before{display:none}.agrid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1><b>THE BRIDGE TO "I"</b> Dinesh's real flow · Zcal → Notion</h1>
+  <p class="sub">The actual current process, mapped from Dinesh's walkthroughs — from a client booking on Zcal all the way to graduation. Covers the Foundation (Life Purpose, Visions), the Engine (Values & Qualities, the two Games, Guidelines), and now Closing the Engagement — the final session that sends the client forward on their own. This documents his live coaching + Notion flow as he described it.</p>
+  <span class="wip">Work in progress · from transcripts · review before build</span>
+
+  <div class="tabs">
+    <button id="b-e2e" class="active" onclick="show('e2e')">End-to-End Flow</button>
+    <button id="b-agents" onclick="show('agents')">⚙ Agents</button>
+    <button id="b-lp" onclick="show('lp')">Life Purpose</button>
+    <button id="b-vis" onclick="show('vis')">Visions</button>
+    <button id="b-val" onclick="show('val')">Values &amp; Qualities</button>
+    <button id="b-dec" onclick="show('dec')">Decisions</button>
+    <button id="b-poss" onclick="show('poss')">Possibilities</button>
+    <button id="b-cho" onclick="show('cho')">Annual Choices</button>
+    <button id="b-rg" onclick="show('rg')">Results Game</button>
+    <button id="b-wb" onclick="show('wb')">Well-Being Game</button>
+    <button id="b-gl" onclick="show('gl')">Guidelines</button>
+    <button id="b-close" onclick="show('close')">Closing</button>
+    <button id="b-proj" onclick="show('proj')">Projects</button>
+    <button id="b-goal" onclick="show('goal')">Goal Planning</button>
+    <button id="b-hab" onclick="show('hab')">Habits</button>
+    <button id="b-recar" onclick="show('recar')">Re-careering</button>
+    <button id="b-supp" onclick="show('supp')">Support Network</button>
+  </div>
+
+  <div class="legend" id="legend"></div>
+  <div id="mount"></div>
+  <footer id="foot"></footer>
+</div>
+
+<script>
+function el(t,c,h){const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e;}
+function chip(t,label){return {t,label};}
+function chipsHTML(arr){let s='';(arr||[]).forEach(c=>{s+=`<span class="chip ${c.t}">${c.label}</span>`;});return s;}
+
+const LANES=[
+  {k:'client',n:'CLIENT',s:'the person (e.g. Priya)'},
+  {k:'coach', n:'COACH', s:'Dinesh · coach-side'},
+  {k:'caa',   n:'CAA',   s:'Claude · coach-assist'},
+  {k:'cca',   n:'CCA',   s:'the client\u2019s companion'},
+  {k:'notion',n:'NOTION',s:'the databases'},
+];
+
+/* =================== END-TO-END =================== */
+const E2E=[
+  {band:'0 · Booking', sub:'before any coaching — the meeting gets set'},
+  {actor:'system', title:'Client books a slot on Zcal', desc:'Dinesh\u2019s Zcal page is where people go to book time with him.', db:'Zcal'},
+  {arrow:1},
+  {actor:'system', title:'Zcal updates Google Calendar', desc:'The booking flows straight into Dinesh\u2019s calendar.', db:'Google Calendar'},
+  {arrow:1},
+  {actor:'notion', title:'The meeting surfaces in Notion', desc:'His calendar shows the next meeting inside Notion — he sees what\u2019s coming up in a meetings view.', db:'Notion · Meetings view'},
+  {arrow:1},
+  {actor:'coach', title:'Logged as a Session row', desc:'A manual step: Dinesh logs each meeting as a row himself (with Claude\u2019s help). One meeting = one row, tagged by session type; recording + deck attached.', db:'Sessions DB', chips:[chip('man','manual step')]},
+  {arrow:1},
+  {actor:'caa', title:'Claude preps the session', desc:'The \u201cpre-call prompt\u201d: Claude builds a pre-session brief before, and a post-session summary + outcomes after.', chips:[chip('note','Claude · coach-assist')]},
+  {citmark:'<b>CIT eventually lives here</b> \u2014 alongside post-session quality scoring. Starting point: Dinesh\u2019s existing ChatGPT agent, not a fresh design.'},
+
+  {band:'1 · Before the exploratory call', sub:'first-time client information'},
+  {actor:'coach', title:'Dinesh sends the Client Information Form', desc:'Every first-time client gets the CIF before the exploratory call. It asks basic info, communication preference, hobbies, the life areas they feel most alive in, prior coaching experience, whether they\u2019re in a transition, and NLP style (visual / kinesthetic / sensory) — some of which Dinesh also gathers live during coaching.'},
+  {arrow:1},
+  {actor:'client', title:'Client fills the form', desc:'A Notion form — Dhruv may later host it as a more interactive page, but either way it flows to the databases.'},
+  {arrow:1},
+  {actor:'notion', title:'CIF database auto-updates', desc:'Submitting the form creates a row; every column except the Master List link auto-fills from the form.', db:'CIF DB'},
+  {arrow:1},
+  {actor:'coach', title:'Dinesh links the row to the Master List', desc:'The one manual step: he reviews the info and connects the CIF row\u2019s first column to the client in the Master List — that link threads the data across every database. (He\u2019d automate it if he knew how.)', db:'Master List', chips:[chip('man','manual step')]},
+  {arrow:1},
+  {actor:'caa', title:'Claude reads the CIF → pre-call prep', desc:'Claude uses the form to prepare Dinesh for the pre-call sync.', chips:[chip('note','Claude · coach-assist')]},
+  {arrow:1},
+  {actor:'cos', title:'COS confirms the booking + reminds the day before', desc:'Sketch, not built. Today Dinesh does this by hand. Grounded in the Master SOP\u2019s own words: \u201cCOS will eventually flag new contacts for follow-up.\u201d Drafts only \u2014 nothing external sends without Dinesh\u2019s review.', chips:[chip('note','COS · aspirational')]},
+
+  {band:'2 · Exploratory session', sub:'mutual fit + the goals'},
+  {actor:'coach', title:'Exploratory conversation', desc:'Getting to know each other. The real aim is mutual assessment: is the client coachable, and is there fit? It\u2019s about mindset, not whether the goals are achievable.'},
+  {arrow:1},
+  {actor:'coach', title:'Flashes the Life Areas card', desc:'\u201cOver a 6-month engagement, which life areas matter most?\u201d — with a technique to set a goal in each, so the conversation doesn\u2019t drift.', db:'Life Area (lookup)'},
+  {arrow:1},
+  {actor:'client', title:'Sets a goal in the areas that matter', desc:'The client picks only the life areas that matter to them and sets a goal in each — some pick 3, some 10+ (typically 5–10). The number doesn\u2019t matter.'},
+  {arrow:1},
+  {actor:'notion', title:'The goals become Key Results', desc:'However many they agree on, they\u2019re captured as Key Results in the shared database.', db:'Key Results DB'},
+  {note:'<b>Why goals in the exploratory?</b> For depth and clarity, not to decide. It forces the client to articulate \u201cwhat do I really want?\u201d — most have never asked. The aim isn\u2019t to <i>achieve</i> the goals but to <b>learn through the process</b>. Whatever number they set becomes a North Star Dinesh revisits every session: \u201cstill valid, or has something shifted? If it shifted — what, why, and what does that mean for you?\u201d'},
+  {arrow:1},
+  {decision:'Coachable + mutual fit?', yes:'YES → convert to client', no:'NO → stop here, no engagement'},
+  {cosnote:'For a \u201cNot now\u201d outcome specifically (interested, but timing is wrong \u2014 not a hard no): <b>COS would hold the follow-up date and resurface it</b> to Dinesh when it arrives, instead of relying on memory. Today this is untracked once a \u201cnot now\u201d conversation ends.'},
+
+  {band:'3 · Conversion & consent', sub:'becoming a client, safely'},
+  {actor:'coach', title:'Ticks the client in the Master List', desc:'A mini-CRM: every contact is a row. The tick converts them to a client and generates their filtered client view. This is the key thread that connects every database.', db:'Master List'},
+  {arrow:1},
+  {actor:'coach', title:'Sends the virtual agreement', desc:'A confidentiality / consent agreement — with the clause that conversations are captured in the database. Signed offline.'},
+  {arrow:1},
+  {actor:'coach', title:'Ticks \u201cconsent signed\u201d', desc:'An audit mark on the Master List.', db:'Master List · Consent'},
+  {arrow:1},
+  {actor:'gate', title:'GATE — Claude checks consent', desc:'Signed → more can be shared / written. Not signed → Claude blocks and keeps reminding \u201cyou can\u2019t share this, the client hasn\u2019t signed.\u201d A manual override exists.', chips:[chip('gate','audit gate')]},
+  {arrow:1},
+  {actor:'notion', title:'Client gets their space + login', desc:'Only after consent does the client get their own client-space page and login. Until then they don\u2019t have access.', db:'Client space'},
+
+  {band:'4 · Life Purpose module', sub:'first coaching work — full detail in the Life Purpose tab'},
+  {actor:'coach', title:'Opens the program → Life Purpose first', desc:'The bird\u2019s-eye program map (brought up for every module): each box is a module, and Life Purpose is module one.'},
+  {arrow:1},
+  {actor:'client', title:'Shares life stories / special moments', desc:'\u201cGo back in time and tell me when you felt fully satisfied and fulfilled.\u201d'},
+  {arrow:1},
+  {actor:'coach', title:'Three questions per story', desc:'For each story Dinesh asks the same three — <i>what were you doing? · what value did you take from it? · how did it leave you feeling?</i> — capturing key words each time.'},
+  {arrow:1},
+  {actor:'notion', title:'Stories captured as rows', desc:'Can be 15–50 rows per client — the raw material of purpose.', db:'Life Purpose DB'},
+  {arrow:1},
+  {actor:'caa', title:'Claude clusters the words → power words', desc:'The captured words are clustered into 3–4 groups; one power word names each cluster (e.g. joy, flow, trust, rhythm).', chips:[chip('note','Claude · coach-assist')]},
+  {arrow:1},
+  {actor:'coach', title:'Power words → wireframe → 7 conditions', desc:'Dinesh gives a statement wireframe (\u201cMy purpose is to…\u201d) and seven conditions a good statement meets — but never writes it himself.'},
+  {arrow:1},
+  {actor:'client', title:'Client writes their own statement', desc:'The power words flow into it (e.g. \u201coperate with agency and in flow…\u201d). Some reach ~90% in the room; refined over 2–3 weeks.'},
+  {arrow:1},
+  {actor:'notion', title:'Final Life Purpose Statement saved', desc:'The North Star on the client\u2019s page.', db:'Life Purpose DB'},
+  {arrow:1},
+  {actor:'cca', title:'CCA carries it into every conversation', desc:'Reads the statement, and pulls specific stories back as triggers (\u201cremember in Nainital…\u201d).', chips:[chip('note','CCA · companion')]},
+
+  {band:'5 · Visions for life areas', sub:'purpose made real per area — full detail in the Visions tab'},
+  {actor:'coach', title:'Brings purpose down to each life area', desc:'Breaks the statement into its power words (kept consistent across the whole conversation) and revisits the life areas.'},
+  {arrow:1},
+  {actor:'client', title:'Expresses the vision per area', desc:'A drawing, words, or a table — whatever fits the client (default is visual). It\u2019s a subset (a \u201cdouble-click\u201d) of the Life Purpose.'},
+  {arrow:1},
+  {actor:'notion', title:'Vision per life area captured', desc:'A free-field statement in the main database; images stored too. Any tabular breakdown lives on the client\u2019s daily home page, not the main DB.', db:'Visions DB'},
+  {arrow:1},
+  {actor:'cca', title:'CCA uses visions to steer direction', desc:'\u201cYour career is heading this way — is that right?\u201d Over time its questions track the client\u2019s stated direction.', chips:[chip('note','CCA · companion')]},
+
+  {band:'6 · Values & Qualities', sub:'the bridge from foundation to engine — full detail in its tab'},
+  {actor:'coach', title:'Identify top Values (WHY) & Qualities (HOW) — in parallel', desc:'From the life purpose + vision, values and qualities are drawn out in parallel using the Drilling Down technique (see the tab): values — 5–10 identified, narrowed to a top 3–5 for the Decision Tool; qualities — 8–10 selected and refined session by session. The two are explored in parallel, not one after the other — As with the life purpose statement, Dinesh keeps himself out of the picking.', db:'Values + Qualities (lookup)'},
+  {arrow:1},
+  {actor:'notion', title:'Values + qualities captured', desc:'The client\u2019s chosen values and top qualities are saved.', db:'Values / Qualities DB', chips:[chip('loop','top qualities → Well-Being Game')]},
+
+  {band:'7 · Annual planning', sub:'from vision to the year’s commitments — Decisions · Possibilities · Choices'},
+  {actor:'coach', title:'Decision Tool — weigh the options', desc:'A weighted-choice tool: each option is scored across Energy · Practicality · Purpose · Values, where the Values lens pulls in the client’s scored values. The client uses it themselves in the CCA’s Explore mode — the one Foundation surface they actively write to.', db:'Decisions DB', chips:[chip('note','CCA · Explore mode')]},
+  {arrow:1},
+  {actor:'coach', title:'Annual Possibilities — the year’s holding list', desc:'Per life area, a wide list of everything that could be worth doing this year — nothing committed yet.', db:'Annual Possibilities DB'},
+  {arrow:1},
+  {actor:'client', title:'Annual Choices — commit for the year', desc:'Chosen possibilities become committed annual goals. Each links back to the possibility it came from and forward to the vision it serves.', db:'Annual Choices DB', chips:[chip('loop','points to a Vision')]},
+  {note:'<b>The through-line.</b> Every Annual Choice points back to a Possibility (idea → commitment) and forward to the Vision it serves — so the year’s commitments stay anchored to purpose and shape the results played fortnightly.'},
+
+  {band:'8 · The fortnightly cycle', sub:'the engine · every ~3 weeks · 7–8 sessions over 6 months'},
+  {actor:'coach', title:'Opens the life-area card again', desc:'Which life areas matter most between now and the next meeting (~3 weeks)? The client chooses and orders a few.'},
+  {arrow:1},
+  {actor:'client', title:'RESULTS GAME — set the fortnight\u2019s goals', desc:'For each chosen area, a concrete goal for the fortnight (\u201crun 3 times, no exceptions\u201d) — tied back to the Key Results, which Dinesh flashes. Not a to-do list.', db:'Results Game', chips:[chip('loop','tied to Key Results')]},
+  {arrow:1},
+  {actor:'client', title:'WELL-BEING GAME — score the qualities', desc:'The client scores each of their top qualities 1–10 for the fortnight.', db:'Well-Being Game'},
+  {arrow:1},
+  {actor:'client', title:'Lives it (~3 weeks)', desc:'Real life happens between sessions.'},
+  {arrow:1},
+  {actor:'coach', title:'Next meeting — score the game', desc:'Two scores: an <b>overall</b> score (average, e.g. 3 of 4 = 75%) and a <b>priority</b> score (weighted by the client\u2019s priority order). A row is created each meeting.', db:'Game Period DB'},
+  {arrow:1},
+  {actor:'coach', title:'Reflect on the learning → Guideline', desc:'Achievement isn\u2019t the point — the learning is. Whatever they learn becomes a Guideline for Living, crosschecked by Dinesh while coaching is active (not after graduation).', db:'Guidelines DB', chips:[chip('loop','feeds Guidelines')]},
+  {eloop:'↺ every ~3 weeks the cycle repeats — set → live → score → learn → guideline'},
+
+  {end:'Over ~6 months this runs <b>7–8 times</b>. Every session: set the Results Game, review the last one, score the Well-Being Game, and pick up Guidelines. The goal is <b>self-reliance</b> — the habits get strong enough that the client can live it themselves and no longer needs the coach.'},
+  {band:'9 · Phase 2 — planned (not built)', sub:'five further modules Dinesh walked through — full detail in their own tabs'},
+  {note:'<b>Placement (Dinesh’s words):</b> life purpose → vision → annual possibilities → annual choice → <b>Project</b> → <b>Goal Planning</b> (breaks it into steps) → Results Game → intended results. <b>Habits</b> is added once the Results Game is running. <b>Re-careering</b> and <b>Support Network</b> are coach-run processes that feed actions into the games. All five are Phase 2.'},
+];
+
+/* =================== MODULES =================== */
+const MODULES={
+  lp:{
+    layer:'Foundation · Life Purpose', layerColor:'#b07d2c', layerBg:'#f6e9d3',
+    title:'Life Purpose Statement — in full depth',
+    desc:'A 4\u201310 hour, emotionally intense exercise spanning 1\u20132 sessions \u2014 not a single 10-minute pass. Each story is mined with three exact questions; the body itself becomes a barometer; the words are clustered into 4\u20135 power words; the client \u2014 never Dinesh \u2014 writes their own statement against 8 explicit criteria. It becomes the North Star the CCA reads in every conversation, and the origin point for the Decision Tool. Sourced from the Life Purpose Module training page, the Life Purpose Prompt (CAA), and Master SOP Stage 5.',
+    flowTitle:'THE LIFE PURPOSE PIPELINE \u2014 AT A GLANCE',
+    flow:[
+      {type:'node',text:'Debrief the Exploratory card sort'},
+      {type:'arrow'},{type:'node',text:'2\u20133 stories to start \u00b7 8\u201310 over 1\u20132 sessions'},
+      {type:'arrow'},{type:'node',text:'3 questions per story, exact order \u2192 key words'},
+      {type:'arrow'},{type:'node',text:'Physical Place of Purpose',style:'anchor'},
+      {type:'label',text:'the body\u2019s barometer \u2014 reused later for decisions'},
+      {type:'arrow'},{type:'node',text:'Words clustered by intuition, not intellect'},
+      {type:'arrow'},{type:'node',text:'4\u20135 power words named'},
+      {type:'arrow'},{type:'node',text:'Wireframe + 8 criteria + the Weasels'},
+      {type:'arrow'},{type:'node',text:'Client drafts the statement',style:'anchor'},
+      {type:'arrow'},{type:'node',text:'Bridge the context \u00b7 sits 2\u20133 weeks \u00b7 refines'},
+      {type:'arrow'},{type:'node',text:'Final Life Purpose Statement',style:'anchor'},
+      {type:'tree',cols:[
+        {top:'CAA \u00b7 Post-Call',bottom:'the generic 5-step'},
+        {top:'CAA \u00b7 Life Purpose prompt',bottom:'3 parts, each gated'},
+        {top:'Client Page \u00a75',bottom:'Bridge Artefacts'},
+      ]},
+      {type:'arrow'},{type:'node',text:'Saved on the client page',style:'db'},
+      {type:'label',text:'Becomes the North Star \u2014 used for'},
+      {type:'tree',cols:[
+        {top:'Every CCA chat',bottom:'as key context'},
+        {top:'Decision Tool',bottom:'power words + values'},
+        {top:'Visions',bottom:'purpose per life area',style:'anchor'},
+      ]},
+    ],
+    phases:[
+      {name:'A \u00b7 OPENS FROM WHERE EXPLORATORY LEFT OFF', meta:'not a cold start', steps:[
+        {lane:'coach',n:'1',title:'Debriefs the Exploratory card sort first',desc:'\u201cWhat happened? What did you notice?\u201d Master SOP Stage 5 opens Life Purpose by debriefing the Results card sort from the Exploratory \u2014 the two sessions are threaded together, not separate starts.',chips:[chip('r','READ Results (Exploratory)')]},
+        {lane:'coach',n:'2',title:'Holds the facilitator role, not the coach role',desc:'\u201cYou are a facilitator, not a coach. You are not evaluating, interpreting, or solutioning. You are collecting stories, listening for language, and offering two or three possible configurations of the client\u2019s own words.\u201d',chips:[chip('dec','facilitator, not coach')]},
+        {lane:'coach',n:'3',title:'Doesn\u2019t rush to a statement',desc:'The thread surfaces over 1\u20132 sessions. Session 1 may only produce 2\u20133 stories \u2014 that\u2019s expected, not behind schedule.',chips:[]},
+      ]},
+      {name:'B \u00b7 CAPTURE THE STORIES', meta:'three exact questions, every time', steps:[
+        {lane:'coach',n:'4',title:'Keeps the life-areas gallery visible',desc:'A visual trigger for memory. Ground rule stated up front: questions are welcome at any point.',chips:[]},
+        {lane:'client',n:'5',title:'Shares a peak fulfilment moment',desc:'\u201cThink of a time in your life when you did something that left you feeling truly fulfilled or satisfied.\u201d 2\u20133 stories to open; the full set builds to 8\u201310 across sessions.',chips:[]},
+        {lane:'coach',n:'6',title:'Asks the same three questions, in order, every story',desc:'Q1 \u2014 \u201cSpecifically, what were you doing?\u201d Q2 \u2014 \u201cWhat value did you take from this? What was in it for you?\u201d Q3 \u2014 \u201cHow did that leave you feeling?\u201d Never reordered.',chips:[]},
+        {lane:'coach',n:'7',title:'Has alternates ready for when stories run dry',desc:'\u201cA time you were achieving something\u2026\u201d \u00b7 \u201cfrom any age at all\u2026\u201d \u00b7 \u201ceven if it was just momentary\u2026\u201d \u00b7 \u201ca deep sense of well-being.\u201d',chips:[]},
+        {lane:'coach',n:'8',title:'Writes present tense, client\u2019s words only',desc:'Even though told in past tense \u2014 purpose is written present tense, saving an editing pass later. Bolds key words and phrases as they land; captures the action verb and noun, not a paragraph.',chips:[chip('dec','present tense, client\u2019s exact words')]},
+        {lane:'coach',n:'9',title:'Holds three live tips while listening',desc:'Unique phrases are gold, write them exactly (\u201cto be the joyful goat\u201d made it into a real statement). If they describe what someone <i>else</i> got from it, redirect: \u201cwhat did <b>you</b> take from this?\u201d If a story drifts negative near the end, gently return to the positive memory.',chips:[]},
+        {lane:'notion',n:'10',title:'Each story can become up to three rows',desc:'One row per question (Q1/Q2/Q3), all sharing one <b>Order</b> number \u2014 not one row per story. A real transcript producing 15\u201350 rows is really about 5\u201317 stories once you account for this, well inside the 8\u201310 target.',chips:[chip('w','WRITE Life Purpose DB'),chip('man','Order number groups Q1/Q2/Q3')]},
+      ]},
+      {name:'C \u00b7 PHYSICAL PLACE OF PURPOSE', meta:'a whole step most flows skip', steps:[
+        {lane:'coach',n:'11',title:'Asks the body, right after the last story',desc:'\u201cTake a moment and check inside your body. Where does your awareness go first? What does it feel like there?\u201d',chips:[]},
+        {lane:'coach',n:'12',title:'Explains why this works',desc:'The body doesn\u2019t know the difference between what\u2019s real and what\u2019s imagined. After 30\u201340 minutes reliving purposeful moments, the body already feels as it did when they were lived.',chips:[]},
+        {lane:'notion',n:'13',title:'Captured as a real field',desc:'Physical Place of Purpose \u2014 on the Coaching Page, not just a passing exercise.',chips:[chip('w','WRITE Coaching Page \u00b7 Physical Place of Purpose')]},
+        {lane:'coach',n:'14',title:'Becomes the ongoing Congruence barometer',desc:'For any future decision: imagine option A in detail, check the body; imagine option B, check again. Whichever is closer to this place is more on-purpose. Reused live in the Decision Tool.',chips:[chip('loop','\u2192 Decision Tool (body-check variant)')]},
+      ]},
+      {name:'D \u00b7 DISTILL TO 4\u20135 POWER WORDS', meta:'intuition, not intellect', steps:[
+        {lane:'client',n:'15',title:'Compiles every bolded word',desc:'\u201cLet your intuition guide the selection. Do not use the intellect to analyze. Let what jumps out, jump out.\u201d',chips:[]},
+        {lane:'client',n:'16',title:'Clusters the words that group together',desc:'Marks the natural groupings across all stories.',chips:[]},
+        {lane:'coach',n:'17',title:'Names the best headline per cluster',desc:'Repeats until 4\u20135 words or phrases remain \u2014 no more. These become the <i>only</i> words used to draft the statement.',chips:[]},
+        {lane:'caa',n:'18',title:'Assists the clustering pass after the call',desc:'\u201cCan you cluster these into groups?\u201d \u2014 Claude helps organize, the client and coach still name the headlines live.',chips:[chip('note','Claude \u00b7 coach-assist'),chip('r','READ Life Purpose DB')]},
+        {lane:'notion',n:'19',title:'Cluster field + a \u201cJump out\u201d checkbox',desc:'Groups the words by cluster; a checkbox marks exactly which key words became power words, so every power word stays traceable back to its source story.',chips:[chip('w','WRITE Life Purpose DB (Cluster, Jump out words)')]},
+      ]},
+      {name:'E \u00b7 DRAFT THE STATEMENT', meta:'8 criteria, the Weasels, never the coach', steps:[
+        {lane:'coach',n:'20',title:'Offers 2\u20133 configurations, power words only',desc:'Never introduces a new substantive word \u2014 only connectives like \u201cin order to,\u201d \u201cby,\u201d \u201cwhile.\u201d Spoken first, then typed once one lands.',chips:[]},
+        {lane:'coach',n:'21',title:'Checks against the 8 criteria',desc:'Doing + Being \u00b7 Connection to Self \u00b7 Connection to Another \u00b7 Connection to the Whole \u00b7 Driver\u2013Process\u2013Outcome \u00b7 Broad enough (not a job description) \u00b7 Fully within the client\u2019s control \u00b7 Present tense, positively stated.',chips:[chip('dec','all 8 criteria checked')]},
+        {lane:'coach',n:'22',title:'Watches for the Weasels',desc:'\u201cFree from\u2026\u201d keeps them moving away from the past \u2014 cut it (\u201cfree to\u2026\u201d is fine). \u201cRelief\u201d isn\u2019t a purposeful feeling \u2014 ask what else. \u201cI felt that\u2026\u201d never produces a real feeling word \u2014 listen past it.',chips:[chip('dec','the Weasels never make the statement')]},
+        {lane:'client',n:'23',title:'Drafts their own final version',desc:'Not Dinesh. Power words flow in naturally; some reach ~90% right in the room.',chips:[chip('dec','the client writes it, never the coach')]},
+        {lane:'coach',n:'24',title:'Holds the 90% rule',desc:'Stop at 90% convincing \u2014 takes the pressure off perfection. It keeps refining over the coming weeks as they live with it.',chips:[]},
+      ]},
+      {name:'F \u00b7 CLOSE & BRIDGE THE CONTEXT', meta:'a step most flows skip entirely', steps:[
+        {lane:'coach',n:'25',title:'Bridges the context before they leave',desc:'\u201cWhat do you want to remember from today as you walk out?\u201d Single contexts leave us when we transition \u2014 naming it crosses the boundary into daily life.',chips:[]},
+        {lane:'coach',n:'26',title:'Gives take-home suggestions',desc:'Write it on cards and post them visibly. Say or sing it into a voice recorder. Share it with friends and let it evolve. Notice moments of Congruence in the coming days.',chips:[]},
+        {lane:'coach',n:'27',title:'Holds whatever reaction shows up',desc:'Elation, tears, deep peace \u2014 sit silently in gratitude. Disconnection \u2014 \u201cyou\u2019ve already lived this; these stories are the proof.\u201d Grief over lost time \u2014 \u201cnow you can proactively choose, and say no to what isn\u2019t on purpose.\u201d',chips:[]},
+        {lane:'coach',n:'28',title:'Opens the next session by re-checking',desc:'Debriefs how the statement has been living with them. Has a word shifted? Re-checks Congruence at the physical place against the refined version.',chips:[]},
+      ]},
+      {name:'G \u00b7 AFTER THE CALL \u2014 TWO SEPARATE CAA PROMPTS', meta:'not one pass \u2014 two, each gated', steps:[
+        {lane:'caa',n:'29',title:'Runs Post-Session (Post Call) \u2014 the generic 5-step',desc:'Sessions DB, Coach Workspace, Client Daily Home, Action Items, Master Network \u2014 same sequence as every session.',chips:[chip('note','Claude \u00b7 coach-assist')]},
+        {lane:'caa',n:'30',title:'Then runs the separate Life Purpose prompt \u2014 Part 1',desc:'Reads the full transcript, every prior session, Master Network, CIF, and existing Life Purpose DB rows. Drafts 2\u20134 line first-person story summaries and maps each to its existing row by <b>Order number</b> \u2014 never guessed from text.',chips:[chip('note','Claude \u00b7 coach-assist'),chip('r','READ Sessions, CIF, Master Network, Life Purpose DB')]},
+        {lane:'coach',n:'31',title:'Reviews the 5-column mapping table before anything writes',desc:'# \u00b7 Story title \u00b7 Summary \u00b7 Timestamp \u00b7 current DB text \u2014 confirms every mapping is correct.',chips:[chip('gate','Dinesh approval required')]},
+        {lane:'notion',n:'32',title:'Updates existing rows only \u2014 never creates new ones',desc:'Key Words field is never touched \u2014 that\u2019s Dinesh\u2019s live session capture, preserved exactly.',chips:[chip('w','WRITE Life Purpose DB (existing rows only)')]},
+        {lane:'caa',n:'33',title:'Part 2 \u2014 drafts the Top Values table',desc:'Only values with 2+ pieces of real evidence across every source \u2014 never padded to hit a target number.',chips:[chip('note','Claude \u00b7 coach-assist')]},
+        {lane:'coach',n:'34',title:'Reviews the ranked values table',desc:'Rank \u00b7 Value \u00b7 Times evident \u00b7 Evidence quote or behaviour.',chips:[chip('gate','Dinesh approval required')]},
+        {lane:'notion',n:'35',title:'Writes to Values DB with a mandatory category lookup',desc:'Checked against an 11-category reference taxonomy (Relationships & Connection, Freedom & Expression, Well-Being & Self-Care, Purpose & Vocation, Service & Contribution, Financial & Material, Inner Life & Meaning, Character & Integrity, Self & Identity, Growth & Learning, Security & Structure). A genuinely new value auto-creates a new reference row.',chips:[chip('w','WRITE Values DB + Values Reference DB')]},
+        {lane:'caa',n:'36',title:'Part 3 \u2014 drafts the Post Life Purpose Email',desc:'Opening hook from Coaching Observations \u00b7 the exact, never-edited statement \u00b7 a stories table compiled across all Order-grouped rows \u00b7 a power-words table filtered to only the rows where \u201cJump out words\u201d is checked.',chips:[chip('note','Claude \u00b7 coach-assist')]},
+        {lane:'coach',n:'37',title:'Approves before anything sends',desc:'\u201cI will not send without your approval\u201d \u2014 stated every time, no exceptions.',chips:[chip('gate','Dinesh approval required')]},
+        {lane:'coach',n:'38',title:'Updates Client Page \u00a75 (Bridge Artefacts)',desc:'The statement lands where every other artefact lives.',chips:[chip('w','WRITE Client Page \u00a75')]},
+        {lane:'coach',n:'39',title:'Cross-checks the Well-Being Game',desc:'If qualities are already surfacing in the stories, they get noted here \u2014 and once 2+ sessions of transcript exist, the separate Well-Being Game Setup prompt runs to identify qualities from the transcripts directly.',chips:[chip('loop','\u2192 seeds Well-Being Game')]},
+      ]},
+      {name:'H \u00b7 IT BECOMES THE NORTH STAR', meta:'ongoing', steps:[
+        {lane:'cca',n:'40',title:'CCA reads it in every chat',desc:'\u201cIf your purpose is this, your vision is this, your guideline is this\u2026\u201d frames every conversation.',chips:[chip('note','CCA \u00b7 companion'),chip('r','READ Life Purpose')]},
+        {lane:'cca',n:'41',title:'CCA pulls stories as triggers',desc:'\u201cRemember in Nainital you could think openly \u2014 try stepping into nature.\u201d The chat is a reminder.',chips:[chip('r','READ Life Purpose (stories)')]},
+        {lane:'client',n:'42',title:'Also browses stories directly',desc:'On the life-purpose detail view: filter by feeling \u2192 story titles \u2192 a 2\u20133 line summary + a suggestion. Not only through chat.',chips:[]},
+      ]},
+    ],
+    tableHead:['Database','Space','Read / Write','Role in this module'],
+    table:[
+      ['Life Purpose DB','Backend','WRITE (stories + statement) \u00b7 READ (CCA)','Stories, key words, power words, Cluster/Order/Jump-out-words fields, and the final statement'],
+      ['Values DB','Backend','WRITE','Top values, ranked, with evidence \u2014 written by the Life Purpose prompt Part 2'],
+      ['Values Reference DB','Look-up','READ \u00b7 auto-WRITE','11-category taxonomy; a genuinely new value adds a row here too'],
+      ['Coaching Page','Backend','WRITE','Physical Place of Purpose field'],
+      ['Client Page \u00a75','Client space','WRITE','Bridge Artefacts \u2014 where the finished statement lives'],
+      ['CIF DB','Backend','READ','Intake used as source / preparation'],
+      ['Life Area','Look-up','READ','Which areas feel most alive'],
+      ['Sessions DB','Backend','WRITE','Where the conversation and transcript are logged'],
+      ['Master List','Backend','READ','The client key that filters every view'],
+    ],
+    notes:[
+      'How does the client reach their stories? <b>Resolved</b> \u2014 through the life-purpose detail view (the \u201cdouble-click\u201d Dhruv is building), filtered by feeling, with a short summary + suggestion. The CCA chat is just the reminder path, not the only one.',
+      'Open design choice: whether the stories are pivoted by <b>power word</b> or by <b>story</b> \u2014 two possibilities Dinesh and Dhruv are still weighing.',
+      '<b>Three different story counts, reconciled:</b> the training manual targets 8\u201310 stories in one sitting; Dinesh\u2019s actual practice per the Master SOP opens with 2\u20133 and spreads the rest across 1\u20132 sessions; a real transcript can show 15\u201350 <i>rows</i>. These agree once you know each story can produce up to three rows (one per question) sharing one Order number \u2014 15\u201350 rows is really about 5\u201317 stories.',
+      'The Life Purpose prompt is a <b>separate CAA pass from the generic Post-Call prompt</b> \u2014 not folded into it. It has its own three gated parts (story summaries, values table, email), each shown to Dinesh for explicit approval before anything writes or sends.',
+    ],
+  },
+
+  vis:{
+    layer:'Foundation · Visions for Life Areas', layerColor:'#b07d2c', layerBg:'#f6e9d3',
+    title:'Visions for Life Areas — in detail',
+    desc:'A \u201cdouble-click\u201d of the Life Purpose into each life area — what the uber-statement means for family, career, health, and so on. Broken down using the power words for consistency, and expressed in whatever form fits the client.',
+    flowTitle:'THE VISIONS PIPELINE — AT A GLANCE',
+    flow:[
+      {type:'node',text:'Final Life Purpose Statement',style:'anchor'},
+      {type:'arrow'},{type:'node',text:'Revisit the life areas'},
+      {type:'arrow'},{type:'node',text:'Break the statement into power words'},
+      {type:'arrow'},{type:'node',text:'“What does it mean for this area?”'},
+      {type:'arrow'},{type:'node',text:'Client expresses the vision',style:'anchor'},
+      {type:'label',text:'default visual · tabular optional'},
+      {type:'tree',cols:[
+        {top:'A drawing / imagery',bottom:'default · stored & recalled'},
+        {top:'Vision words',bottom:'a short statement'},
+        {top:'A table',bottom:'power-word columns, if they want'},
+      ]},
+      {type:'arrow'},{type:'node',text:'Captured per life area',style:'db'},
+      {type:'arrow'},{type:'node',text:'CCA steers questions to this direction'},
+    ],
+    phases:[
+      {name:'A · BRING PURPOSE DOWN TO LIFE AREAS', meta:'after Life Purpose', steps:[
+        {lane:'coach',n:'1',title:'Takes the finished statement',desc:'Goes back to the life areas discussed in the exploratory session.',chips:[chip('r','READ Life Purpose'),chip('r','READ Life Area')]},
+        {lane:'coach',n:'2',title:'Breaks it into power words',desc:'The statement\u2019s power words become the columns to think against — kept as power words so they stay consistent across the whole conversation.',chips:[]},
+        {lane:'client',n:'3',title:'Considers each area',desc:'\u201cWhat does my purpose mean for family? for career? for health?\u201d',chips:[]},
+      ]},
+      {name:'B · EXPRESS THE VISION', meta:'the client\u2019s own form', steps:[
+        {lane:'client',n:'4',title:'Expresses the vision per area',desc:'Default is visual (a drawing, imagery) or words; a table is optional. \u201cIf I put it in a canned box, it\u2019s me, not them.\u201d',chips:[]},
+        {lane:'coach',n:'5',title:'Does one or two areas with them',desc:'Shows how to break it down; the rest the client does alone — a self-reliance principle.',chips:[]},
+        {lane:'notion',n:'6',title:'Vision per area captured',desc:'A free-field statement in the main DB (images stored too). If the client wants a table, that tabular breakdown lives on their daily home page, not the main database.',chips:[chip('w','WRITE Visions DB')]},
+      ]},
+      {name:'C · IT GUIDES DIRECTION', meta:'ongoing', steps:[
+        {lane:'cca',n:'7',title:'CCA uses the visions',desc:'\u201cYour career is heading this way — is that right?\u201d Helps the client think through direction.',chips:[chip('note','CCA · companion'),chip('r','READ Visions')]},
+        {lane:'client',n:'8',title:'Expands on the detail view',desc:'The vision opens on <b>hover</b> (not click). The client can add power-word columns to go deeper, or keep just the first — their choice.',chips:[]},
+        {lane:'notion',n:'9',title:'Images recalled on demand',desc:'If a vision is a drawing, the image is stored and can be pulled straight back into chat.',chips:[chip('r','READ Visions (image)')]},
+      ]},
+    ],
+    tableHead:['Database','Space','Read / Write','Role in this module'],
+    table:[
+      ['Visions DB','Backend','WRITE · READ (CCA)','One vision per life area — the picture of that area on purpose'],
+      ['Life Purpose DB','Backend','READ','The uber-statement (and power words) each vision comes from'],
+      ['Life Area','Look-up','READ','Each vision is tied to one life area'],
+      ['Daily home page','Client space','WRITE','Where any tabular, power-word customisation lives'],
+    ],
+    notes:[
+      'Default view is <b>visual</b>; the tabular power-word breakdown is an optional deeper layer the client can choose to fill in. Column titles are the power words.',
+      'The main database keeps the vision as a free-field statement — the customisable table sits on the client\u2019s daily home page (which the CCA can read), so the shared backend stays simple.',
+    ],
+  },
+
+  val:{
+    layer:'Bridge · Values & Qualities', layerColor:'#2f7d8f', layerBg:'#e0eef0',
+    title:'Values & Well-Being Qualities \u2014 in full depth',
+    desc:'The connection point between Foundation and Engine \u2014 introduced together, in the same session, as \u201ctwo sides of the same insight.\u201d Values are the principles the client chooses; Qualities are the felt states that confirm those values are actually being lived. Purpose activates the body, values activate the head, qualities confirm both are aligned. Sourced from the Values & Well-Being Qualities module page in full (Sections 0\u20137), the Prompt Reference, and Master SOP Stage 6.',
+    flowTitle:'FROM PURPOSE TO THE GAMES \u2014 AT A GLANCE',
+    flow:[
+      {type:'node',text:'Pre-Session Prompt surfaces hypotheses \u2014 background only'},
+      {type:'arrow'},{type:'node',text:'Teri\u2019s segue \u2014 \u201cyour head brain wants to participate too\u201d'},
+      {type:'label',text:'introduced together \u2014 not values first, then qualities'},
+      {type:'tree',cols:[
+        {items:['V-A-L-U-E framework','Core \u00b7 context-specific \u00b7 situational','Drilling down to a principle','5\u201310 identified \u2192 top 3\u20135 for Decision Tool']},
+        {items:['Q-U-A-L-I-T-Y framework','Universal need, personal form','Drilling down to a felt state','8\u201310 selected, refined session by session']},
+      ]},
+      {type:'arrow'},{type:'node',text:'The Litmus Test \u2014 be, or feel?',style:'anchor'},
+      {type:'arrow'},{type:'node',text:'Recorded \u2014 Coaching Page + both DBs',style:'db'},
+      {type:'label',text:'feeds \u2192'},
+      {type:'tree',cols:[
+        {top:'Decision Tool',bottom:'top 3\u20135 values'},
+        {top:'Well-Being Game',bottom:'8\u201310 qualities',style:'anchor'},
+        {top:'Optional deeper work',bottom:'purchases, actions, choices'},
+      ]},
+    ],
+    phases:[
+      {name:'A \u00b7 SITS RIGHT AFTER LIFE PURPOSE', meta:'session 2 or 3, prepared in advance', steps:[
+        {lane:'coach',n:'1',title:'Values and Qualities, introduced together',desc:'Typically the session right after Life Purpose. \u201cTwo sides of the same insight,\u201d not two separate modules run back to back.',chips:[chip('r','READ Life Purpose')]},
+        {lane:'coach',n:'2',title:'Opens with Teri\u2019s exact segue',desc:'\u201cNow you have your Purpose \u2014 and you\u2019ve felt where it lives in your body. Your head brain also wants to participate. Values are the foundational beliefs you act on consistently\u2026 the words that describe how you feel when you are living your values \u2014 those are your Well-Being Qualities.\u201d',chips:[]},
+        {lane:'caa',n:'3',title:'Pre-Session Prompt surfaces hypotheses \u2014 background only',desc:'Automatically pulls candidate Values and Qualities already noticed during the Exploratory and Life Purpose work. Starting hypotheses only \u2014 never offered to the client unprompted, surfaced only if they\u2019re stuck. Their own selection always wins.',chips:[chip('note','Claude \u00b7 coach-assist'),chip('dec','hypotheses only, never offered first')]},
+        {lane:'coach',n:'4',title:'Confirms AI Consent if not already recorded',desc:'Part of this session\u2019s outcome checklist, not a separate step elsewhere.',chips:[]},
+      ]},
+      {name:'B \u00b7 THE V-A-L-U-E FRAMEWORK', meta:'what a value actually is', steps:[
+        {lane:'coach',n:'5',title:'Walks V-A-L-U-E as the anchor',desc:'Very important \u2014 the choices consistently made for genuine well-being. Actions, not just words \u2014 behavioural evidence is the real test. Like \u2014 a deep pull, drawn toward with energy, not obligation. Unique \u2014 no two people\u2019s prioritised list matches. Energising \u2014 honouring them propels you; ignoring them drains you.',chips:[chip('dec','V-A-L-U-E, all 5 letters')]},
+        {lane:'coach',n:'6',title:'Values are \u201chot batons\u201d',desc:'Connected to an emotional state, igniting a feeling \u2014 and a way to evaluate behaviour against.',chips:[]},
+        {lane:'coach',n:'7',title:'Opens with two direct questions',desc:'\u201cWhat are the key values that guide your life?\u201d \u00b7 \u201cCould you name them right now, in order of importance?\u201d',chips:[]},
+      ]},
+      {name:'C \u00b7 THREE TYPES OF VALUES, AND WHAT VALUES ARE NOT', meta:'range matters', steps:[
+        {lane:'coach',n:'8',title:'Core, context-specific, or situational',desc:'Core: broad and enduring \u2014 love, peace, integrity, freedom. Context-specific: strong in one life area \u2014 security or contribution in career, appreciation in relationships. Situational: tied to a life stage, then evolves \u2014 money becomes relevant when planning for retirement.',chips:[]},
+        {lane:'coach',n:'9',title:'Money, balance, and comfort are not values',desc:'Money is too concrete \u2014 always a means to something else. Balance and comfort are usually situational, not core \u2014 real for a season, not for life.',chips:[chip('dec','money is never the value itself')]},
+        {lane:'coach',n:'10',title:'Holds the optimal range \u2014 5 to 10',desc:'Research-backed. Too many (15\u201320) and the client gets stuck, immobilised by options. Too few and they become rigid, unable to adapt.',chips:[]},
+      ]},
+      {name:'D \u00b7 THE Q-U-A-L-I-T-Y FRAMEWORK', meta:'what a quality actually is', steps:[
+        {lane:'coach',n:'11',title:'States the connection plainly',desc:'\u201cPurpose activates the body. Values activate the head. Qualities confirm both are aligned.\u201d',chips:[]},
+        {lane:'coach',n:'12',title:'Walks Q-U-A-L-I-T-Y as the anchor',desc:'Qualitative, not quantitative \u2014 felt states, not metrics. Universal in need, personal in form. Alive when values are honoured. Lived, not just listed \u2014 tracked 1\u201310 every session from here. Indicators of thriving \u2014 a drop opens a conversation, it isn\u2019t a failure. Tied to values, not outcomes \u2014 a values breach shows up as a quality dip. Yours to choose and refine.',chips:[chip('dec','Q-U-A-L-I-T-Y, all 7 letters')]},
+        {lane:'coach',n:'13',title:'Keeps a working list of examples in mind',desc:'Vitality \u00b7 presence \u00b7 joy \u00b7 connection \u00b7 confidence \u00b7 peace \u00b7 flow \u00b7 courage \u00b7 groundedness \u00b7 clarity \u00b7 aliveness \u00b7 warmth \u00b7 freedom \u00b7 fire.',chips:[]},
+        {lane:'coach',n:'14',title:'The live 20-minute list-building exercise lives in the Well-Being Game module',desc:'Same session, cross-referenced rather than duplicated here \u2014 opening question, handling silence, preserving exact words, the boundary-holding rules.',chips:[chip('loop','\u2192 Well-Being Game, Phase C')]},
+      ]},
+      {name:'E \u00b7 VALUES VS. QUALITIES \u2014 THE DISTINCTION', meta:'a comparison table + a litmus test', steps:[
+        {lane:'coach',n:'15',title:'Four-way comparison, held in mind',desc:'What it is: chosen principle vs. universal state. Nature: chosen vs. fundamental. Stability: a moral compass, stable for years vs. dynamic, shifting daily. Change: rarely vs. constantly.',chips:[]},
+        {lane:'coach',n:'16',title:'States how they interact',desc:'\u201cActing in alignment with your core values is one of the most reliable ways to improve your well-being qualities.\u201d',chips:[]},
+        {lane:'coach',n:'17',title:'Runs the litmus test when a word sits on the boundary',desc:'\u201cIs this something I want to be \u2014 or something I want to feel?\u201d \u201cConnection\u201d often feels like a value but is really a well-being need for most people \u2014 the person who truly <i>values</i> connection will sacrifice time and comfort to build it, even when it\u2019s hard. That\u2019s the tell.',chips:[]},
+      ]},
+      {name:'F \u00b7 THE DRILLING DOWN TECHNIQUE', meta:'one move, two different destinations', steps:[
+        {lane:'coach',n:'18',title:'Same underlying move, different arrival signal',desc:'For a value: a principle \u2014 \u201cI am someone who\u2026\u201d For a quality: a felt state \u2014 \u201cwhen I\u2019m at my best, I feel\u2026\u201d Knowing which one you\u2019re drilling toward changes what \u201carrived\u201d sounds like.',chips:[chip('dec','one technique, two destinations')]},
+        {lane:'coach',n:'19',title:'Drilling for a value',desc:'Opens: \u201cWhat is most important to you in how you want to live and who you want to be?\u201d Drills with: \u201cWhat does that bring you?\u201d or \u201cWhat is the meaning of this for you?\u201d \u2014 repeated until they reach a character principle, not a concrete thing.',chips:[]},
+        {lane:'coach',n:'20',title:'A full worked example',desc:'Client names \u201csuccess.\u201d \u201cWhat does success bring you?\u201d \u2192 \u201cfulfilment.\u201d \u201cAnd what does fulfilment bring you?\u201d \u2192 the client runs out of further answers. That\u2019s the core value, pinpointed.',chips:[]},
+        {lane:'coach',n:'21',title:'Pushes for specificity once the value lands',desc:'\u201cFamily\u201d is fine, but \u201cestablishing a secure home for my kids\u201d is more usable. \u201cCourage\u201d is fine, but \u201cbeing a calculated risk-taker\u201d gives a sharper picture.',chips:[]},
+        {lane:'coach',n:'22',title:'Drilling for a quality',desc:'Opens: \u201cWhen you are at your absolute best \u2014 fully alive, thriving \u2014 what words describe how you feel inside?\u201d Drills with: \u201cAnd when you have that, what does that feel like in your body?\u201d \u2014 repeated until embodied and present-tense, not a behaviour.',chips:[]},
+        {lane:'coach',n:'23',title:'A live litmus test mid-drill',desc:'If the word sounds like a behaviour or commitment (\u201cbeing a good father,\u201d \u201cshowing up for my team\u201d) \u2014 it\u2019s probably a value. If it\u2019s an inner texture (\u201caliveness,\u201d \u201cpeace,\u201d \u201cfire\u201d) \u2014 it\u2019s probably a quality.',chips:[]},
+      ]},
+      {name:'G \u00b7 NARROWING & RECORDING', meta:'two different numbers, on purpose', steps:[
+        {lane:'client',n:'24',title:'Values: 5\u201310 identified, narrowed to 3\u20135',desc:'The smaller set is specifically for Decision Tool use \u2014 order can change and missing values can be added later, this isn\u2019t a one-time lock.',chips:[chip('loop','\u2192 Decision Tool')]},
+        {lane:'client',n:'25',title:'Qualities: 8\u201310 selected',desc:'Not narrowed further \u2014 this is the full tracked set, refined session by session as the client evolves. Matches the Well-Being Game module exactly.',chips:[]},
+        {lane:'notion',n:'26',title:'Recorded on the Coaching Page and in both databases',desc:'Values DB and Qualities / Well-Being Game DB. The source page also names \u201cKey Results DB\u201d as a recording location \u2014 flagged below, since that doesn\u2019t match what\u2019s documented elsewhere.',chips:[chip('w','WRITE Values DB, Qualities DB, Coaching Page')]},
+      ]},
+      {name:'H \u00b7 OPTIONAL DEEPER WORK', meta:'only when a client wants to go further', steps:[
+        {lane:'coach',n:'27',title:'Values behind actions',desc:'List 10 actions from the coming or past week \u2014 a meeting, driving a child to practice, the gym \u2014 and find the value beneath each. Genuinely activating; try it on yourself before a client.',chips:[]},
+        {lane:'coach',n:'28',title:'Mining the Life Purpose stories a second time',desc:'\u201cWhich of your values motivated you in this experience?\u201d \u2014 asked retroactively against stories already captured, the same move Guidelines uses to mine the same stories for a different artefact.',chips:[chip('loop','\u2194 Life Purpose stories')]},
+        {lane:'coach',n:'29',title:'Connecting to Guidelines already written',desc:'Examines which values connect most strongly to guidelines that have already emerged through coaching.',chips:[chip('loop','\u2194 Guidelines')]},
+        {lane:'coach',n:'30',title:'The deeper values exercise, if they want it',desc:'Maps underlying values against 8 recent purchases, 5 actions this past week, and 3 recent choices \u2014 then asks simply: \u201cwhat have you discovered?\u201d',chips:[]},
+      ]},
+    ],
+    tableHead:['Database','Space','Read / Write','Role in this module'],
+    table:[
+      ['Values DB','Backend','WRITE','5\u201310 identified values, narrowed to a top 3\u20135 for the Decision Tool'],
+      ['Qualities DB','Backend','WRITE \u00b7 READ','5-category reference menu; 8\u201310 selected per client'],
+      ['Well-Being Game DB','Backend','WRITE','Where the selected qualities live day to day \u2014 see that module'],
+      ['Life Purpose DB','Backend','READ','What values and qualities are drawn from, and mined a second time for values'],
+      ['Visions DB','Backend','READ','Context for the conversation'],
+      ['Guidelines DB','Backend','READ','Cross-checked against values in the optional deeper work'],
+    ],
+    notes:[
+      '<b>Values = the why, Qualities = the how</b> \u2014 Dinesh\u2019s framing, confirmed directly by this source page: purpose activates the body, values activate the head, qualities confirm both are aligned.',
+      '<b>The earlier \u201ctop 5 for both\u201d framing in this module was wrong \u2014 now corrected.</b> This page states plainly: values run 5\u201310 identified, narrowed to a top <b>3\u20135</b> specifically for the Decision Tool. Qualities run <b>8\u201310</b>, not narrowed further. This resolves the discrepancy flagged when Well-Being Game was rebuilt \u2014 that flag can be considered closed.',
+      '<b>Two different CAA pre-session mechanisms, not one</b> \u2014 worth keeping distinct. The general Pre-Session Prompt run before <i>every</i> session surfaces informal Values/Qualities hypotheses as background for Dinesh. The dedicated Well-Being Game Setup prompt (see that module) is a separate, formal, evidence-gated pipeline that actually creates the Well-Being Game DB rows. They serve different purposes even though both draw on the same transcripts.',
+      'The source page states both are recorded to \u201cthe Coaching Page and Key Results DB.\u201d <b>Key Results DB doesn\u2019t match</b> what\u2019s documented elsewhere in this system for values/qualities storage (Values DB, Qualities DB) \u2014 flagged as-is rather than silently corrected, since it\u2019s Dinesh\u2019s own reference page.',
+      'The \u201cflashcards, client picks\u201d framing from the earlier draft wasn\u2019t wrong so much as incomplete \u2014 the real technique underneath is the <b>Drilling Down</b> method (Phase F), which is a live conversational drill, not a card-sort.',
+    ],
+  },
+
+  dec:{
+    layer:'Foundation · Decisions', layerColor:'#b07d2c', layerBg:'#f6e9d3',
+    title:'Decisions — the Decision Tool',
+    desc:'A weighted-choice tool for thinking a decision through. Each option is scored across four lenses — Energy, Practicality, Purpose and Values — and the Values lens pulls in the client’s own scored values. It’s the one Foundation surface the client actively uses (in the CCA’s Explore mode).',
+    flowTitle:'THE DECISION TOOL — AT A GLANCE',
+    flow:[
+      {type:'node',text:'A decision to think through',style:'anchor'},
+      {type:'arrow'},{type:'node',text:'List the options'},
+      {type:'arrow'},{type:'node',text:'Score each option on four lenses'},
+      {type:'tree',cols:[
+        {top:'Energy',bottom:'does it energise?'},
+        {top:'Practicality',bottom:'is it doable?'},
+        {top:'Purpose · Values',bottom:'uses scored values'},
+      ]},
+      {type:'arrow'},{type:'node',text:'Weighted total per option'},
+      {type:'arrow'},{type:'node',text:'A clearer choice',style:'anchor'},
+    ],
+    phases:[
+      {name:'A · SET IT UP', meta:'name the decision', steps:[
+        {lane:'client',n:'1',title:'Name the decision + the options',desc:'What is being decided, and what are the candidate options?',chips:[]},
+        {lane:'notion',n:'2',title:'Pull in the scored values',desc:'The Values lens draws on the client’s own values and their “how much?” scores.',chips:[chip('r','READ Values')]},
+      ]},
+      {name:'B · SCORE THE OPTIONS', meta:'four lenses', steps:[
+        {lane:'client',n:'3',title:'Score across the four lenses',desc:'Each option is rated on Energy, Practicality, Purpose and Values.',chips:[]},
+        {lane:'notion',n:'4',title:'Weighted total per option',desc:'The scores combine into a weighted total — the Values weight comes from the client’s scored values.',chips:[chip('w','WRITE Decisions DB')]},
+      ]},
+      {name:'C · DECIDE', meta:'a tool, not an oracle', steps:[
+        {lane:'client',n:'5',title:'The clearest option shows itself',desc:'The highest-weighted option points the way — the client still decides.',chips:[]},
+        {lane:'cca',n:'6',title:'The CCA can walk it through',desc:'In Explore mode the CCA helps the client reason through the decision.',chips:[chip('note','CCA · companion'),chip('r','READ Decisions')]},
+      ]},
+    ],
+    tableHead:['Database','Space','Read / Write','Role in this module'],
+    table:[
+      ['Decisions DB','Backend','WRITE (via Decision Tool)','The weighted-choice working: options × four lenses'],
+      ['Values DB','Backend','READ','The Values lens — the client’s scored values'],
+      ['Life Area','Look-up','READ','The area the decision sits in'],
+      ['Sessions DB','Backend','READ','Where the decision was worked'],
+    ],
+    notes:[
+      'This is the <b>one Foundation surface the client writes to</b> — the Decision Tool, used in the CCA’s Explore mode. Everything else in the Foundation is view-only.',
+      'Scoring lenses: <b>Energy · Practicality · Purpose · Values</b>. The Values lens is fed by the client’s scored values, so decisions stay true to what matters to them.',
+      'Scheduled for <b>Phase 1B</b> (Tab 4 · Tools & Reference).',
+    ],
+  },
+
+  poss:{
+    layer:'Foundation · Annual Possibilities', layerColor:'#b07d2c', layerBg:'#f6e9d3',
+    title:'Annual Possibilities — the year’s holding list',
+    desc:'A wide holding list of possibilities for the year, per life area — everything that could be worth doing, before committing to anything. When a possibility is chosen it moves to Annual Choices, keeping the trail from idea to commitment.',
+    flowTitle:'ANNUAL POSSIBILITIES — AT A GLANCE',
+    flow:[
+      {type:'node',text:'Per life area, brainstorm the year',style:'anchor'},
+      {type:'arrow'},{type:'node',text:'A wide holding list (nothing committed)'},
+      {type:'arrow'},{type:'node',text:'Sit with it — not everything is chosen'},
+      {type:'arrow'},{type:'node',text:'Choose the ones to commit to'},
+      {type:'label',text:'chosen → moves to Annual Choices'},
+      {type:'node',text:'Annual Choices',style:'db'},
+    ],
+    phases:[
+      {name:'A · BRAINSTORM', meta:'wide and uncommitted', steps:[
+        {lane:'coach',n:'1',title:'Open each life area',desc:'For each area that matters, what’s possible this year? Kept wide on purpose.',chips:[chip('r','READ Life Area')]},
+        {lane:'client',n:'2',title:'Name the possibilities',desc:'Everything that could be worth doing — no commitment yet.',chips:[]},
+        {lane:'notion',n:'3',title:'Each possibility → a row',desc:'Captured against its life area, in the year’s holding list.',chips:[chip('w','WRITE Annual Possibilities DB')]},
+      ]},
+      {name:'B · HOLD & CHOOSE', meta:'the trail to commitment', steps:[
+        {lane:'client',n:'4',title:'Sit with the list',desc:'Not everything gets chosen — that’s the point of a holding list.',chips:[]},
+        {lane:'coach',n:'5',title:'Choose → flip “Moved to Choices”',desc:'Choosing a possibility flags it and carries it forward.',chips:[]},
+        {lane:'notion',n:'6',title:'It becomes an Annual Choice',desc:'The chosen possibility moves to Annual Choices, keeping a link back to where it came from.',chips:[chip('loop','→ Annual Choices')]},
+      ]},
+    ],
+    tableHead:['Database','Space','Read / Write','Role in this module'],
+    table:[
+      ['Annual Possibilities DB','Backend','WRITE','The year’s holding list, per life area'],
+      ['Life Area','Look-up','READ','Each possibility is tagged to an area'],
+      ['Annual Choices DB','Backend','WRITE-forward','Where a chosen possibility goes'],
+      ['Master List','Backend','READ','The client key that filters the list'],
+    ],
+    notes:[
+      'Per life area, and <b>view-only for the client</b> — built with Dinesh in the foundation sessions.',
+      'The <b>“Moved to Choices”</b> flag keeps the trail from idea to commitment, so every choice can be traced back to the possibility it started as.',
+    ],
+  },
+
+  cho:{
+    layer:'Foundation · Annual Choices', layerColor:'#b07d2c', layerBg:'#f6e9d3',
+    title:'Annual Choices — the year’s commitments',
+    desc:'The committed annual goals. Each Annual Choice links back to the possibility it came from and forward to the Vision it serves — so every yearly commitment stays anchored to the bigger picture. These committed choices shape the results the client then plays fortnightly.',
+    flowTitle:'ANNUAL CHOICES — AT A GLANCE',
+    flow:[
+      {type:'node',text:'A chosen possibility'},
+      {type:'arrow'},{type:'node',text:'Commit → an Annual Choice',style:'anchor'},
+      {type:'label',text:'it points both ways'},
+      {type:'tree',cols:[
+        {top:'Back to',bottom:'its source Possibility'},
+        {top:'Forward to',bottom:'the Vision it serves',style:'anchor'},
+      ]},
+      {type:'arrow'},{type:'node',text:'Shapes the year’s results'},
+      {type:'arrow'},{type:'node',text:'Played fortnightly in the Results Game'},
+    ],
+    phases:[
+      {name:'A · COMMIT', meta:'idea → commitment', steps:[
+        {lane:'client',n:'1',title:'Turn a possibility into a commitment',desc:'A chosen Annual Possibility becomes a committed annual goal.',chips:[chip('r','READ Annual Possibilities')]},
+        {lane:'notion',n:'2',title:'Write the Annual Choice',desc:'Saved with its Source Possibility and Vision Connection.',chips:[chip('w','WRITE Annual Choices DB')]},
+      ]},
+      {name:'B · IT POINTS BOTH WAYS', meta:'the through-line', steps:[
+        {lane:'notion',n:'3',title:'Back to its Possibility',desc:'The source link keeps the trail from idea to commitment.',chips:[chip('r','READ Annual Possibilities')]},
+        {lane:'notion',n:'4',title:'Forward to its Vision',desc:'Every commitment points at the vision it serves — staying purpose-anchored.',chips:[chip('r','READ Visions')]},
+      ]},
+      {name:'C · INTO THE YEAR', meta:'foundation feeds the engine', steps:[
+        {lane:'coach',n:'5',title:'The choices shape the year’s results',desc:'The year’s commitments become the results that get played, fortnight by fortnight.',chips:[chip('loop','→ Results Game')]},
+        {lane:'cca',n:'6',title:'The CCA keeps the client oriented',desc:'It reads the choices (with vision and purpose) to keep the client pointed the right way.',chips:[chip('note','CCA · companion'),chip('r','READ Annual Choices')]},
+      ]},
+    ],
+    tableHead:['Database','Space','Read / Write','Role in this module'],
+    table:[
+      ['Annual Choices DB','Backend','WRITE · READ (CCA)','Committed annual goals — the year’s commitments'],
+      ['Annual Possibilities DB','Backend','READ','The possibility each choice came from'],
+      ['Visions DB','Backend','READ','The vision each choice serves'],
+      ['Results Game','Backend','forward','What the committed choices become, fortnightly'],
+    ],
+    notes:[
+      'Every commitment <b>points back to a possibility and forward to a vision</b> — the through-line from purpose to yearly action.',
+      'This is where the <b>Foundation feeds the Engine</b>: the year’s committed choices shape the results played in the fortnightly game.',
+    ],
+  },
+
+  rg:{
+    layer:'Engine · Results Game', layerColor:'#9a3f3f', layerBg:'#f6dede',
+    title:'Results Game \u2014 in full depth',
+    desc:'The \u201cdoing\u201d game, and the backbone of every gap between sessions. The client sorts their life areas by priority for a 2\u20133 week window, commits to one doing and one being result per top area, then at the next meeting there are only two scores per item \u2014 got it, or did not. What did <i>not</i> get done is where the next Guideline for Living comes from. Sourced from Dinesh\u2019s own talk track, the Results Game coachable-moments reference, the Post Results Game Email template, the (unbuilt) Game Scorecard Prompt, and Master SOP Stage 8.',
+    flowTitle:'THE RESULTS GAME \u2014 AT A GLANCE',
+    flow:[
+      {type:'node',text:'\u201cLet\u2019s start the engine tonight\u201d'},
+      {type:'arrow'},{type:'node',text:'Life Area Cards sorted, top \u2192 bottom'},
+      {type:'arrow'},{type:'node',text:'One doing + one being result per top area',style:'anchor'},
+      {type:'label',text:'being \u2265 doing in weight \u00b7 must be within their control'},
+      {type:'arrow'},{type:'node',text:'3 commitment questions, read back slowly'},
+      {type:'arrow'},{type:'node',text:'Live it (2\u20133 weeks)'},
+      {type:'arrow'},{type:'node',text:'Next session: Well-Being check-in first'},
+      {type:'arrow'},{type:'node',text:'Then debrief \u2014 got it, or did not',style:'anchor'},
+      {type:'label',text:'15 named coachable-moment cues, one per pattern'},
+      {type:'tree',cols:[
+        {top:'Overall %',bottom:'items achieved \u00f7 total items'},
+        {top:'Priority %',bottom:'points achieved \u00f7 total points'},
+        {top:'Game Period row',bottom:'a trend over 7\u20138'},
+      ]},
+      {type:'arrow'},{type:'node',text:'Reflect \u2192 Guideline for Living',style:'anchor'},
+      {type:'arrow'},{type:'node',text:'Next Results Game built, same session'},
+    ],
+    phases:[
+      {name:'A \u00b7 OPENS THE ENGINE', meta:'Dinesh\u2019s exact talk track', steps:[
+        {lane:'coach',n:'1',title:'\u201cLet\u2019s start the engine tonight\u201d',desc:'\u201cThe Results Game is simple \u2014 and it will become the backbone of the work between sessions. Every two to three weeks, you sort your life areas in order of priority for that period \u2014 not for your whole life, just for this window.\u201d',chips:[]},
+        {lane:'coach',n:'2',title:'States the two-score rule up front',desc:'\u201cThen for each of the top areas, you name one doing result and one being result. That is the Game. After the period, we review. There are only two scores: got it, or did not get it. And whatever did not get done \u2014 that is where your next Guideline for Living comes from.\u201d',chips:[chip('dec','only two scores: got it, or did not')]},
+        {lane:'coach',n:'3',title:'Hands over the Life Area Cards',desc:'Shares the link or screen. \u201cTake these. Put them in order for the next two to three weeks. Most important to least important. The top and the bottom matter more than the middle. Take your time.\u201d',chips:[chip('r','READ Life Area')]},
+        {lane:'client',n:'4',title:'Sorts the cards',desc:'A few areas, ranked \u2014 they\u2019re not equal for this window.',chips:[]},
+        {lane:'coach',n:'5',title:'\u201cTell me what you notice about that order\u201d',desc:'A reflection prompt, not a rubber stamp \u2014 the order itself is often revealing.',chips:[]},
+      ]},
+      {name:'B \u00b7 BUILD THE RESULTS', meta:'top 2\u20133 areas, doing + being', steps:[
+        {lane:'coach',n:'6',title:'Builds doing and being results for the top areas',desc:'Full talk track lives in the Results Game reference doc, Sections 3\u20135 \u2014 not reproduced here since it\u2019s the primary source, not a summary of it.',chips:[]},
+        {lane:'coach',n:'7',title:'Being results carry at least equal weight to doing',desc:'A Master SOP rule, not optional \u2014 the game is not just a to-do list.',chips:[chip('dec','being \u2265 doing, always')]},
+        {lane:'coach',n:'8',title:'Every result stays inside the client\u2019s control',desc:'Coachable \u2014 the same control test used for Key Results.',chips:[chip('dec','fully coachable, no dependency on others')]},
+        {lane:'coach',n:'9',title:'Flashes the Key Results as anchor',desc:'Reminds them of the 6-month goals from the Exploratory \u2014 the fortnight\u2019s results tie back, not reinvent.',chips:[chip('r','READ Key Results'),chip('loop','tied to Key Results')]},
+        {lane:'coach',n:'10',title:'Reads the list back slowly, then asks three commitment questions',desc:'\u201cAre these the most important things for you in the next two to three weeks? Do you agree to bring full effort to each of these? How do these connect to the larger direction you are moving toward?\u201d',chips:[]},
+        {lane:'coach',n:'11',title:'Closes the Game',desc:'\u201cGood. We will open our next session by reviewing what happened with each of these. There are only two scores: got it, or did not get it. And when we look at what did not get done \u2014 that is where your next Guideline for Living comes from.\u201d',chips:[]},
+      ]},
+      {name:'C \u00b7 CAPTURED, THEN LIVED', meta:'2\u20133 weeks', steps:[
+        {lane:'notion',n:'12',title:'Results captured with priority order and points',desc:'Points assigned in reverse by priority order \u2014 top item gets the most points, bottom item the fewest (e.g. 8 items \u2192 8, 7, 6\u2026down to 1).',chips:[chip('w','WRITE Results Game DB'),chip('man','points = reverse of priority order')]},
+        {lane:'client',n:'13',title:'Lives it',desc:'Real life between sessions \u2014 no check-in required to \u201ccount.\u201d',chips:[]},
+        {lane:'cca',n:'14',title:'CCA supports between sessions',desc:'Reminds the client of their Results Game, reflects their own words back to them \u2014 per Master SOP Stage 8. Does not score or judge.',chips:[chip('note','CCA \u00b7 companion')]},
+      ]},
+      {name:'D \u00b7 NEXT SESSION \u2014 DEBRIEF & SCORE', meta:'well-being first, then the game', steps:[
+        {lane:'coach',n:'15',title:'Opens with the Well-Being Game check-in',desc:'Master SOP Stage 8 orders the cycle this way on purpose \u2014 feeling state first, then the doing debrief.',chips:[chip('loop','\u2190 Well-Being Game check-in')]},
+        {lane:'coach',n:'16',title:'Reviews each result \u2014 got it, or did not',desc:'For \u201cgot it,\u201d one question: what resources helped that are worth remembering next time. For everything else, the coachable-moment cue that fits.',chips:[]},
+        {lane:'coach',n:'17',title:'Runs the matching coachable-moment cue',desc:'15 named patterns \u2014 absolute language, out-of-control results, not measurable, bundled results, and more. Full reference table below.',chips:[chip('dec','15 named cues, signal \u2192 ask \u2192 guideline')]},
+        {lane:'coach',n:'18',title:'Calculates Overall % and Priority %',desc:'Overall = items achieved \u00f7 total items (e.g. 5 of 8 = 62.5%). Priority = points achieved \u00f7 total points (e.g. 21 of 36 = 58.3%) \u2014 weighted toward what mattered most.',chips:[]},
+        {lane:'coach',n:'19',title:'Enters both scores by hand, today',desc:'Semi-automated in practice: Dinesh calculates and manually inputs. Explicitly decided not worth automating yet \u2014 the 2026-08-21 50x rule was tested against this exact step.',chips:[chip('man','manual today, by decision not oversight')]},
+        {lane:'notion',n:'20',title:'Row in the Game Period DB',desc:'Both scores logged each meeting \u2014 a trend builds over 7\u20138 meetings.',chips:[chip('w','WRITE Game Period DB')]},
+      ]},
+      {name:'E \u00b7 THE REAL PAYOFF \u2014 LEARNING, NOT ACHIEVEMENT', meta:'this is the actual point', steps:[
+        {lane:'coach',n:'21',title:'Extracts 1\u20133 Guidelines from the debrief',desc:'\u201cWhat helped you achieve it? If not \u2014 what was the learning?\u201d In the client\u2019s own words, never the coach\u2019s.',chips:[]},
+        {lane:'notion',n:'22',title:'Captured as Guidelines for Living',desc:'The learning becomes a durable principle, not a scorecard footnote.',chips:[chip('w','WRITE Guidelines DB'),chip('loop','\u2192 Guidelines')]},
+        {lane:'coach',n:'23',title:'Builds the next Results Game, same session',desc:'The cycle repeats immediately \u2014 new priorities, new doing/being results, same rules.',chips:[chip('loop','\u2192 back to Phase A')]},
+      ]},
+      {name:'F \u00b7 AFTER THE SESSION', meta:'two prompts \u2014 one real, one still on paper', steps:[
+        {lane:'caa',n:'24',title:'Runs Post-Session (Post Call) \u2014 the generic 5-step',desc:'Same sequence as every session \u2014 Sessions DB, Coach Workspace, Client Daily Home, Action Items, Master Network.',chips:[chip('note','Claude \u00b7 coach-assist')]},
+        {lane:'caa',n:'25',title:'Drafts the Post Results Game Email',desc:'Four jobs: puts the game in the client\u2019s hands in writing, anchors the doing/being frame, offers 3\u20134 light \u201cinvitations to notice\u201d drawn only from the session, confirms the next session.',chips:[chip('note','Claude \u00b7 coach-assist')]},
+        {lane:'notion',n:'26',title:'Uses a screenshot, never typed text',desc:'A snip of the client\u2019s actual Results Game view, Doing + Being columns \u2014 so it reads as their own space, not a re-typed summary.',chips:[]},
+        {lane:'coach',n:'27',title:'Approves before it sends',desc:'Same rule as every other agent-drafted communication in this system \u2014 not restated on this specific page, but consistent throughout.',chips:[chip('gate','Dinesh approval, by established pattern')]},
+        {lane:'notion',n:'28',title:'Visions section joins permanently, once ready',desc:'Once the Life Purpose statement has fully landed and Visions are built, a Visions screenshot is added \u2014 and stays in every future email for that client.',chips:[chip('loop','\u2190 Visions, once complete')]},
+        {lane:'caa',n:'29',title:'Game Scorecard Prompt \u2014 the planned replacement for step 19',desc:'Would capture both games in one pass right after the debrief: Results Game score, status, debrief note, and learning per item; Well-Being score, previous score, trend, and session note per quality \u2014 both parts gated for approval before any write.',chips:[chip('note','Claude \u00b7 coach-assist')],planned:true},
+        {lane:'coach',n:'30',title:'Locked so far, undesigned so far',desc:'Locked: kept separate from Post-Call; covers both games together; runs right after debrief while scores are fresh; writes to Results Game DB + Well-Being Game DB. Still undesigned: the exact step flow, how Previous Score carries forward, the trend calculation, and the approval wording itself.',chips:[]},
+      ]},
+    ],
+    refTableTitle:'Reference \u2014 15 coachable-moment cues for the debrief',
+    refTableHead:['Cue','Signal you\u2019ll see','What you ask','Guideline that emerges'],
+    refTable:[
+      ['1 \u00b7 Result achieved','Client proudly shares they succeeded \u2014 and more','What resources did you use that you want to remember next time?','I have and use [resources] that enable me to succeed'],
+      ['2 \u00b7 Allow credit for progress','Didn\u2019t get it, but made real progress','What have you learned about writing results so you can credit progress?','I write results that let me credit what I accomplish'],
+      ['3 \u00b7 Overwhelmed / procrastinating','Too many options, stuck, can\u2019t begin','What would the first step have been? Which sounds easier?','I commit to only the first step before the second'],
+      ['4 \u00b7 Rigid absolute language','Used all / always / never / every, and it broke the result','Which word prevented you from succeeding?','I represent results on a continuum, not an absolute'],
+      ['5 \u00b7 Conflicting values','Chose something that contradicted the result \u2014 a competing value won','Which value, given this circumstance, was the higher one?','I act consistent with my higher value'],
+      ['6 \u00b7 Intention vs. specific way','Hit the underlying intention, not the literal action written','Was your intention the action itself, or the outcome?','I choose whether to commit to the intention, or one specific way to reach it'],
+      ['7 \u00b7 Not measurable (doing)','Can\u2019t say a clean yes or no to whether they achieved it','What\u2019s missing that would make yes/no easy to answer?','My results are measurable'],
+      ['8 \u00b7 Out of client\u2019s control','Depended on someone else\u2019s choice','Who had control here? What was your part, specifically?','I only commit to the portion I fully control'],
+      ['9 \u00b7 No system for visibility','Forgot \u2014 simply didn\u2019t remember to do it','How often did you actually look at the list?','I look at my Results Game daily'],
+      ['10 \u00b7 Didn\u2019t allot enough time','\u201cI didn\u2019t have time\u201d','How do you decide whether you have enough time, before committing?','I check my calendar before I commit to something'],
+      ['11 \u00b7 Product vs. time result','Real effort and satisfaction, but the written outcome wasn\u2019t completed','What if you\u2019d committed to time spent, not the finished product?','Results can be written as an outcome, or as time spent'],
+      ['12 \u00b7 Ask for help','Lists reasons they couldn\u2019t do it alone','What else would you have tried with more support behind you?','I ask for help from those who can give it'],
+      ['13 \u00b7 Doing vs. being result','Progress happened, but they describe a feeling or energy gained instead','Was your intention to do something \u2014 or to be something?','I choose between writing a doing result and a being result'],
+      ['14 \u00b7 Multiple results bundled','Wants partial credit for one of several things listed as one item','How many separate results are actually inside this one item?','I keep results separate so I get credit for every piece'],
+      ['15 \u00b7 Not measurable (being)','\u201cSometimes yes, sometimes no\u201d \u2014 can\u2019t tell if they got it','How could you write it so you\u2019d know for sure?','I measure being results on a scale \u2014 1 to 10'],
+    ],
+    tableHead:['Database','Space','Read / Write','Role in this module'],
+    table:[
+      ['Results Game DB','Backend','WRITE','Priority-ordered results with reverse-assigned points'],
+      ['Game Period DB','Backend','WRITE','One row per meeting \u2014 Overall % and Priority %, a trend over 7\u20138'],
+      ['Key Results','Backend','READ','The 6-month goals each fortnight ties back to'],
+      ['Life Area','Look-up','READ','The areas chosen for the fortnight'],
+      ['Well-Being Game DB','Backend','READ','Checked at the open of every debrief, before the Results Game itself'],
+      ['Guidelines DB','Backend','WRITE','Where the learning lands'],
+    ],
+    notes:[
+      'The Results Game is about <b>working on habits</b> \u2014 helping the client set the right goals, connected to purpose and vision, then learn from them. It turns living into data: the trend itself becomes motivating.',
+      'App view Dinesh wants: the <b>current period</b> shown as life-area cards sorted by priority, with the period\u2019s start/end dates; prior periods archived below.',
+      '<b>Priority-score methodology, now fully resolved</b> \u2014 previously noted as \u201cto be shared.\u201d Points are assigned in reverse by priority order (top item = most points). Overall % = items achieved \u00f7 total items. Priority % = points achieved \u00f7 total points. A worked example: 8 items, 5 achieved = 62.5% overall; those 5 items happened to total 21 of 36 possible points = 58.3% priority.',
+      'Except for cue 1, every coachable-moment cue assumes the result was <b>not</b> achieved \u2014 that\u2019s deliberate. The debrief conversation is built around what didn\u2019t happen, since that\u2019s where the Guideline comes from.',
+      'The Game Scorecard Prompt is explicitly marked <b>not built</b> on its own source page \u2014 shown here with a dashed border and \u201cplanned\u201d tag for that reason. It would eventually replace today\u2019s manual scoring step, once designed.',
+    ],
+  },
+
+  wb:{
+    layer:'Engine · Well-Being Game', layerColor:'#9a3f3f', layerBg:'#f6dede',
+    title:'Well-Being Game \u2014 in full depth',
+    desc:'The \u201cbeing\u201d game, opened at the start of every session from the moment it\u2019s built. Where the Results Game tracks doing, this tracks feeling \u2014 8\u201310 qualities the client themselves named, scored 1\u201310 every time, until patterns and a rising baseline become visible. Sourced from the Well-Being Game module page (talk track, Q-U-A-L-I-T-Y framework, the qualities-building exercise), the Well-Being Game Setup prompt, and Master SOP Stages 5\u20136 and 8.',
+    flowTitle:'THE WELL-BEING GAME \u2014 AT A GLANCE',
+    flow:[
+      {type:'node',text:'CAA pre-reads transcripts \u2014 candidate qualities, evidenced'},
+      {type:'arrow'},{type:'node',text:'Dinesh approves \u2014 rows created, definition left blank'},
+      {type:'arrow'},{type:'node',text:'Live: Q-U-A-L-I-T-Y walkthrough',style:'anchor'},
+      {type:'label',text:'values = who I choose to be \u00b7 qualities = how I feel being that'},
+      {type:'arrow'},{type:'node',text:'\u201cWhen did you feel genuinely alive?\u201d'},
+      {type:'arrow'},{type:'node',text:'Builds to 8\u201310, client\u2019s exact words'},
+      {type:'arrow'},{type:'node',text:'Client Definition filled in',style:'anchor'},
+      {type:'arrow'},{type:'node',text:'Every session opens with the same scores'},
+      {type:'arrow'},{type:'node',text:'\u201cWhat made you shift?\u201d'},
+      {type:'tree',cols:[
+        {top:'Feeds Guidelines',bottom:'from the shift talk'},
+        {top:'Correlates',bottom:'with Results Game',style:'anchor'},
+        {top:'Baseline rises',bottom:'a 4 today, a 7 in 5 months'},
+      ]},
+    ],
+    phases:[
+      {name:'A \u00b7 SEEDED BEFORE THE LIVE SESSION', meta:'CAA prep, not a cold start', steps:[
+        {lane:'caa',n:'1',title:'Runs the Well-Being Game Setup prompt',desc:'Can start as early as 2+ sessions into Life Purpose. Reads every session transcript, Master Network, and the CIF \u2014 identifies feeling states and being-qualities the client has already named or demonstrated.',chips:[chip('note','Claude \u00b7 coach-assist'),chip('r','READ Sessions, Master Network, CIF')]},
+        {lane:'caa',n:'2',title:'Keeps only qualities with 2+ pieces of evidence',desc:'No padding to hit a number \u2014 the same evidence discipline as the Life Purpose values pass.',chips:[]},
+        {lane:'caa',n:'3',title:'Checks the Qualities DB, adds new entries first',desc:'Five categories: Inner State, Energy & Drive, Mind & Thinking, Character & Values, Relationships. A genuinely new quality gets added with a category before it\u2019s ever shown to Dinesh.',chips:[chip('w','WRITE Qualities DB (if new)')]},
+        {lane:'coach',n:'4',title:'Reviews the approval table',desc:'Quality \u00b7 Times Evident \u00b7 Evidence \u00b7 Category \u00b7 Exists in Qualities DB (Y/N) \u2014 held as informed background, not shown to the client.',chips:[chip('gate','Dinesh approval required')]},
+        {lane:'notion',n:'5',title:'Well-Being Game rows created \u2014 Client Definition left blank',desc:'Quality, Times Evident, Evidence, and Master List are filled in now. The Client Definition field stays empty on purpose \u2014 it\u2019s filled only after the client names it themselves, live.',chips:[chip('w','WRITE Well-Being Game DB (setup rows)')]},
+      ]},
+      {name:'B \u00b7 INTRODUCING QUALITIES, LIVE', meta:'the Q-U-A-L-I-T-Y framework', steps:[
+        {lane:'coach',n:'6',title:'Checks whether Values already covered the shared slide',desc:'If the Values session already showed it: short version \u2014 \u201ca quality is not a goal and not a behaviour, it\u2019s a felt state.\u201d If this is the first time: the full walkthrough.',chips:[]},
+        {lane:'coach',n:'7',title:'Walks Q-U-A-L-I-T-Y as an anchor, not a script',desc:'Qualitative (felt, not metric) \u00b7 Universal in need, personal in form (your word, not the dictionary\u2019s) \u00b7 Alive when values are honoured \u00b7 Lived, not listed (tracked 1\u201310 from session one) \u00b7 Indicators (a drop is information, not failure) \u00b7 Tied to values (a breach shows up as a dip within 2\u20133 weeks) \u00b7 Yours (8\u201310 that resonate).',chips:[chip('dec','Q-U-A-L-I-T-Y, all 7 letters')]},
+        {lane:'coach',n:'8',title:'States the key distinction plainly',desc:'\u201cValues answer: who am I choosing to be? Qualities answer: how do I feel when I\u2019m being that? One without the other is incomplete.\u201d',chips:[]},
+        {lane:'coach',n:'9',title:'Has a litmus test ready for when they\u2019re unsure',desc:'\u201cIs this something I want to be \u2014 or something I want to feel? Integrity is a value. Aliveness is a quality. Both matter \u2014 they live in different places.\u201d',chips:[]},
+      ]},
+      {name:'C \u00b7 BUILDING THE LIST', meta:'20 minutes, their exact words', steps:[
+        {lane:'coach',n:'10',title:'Opens with a felt-sense question, not a list request',desc:'\u201cThink of a moment \u2014 in the last few weeks, or in your Life Purpose stories \u2014 when you felt genuinely alive. Not accomplished. Not productive. Alive. What word describes how you felt inside?\u201d',chips:[chip('loop','\u2190 Life Purpose stories')]},
+        {lane:'coach',n:'11',title:'Waits \u2014 never suggests the word',desc:'\u201cGood\u201d gets pushed deeper (\u201cwhat kind of good?\u201d). Silence and looking down is correct, not stuck \u2014 kinesthetic primaries need a moment to retrieve the felt sense. Hold it.',chips:[]},
+        {lane:'client',n:'12',title:'Builds toward 8\u201310 words',desc:'Drawing from stories, work, family, relationships \u2014 \u201cthe moments that felt most real.\u201d',chips:[]},
+        {lane:'coach',n:'13',title:'Grounds every word before it goes on the list',desc:'\u201cSay more about that one. When does that quality show up for you?\u201d',chips:[]},
+        {lane:'coach',n:'14',title:'Preserves the exact word \u2014 never tidies it',desc:'\u201cBeing in the zone\u201d stays \u201cbeing in the zone,\u201d not \u201cflow.\u201d \u201cFired up\u201d stays \u201cfired up,\u201d not \u201centhusiasm.\u201d',chips:[chip('dec','client\u2019s exact word, never smoothed')]},
+        {lane:'coach',n:'15',title:'Redirects achievements back to the felt state',desc:'If the word is an accomplishment, not a feeling: \u201cand when that\u2019s happening \u2014 what does it feel like inside you?\u201d The answer is the real quality.',chips:[]},
+        {lane:'coach',n:'16',title:'Holds the boundary at the edges',desc:'Past 10: \u201cWhich of these feel most alive? Let\u2019s find the 8\u201310 that will serve as your dashboard.\u201d Under 5: reaches for the opposite-state, at-your-best, or in-your-element prompts.',chips:[]},
+        {lane:'notion',n:'17',title:'Captured \u2014 and the blank Client Definition finally fills in',desc:'This is the same row the CAA pre-seeded in Phase A; the client\u2019s own words complete it now, live.',chips:[chip('w','WRITE Well-Being Game DB (Client Definition)')]},
+      ]},
+      {name:'D \u00b7 THE ONGOING RHYTHM', meta:'from here, every single session', steps:[
+        {lane:'coach',n:'18',title:'Opens every session with the same question',desc:'\u201cSame list, same 1\u201310 scale, same question: how much of each quality have you experienced in the last two to three weeks overall?\u201d',chips:[]},
+        {lane:'coach',n:'19',title:'Names the three things this does',desc:'Early warning \u2014 a drop is information, not failure. Shared language \u2014 specific words and numbers, not \u201cI\u2019m not doing great.\u201d And the baseline rises \u2014 \u201cwhat scores a 4 today may become your 7 in five months.\u201d',chips:[chip('dec','early warning \u00b7 shared language \u00b7 rising baseline')]},
+        {lane:'coach',n:'20',title:'Sets the between-session rule',desc:'Formal score only at the start of each session. No need to score in between \u2014 unless something drops noticeably, there\u2019s a form for that. The pattern across sessions matters, not one day\u2019s reading.',chips:[]},
+      ]},
+      {name:'E \u00b7 SCORE & REFLECT', meta:'every ~3 weeks, alongside the Results Game', steps:[
+        {lane:'coach',n:'21',title:'Scores each quality 1\u201310',desc:'\u201cWhere do you feel you are on each?\u201d \u2014 same cadence as the Results Game debrief.',chips:[]},
+        {lane:'coach',n:'22',title:'\u201cWhat made you shift?\u201d',desc:'A deeper conversation about what moved the quality up or down since last time.',chips:[]},
+        {lane:'caa',n:'23',title:'Game Scorecard Prompt would capture this \u2014 not built yet',desc:'Planned Part 2: Score, Previous Score, Trend (Up/Stable/Down), Session Note per quality, gated for approval. Today, Dinesh enters both games\u2019 scores by hand \u2014 explicitly not worth automating yet, same 50x-rule decision as the Results Game side.',chips:[chip('note','Claude \u00b7 coach-assist')],planned:true},
+        {lane:'notion',n:'24',title:'Scores logged in the period, by hand today',desc:'Captured alongside the Results Game score in the same Game Period row.',chips:[chip('w','WRITE Well-Being Game DB'),chip('man','manual today, by decision not oversight')]},
+      ]},
+      {name:'F \u00b7 WHAT IT REVEALS', meta:'the trend, and the correlation', steps:[
+        {lane:'cca',n:'25',title:'Shift conversations feed Guidelines',desc:'What surfaces in the \u201cwhat shifted?\u201d talk becomes a candidate guideline \u2014 same guardrail as every other source.',chips:[chip('loop','\u2192 Guidelines')]},
+        {lane:'coach',n:'26',title:'Correlates with the Results Game',desc:'Doing well \u2194 feeling well. Some clients feel-first, some do-first; the pattern becomes clear over 6\u20137 engagements.',chips:[chip('r','READ Game Period DB')]},
+        {lane:'cca',n:'27',title:'Powers the visualisation Dinesh is most excited about',desc:'Next time the client feels off, they \u2014 and the CCA \u2014 check both games together and decide what to change.',chips:[chip('note','CCA \u00b7 companion')]},
+      ]},
+    ],
+    tableHead:['Database','Space','Read / Write','Role in this module'],
+    table:[
+      ['Well-Being Game DB','Backend','WRITE','Quality scores 1\u201310, Client Definition, evidence \u2014 seeded by CAA, completed live'],
+      ['Qualities DB','Backend','READ \u00b7 auto-WRITE','5-category reference menu; a genuinely new quality adds a row here first'],
+      ['Game Period DB','Backend','READ \u00b7 WRITE','Where results + well-being scores sit together'],
+      ['Sessions DB, Master Network, CIF','Backend','READ','What the Well-Being Game Setup prompt reads to find candidate qualities'],
+      ['Guidelines DB','Backend','WRITE','Where the shift-learnings land'],
+    ],
+    notes:[
+      'There is a <b>direct or indirect correlation</b> between the two games \u2014 the powerful visualisation Dinesh is most excited about. Over months it becomes a self-guiding tool the client carries for life.',
+      'App views Dinesh wants: a <b>well-being trend</b> and a combined <b>results + well-being trend</b> view.',
+      '<b>Resolved.</b> The Values & Qualities module (rebuilt 2026-08-24) confirms 8\u201310 is correct \u2014 the earlier \u201ctop 5\u201d there was carried over from the Values pattern without checking against this page. Priya\u2019s sandbox showing only 3 tracked qualities is a separate, still-open question \u2014 possibly an individual client\u2019s narrower real choice, not a system default; worth confirming with Dinesh rather than assumed either way.',
+      'Alternative names for the same artefact: Qualities of Life, Experience Indicators, Being Gauge.',
+      'The Game Scorecard Prompt is explicitly marked <b>not built</b> on its own source page \u2014 shown here with a dashed border and \u201cplanned\u201d tag, same treatment as on the Results Game side, since it\u2019s the same prompt covering both games.',
+    ],
+  },
+
+  gl:{
+    layer:'Engine · Guidelines for Living', layerColor:'#9a3f3f', layerBg:'#f6dede',
+    title:'Guidelines for Living \u2014 in full depth',
+    desc:'Over the engagement, the client builds a <b>personal operations manual</b> \u2014 distilled from real experience, never invented in the abstract. They surface from the Results Game, the Well-Being Game, regular coaching conversations, and even a second look back at the Life Purpose stories. The CCA can only propose one inside a defined guardrail; while the client is in <b>active coaching</b>, Dinesh crosschecks every one before it\u2019s final \u2014 that review stops at <b>graduation</b>, not before. Sourced from Dinesh\u2019s own written definition, the Prompt Reference, and Master SOP Stage 8.',
+    flowTitle:'GUIDELINES FOR LIVING \u2014 AT A GLANCE',
+    flow:[
+      {type:'tree',cols:[
+        {top:'Results Game',bottom:'debrief'},
+        {top:'Well-Being Game',bottom:'debrief'},
+        {top:'Any coaching talk',bottom:'or Life Purpose stories'},
+      ]},
+      {type:'arrow'},{type:'node',text:'\u201cWhat guideline allowed you to succeed \u2014 or would have helped?\u201d',style:'anchor'},
+      {type:'arrow'},{type:'node',text:'Client says it in their own words'},
+      {type:'label',text:'micro (one situation) or macro (generalized) \u2014 both valid'},
+      {type:'arrow'},{type:'node',text:'First person \u00b7 present tense \u00b7 personalized',style:'anchor'},
+      {type:'arrow'},{type:'node',text:'Dinesh crosschecks it \u2014 while coaching only'},
+      {type:'arrow'},{type:'node',text:'Deepened with 6 exploration questions'},
+      {type:'arrow'},{type:'node',text:'Saved',style:'db'},
+      {type:'label',text:'used later by \u2192'},
+      {type:'tree',cols:[
+        {top:'CCA guidance',bottom:'+ vision + purpose'},
+        {top:'End of engagement',bottom:'client makes sense of all of them',style:'anchor'},
+        {top:'After graduation',bottom:'self-directed, forever'},
+      ]},
+    ],
+    phases:[
+      {name:'A \u00b7 WHERE THEY COME FROM', meta:'distilled, never invented', steps:[
+        {lane:'coach',n:'1',title:'Distilled from experience, not invented in the abstract',desc:'Dinesh\u2019s own framing \u2014 a guideline is always mined from something that actually happened, never brainstormed cold.',chips:[chip('dec','distilled, not invented')]},
+        {lane:'coach',n:'2',title:'Three live sources, named explicitly',desc:'The Results Game, the Well-Being Game, or a regular coaching conversation \u2014 any of the three can surface one.',chips:[]},
+        {lane:'coach',n:'3',title:'Asks one of two exact questions',desc:'\u201cWhat guideline allowed you to succeed?\u201d or \u201cWhat guideline would have helped you not miss?\u201d \u2014 the second is asked far more often, since most debriefs start from a miss.',chips:[]},
+        {lane:'coach',n:'4',title:'A fourth source: mining the Life Purpose stories',desc:'Going back over the peak-fulfilment stories and asking what guideline was already in play during those successes \u2014 insight the client lived before it was ever named.',chips:[chip('loop','\u2190 Life Purpose stories')]},
+        {lane:'cca',n:'5',title:'Also anytime via the CCA',desc:'\u201cIs there something here that could become a guideline?\u201d \u2014 captured in the client\u2019s own words, always inside the defined guardrail.',chips:[chip('note','CCA \u00b7 companion'),chip('w','WRITE Guidelines DB')]},
+      ]},
+      {name:'B \u00b7 MICRO OR MACRO \u2014 BOTH ARE REAL GUIDELINES', meta:'a distinction the earlier draft missed', steps:[
+        {lane:'coach',n:'6',title:'Micro guidelines \u2014 tied to one situation',desc:'\u201cI remember to take my eyeglasses prescription with me when I go to buy new frames.\u201d Specific, situational, still worth keeping.',chips:[]},
+        {lane:'coach',n:'7',title:'Macro guidelines \u2014 generalized, travels everywhere',desc:'\u201cIn order to be prepared, I anticipate my needs in advance.\u201d The same lesson, lifted to apply across life areas.',chips:[]},
+        {lane:'coach',n:'8',title:'Neither is more correct than the other',desc:'A client\u2019s manual holds both kinds side by side \u2014 the mix is what makes it theirs, not a template.',chips:[chip('dec','refines the earlier \u201cmust be broad\u201d guidance \u2014 see note below')]},
+      ]},
+      {name:'C \u00b7 HOW THEY\u2019RE WRITTEN & CHECKED', meta:'a taught technique + a coach crosscheck', steps:[
+        {lane:'coach',n:'9',title:'Written first person, active present tense, personalized',desc:'\u201cI feel better when I keep my word.\u201d Not a rule handed down \u2014 the client\u2019s own operating instruction to themself.',chips:[chip('dec','first person \u00b7 present tense \u00b7 personalized')]},
+        {lane:'coach',n:'10',title:'Stated positively, controllable, clear \u2014 the CCA\u2019s guardrail',desc:'No \u201cmaybe / I\u2019ll try.\u201d This is the boundary the CCA operates inside \u2014 it can\u2019t log just anything the client says as a guideline.',chips:[chip('dec','a taught technique'),chip('gate','CCA guardrail')]},
+        {lane:'client',n:'11',title:'In the client\u2019s own words',desc:'The CCA writes back exactly what the client says \u2014 never smoothed or rephrased.',chips:[chip('w','WRITE Guidelines DB')]},
+        {lane:'coach',n:'12',title:'Dinesh crosschecks it \u2014 while coaching only',desc:'Every guideline is reviewed before it\u2019s treated as final. This runs for the length of the engagement \u2014 it stops at graduation, not before.',chips:[chip('gate','while coaching only')]},
+      ]},
+      {name:'D \u00b7 DEEPENING A GUIDELINE, ONCE WRITTEN', meta:'a whole conversation, not just a save', steps:[
+        {lane:'coach',n:'13',title:'Explores it with up to six questions',desc:'\u201cHow will this be demonstrated \u2014 what evidence would we see or hear when you\u2019re living it? How or when will you use it? How will you make it real? What does it mean to you? How does it show up in your life? What possibilities are available to you now that you have it?\u201d',chips:[]},
+        {lane:'coach',n:'14',title:'Turns a captured line into something integrated',desc:'The difference between a guideline that gets logged and one that actually changes how the client moves.',chips:[]},
+      ]},
+      {name:'E \u00b7 HOW THEY\u2019RE USED', meta:'the memory at work', steps:[
+        {lane:'cca',n:'15',title:'The CCA reads them',desc:'Alongside the vision for that life area and the life purpose, to help the client think through a new situation.',chips:[chip('r','READ Guidelines + Visions + Life Purpose')]},
+        {lane:'client',n:'16',title:'During coaching: Dinesh-reviewed',desc:'Every new guideline is crosschecked for as long as the engagement is active.',chips:[chip('gate','coach crosscheck')]},
+        {lane:'client',n:'17',title:'After graduation: self-directed, forever',desc:'The client keeps writing and refining guidelines through the CCA on their own \u2014 no more crosscheck from Dinesh.',chips:[]},
+      ]},
+      {name:'F \u00b7 MAKING SENSE OF THEM, NEAR THE END', meta:'a late-engagement integration session', steps:[
+        {lane:'coach',n:'18',title:'Asks the client to organize all of them, once there are many',desc:'They\u2019ve spilled out across many separate meetings, tied to all sorts of results, with no inherent order. Toward the end of the engagement, the client is asked to build a formula, sequence, or structure that means something to <i>them</i>.',chips:[]},
+        {lane:'client',n:'19',title:'Finds their own organizing scheme',desc:'One client grouped by pre-action / during-action / post-action. Another by doing versus being. Another pulled out every well-being quality into its own cluster \u2014 no single right answer.',chips:[]},
+        {lane:'coach',n:'20',title:'Does two things at once',desc:'It forces a full review of everything they\u2019ve learned, and it brings integration and personal meaning \u2014 not just a list, a shape that\u2019s theirs.',chips:[chip('loop','\u2192 feeds Graduation prep')]},
+      ]},
+    ],
+    tableHead:['Database','Space','Read / Write','Role in this module'],
+    table:[
+      ['Guidelines DB','Backend','WRITE \u00b7 READ (CCA)','The client\u2019s principles for living \u2014 the system\u2019s memory'],
+      ['Life Purpose DB','Backend','READ','Read with a guideline to guide thinking \u2014 and mined directly as a fourth source'],
+      ['Visions DB','Backend','READ','The vision for the relevant life area'],
+      ['Game Period DB','Backend','READ','The games most guidelines come from'],
+    ],
+    notes:[
+      'Guidelines are the <b>back-end of the client\u2019s operating life system</b> \u2014 their principles for living, that outlast the coaching engagement.',
+      '<b>Correction to the 2026-08-18 decision:</b> that entry said guidelines \u201cmust be broad/generalizable, not tied to one specific life area.\u201d Dinesh\u2019s fuller write-up shows that\u2019s only half true \u2014 <b>micro guidelines</b> (tied to one situation) are just as real as <b>macro</b> ones. The positive/controllable/clear/no-hedging guardrail still holds for both; breadth doesn\u2019t. Worth updating that Decision Log entry to match \u2014 flagged, not changed yet.',
+      '<b>No dedicated CAA prompt exists for Guidelines</b>, unlike Life Purpose or Visions \u2014 confirmed against the Prompt Reference page. Capture happens live, either through the CCA\u2019s SAVE_READY signal in chat or Dinesh\u2019s direct capture during a session, never as a batch pass after the call.',
+      'Crosscheck window: Dinesh reviews every guideline while the client is in active coaching. That review stops at <b>graduation</b> \u2014 after that, the client writes and refines guidelines entirely on their own through the CCA.',
+      'Alternative names for the same artefact, in case any surface in client language: Ways of Winning (WOWs), Strategies for Winning, Life Lessons, Guidelines for Success, Success Factors, Best Practices, Keys to Success, Insights, Operational Life Principles, Modus Operandi (MO).',
+      'The four engine views Dinesh pictures together: current <b>Results Game</b>, <b>Well-Being Game</b>, a <b>trend</b> view, and <b>Guidelines for Living</b>.',
+    ],
+  },
+
+  proj:{
+    layer:'Phase 2 · Projects', layerColor:'#6a5a8a', layerBg:'#ece7f2',
+    title:'Projects — breaking an Annual Choice into a project',
+    desc:'<b>Phase 2 (planned — not built yet).</b> After the Annual Choices, Dinesh helps the client break a choice into a bigger <b>project</b>. His example: the annual choice “do an MBA” becomes a project. The project connects to its annual choice, the vision, and the life area — then Goal Planning breaks it into steps that are tracked fortnightly in the Results Game.',
+    flowTitle:'PROJECTS — WHERE THEY SIT',
+    flow:[
+      {type:'node',text:'An Annual Choice (e.g. “do an MBA”)',style:'anchor'},
+      {type:'arrow'},{type:'node',text:'Becomes a Project'},
+      {type:'label',text:'connects vision · coaching · results'},
+      {type:'arrow'},{type:'node',text:'Goal Planning breaks it into steps'},
+      {type:'arrow'},{type:'node',text:'Next 2–3 steps per fortnight'},
+      {type:'arrow'},{type:'node',text:'Tracked in the Results Game'},
+    ],
+    phases:[
+      {name:'A · IDENTIFY THE PROJECT', meta:'from an annual choice', steps:[
+        {lane:'coach',n:'1',title:'A project gets identified',desc:'In the coaching conversation, an annual choice is turned into a bigger project — e.g. “MBA”.',chips:[]},
+        {lane:'notion',n:'2',title:'Capture the project',desc:'The project is captured, connected to the annual choice it came from.',chips:[chip('w','WRITE Projects DB')]},
+      ]},
+      {name:'B · CONNECT IT', meta:'vision · coaching · results', steps:[
+        {lane:'notion',n:'3',title:'Establish the connections',desc:'Every project links to its annual choice, the vision it serves, and its life area — the connection between vision, coaching and results has to be established.',chips:[chip('r','READ Annual Choices + Visions + Life Area')]},
+      ]},
+      {name:'C · BREAK IT DOWN & TRACK', meta:'via Goal Planning + the game', steps:[
+        {lane:'coach',n:'4',title:'Use Goal Planning to break it into steps',desc:'The project is broken into steps using the Goal Planning process (see its tab). Example: MBA → entrance exam, find the institute, arrange financing…',chips:[]},
+        {lane:'client',n:'5',title:'Pick the next 2–3 steps',desc:'Each meeting, choose what to achieve between now and the next meeting.',chips:[]},
+        {lane:'cca',n:'6',title:'Tracked in the Results Game',desc:'The steps are tracked fortnightly; the CCA can show progress on the project.',chips:[chip('note','CCA · companion'),chip('loop','→ Results Game')]},
+      ]},
+    ],
+    tableHead:['Database','Space','Read / Write','Role in this module'],
+    table:[
+      ['Projects DB','Backend','WRITE','Each project, connected to its annual choice'],
+      ['Annual Choices DB','Backend','READ','The choice the project comes from'],
+      ['Visions DB','Backend','READ','The vision the project serves'],
+      ['Life Area','Look-up','READ','The area the project sits in'],
+      ['Results Game','Backend','forward','Where the project’s steps get tracked'],
+    ],
+    notes:[
+      '<b>Placement (Dinesh’s words):</b> life purpose → vision → annual possibilities → annual choice → <b>project</b> → goal planning → results game → intended results.',
+      '<b>Example:</b> annual choice “do an MBA” → MBA becomes a project → broken into steps (entrance exam, find the institute, financing…) → tracked every 2–3 weeks.',
+      '<b>Phase 2</b> — planned, not built yet.',
+    ],
+  },
+
+  goal:{
+    layer:'Phase 2 · Goal Planning', layerColor:'#6a5a8a', layerBg:'#ece7f2',
+    title:'Goal Planning — a process to think a goal through',
+    desc:'<b>Phase 2 (planned — not built yet).</b> A coaching process (an HTML form exists) Dinesh runs to help a client think a goal through before it becomes a project — is it well-formed, why it matters, what steps, and is it worth doing. In his words it’s “more of a coaching process than a front-end artifact.” Each goal sits in the Goals database; progress is retrievable through the CCA.',
+    flowTitle:'GOAL PLANNING — AT A GLANCE',
+    flow:[
+      {type:'node',text:'A goal (e.g. “do an MBA”)',style:'anchor'},
+      {type:'arrow'},{type:'node',text:'Well-formed? specific · measurable · attainable · positively stated · names how you want to be'},
+      {type:'arrow'},{type:'node',text:'Why it matters · what I’ll get · obstacles · support'},
+      {type:'arrow'},{type:'node',text:'A positive affirmation'},
+      {type:'arrow'},{type:'node',text:'Next 5 steps + by when'},
+      {type:'arrow'},{type:'node',text:'Worth my time, effort & money?',style:'anchor'},
+      {type:'label',text:'yes → go, tracked in the Results Game · no → drop'},
+    ],
+    phases:[
+      {name:'A · IS THE GOAL WELL-FORMED?', meta:'the first checks', steps:[
+        {lane:'coach',n:'1',title:'Define & test the goal',desc:'Name the goal, and check it is specific, measurable, attainable, positively stated, and names how you want to be.',chips:[]},
+        {lane:'client',n:'2',title:'Anchor it',desc:'How does it connect to your life purpose? Where are you now on it? Why is it important — said clearly?',chips:[chip('r','READ Life Purpose')]},
+      ]},
+      {name:'B · THINK IT THROUGH', meta:'depth before commitment', steps:[
+        {lane:'client',n:'3',title:'Payoff, obstacles, support',desc:'What are the five things I’ll get? What might get in the way, and how will I overcome it? What resources & support do I have — who’s done this, and how do I involve them?',chips:[]},
+        {lane:'client',n:'4',title:'A positive affirmation',desc:'A statement that keeps the client focused on achieving the goal.',chips:[]},
+      ]},
+      {name:'C · COMMIT & TRACK', meta:'steps, go/no-go, reward', steps:[
+        {lane:'client',n:'5',title:'Next five steps + by when',desc:'Define the steps and their timing; the next step connects to the Results Game.',chips:[chip('loop','→ Results Game')]},
+        {lane:'coach',n:'6',title:'Worth it? + a reward',desc:'Is it worth my time, effort and money? If yes, go; if not, don’t. Set a reward for when it’s achieved.',chips:[chip('dec','go / no-go')]},
+        {lane:'notion',n:'7',title:'Saved to the Goals DB',desc:'Each goal sits in the Goals database; progress is retrievable through the CCA.',chips:[chip('w','WRITE Goals DB')]},
+      ]},
+    ],
+    tableHead:['Database','Space','Read / Write','Role in this module'],
+    table:[
+      ['Goals DB','Backend','WRITE','Each goal the client sets, with its plan and progress'],
+      ['Life Purpose DB','Backend','READ','The goal is checked against it'],
+      ['Results Game','Backend','forward','Where the next steps get tracked'],
+    ],
+    notes:[
+      '<b>The full process (Dinesh’s 10 steps):</b> (1) define the goal · (2) well-formed — specific, measurable, attainable, positively stated, names how you want to be · (3) connected to life purpose? · (4) where am I now? · (5) why is it important? · (6) what will I get (five things)? · (7) obstacles + how to overcome · (8) resources & support · (9) a positive affirmation · (10) next five steps + by when → Results Game. Then: is it worth my time, effort & money? and a reward for achieving it.',
+      '<b>Open question:</b> “more of a coaching process than a front-end artifact” — the front-end is still to be decided. Dhruv suggested showing it on the front-end so the client can revisit why they set a goal, its outcomes, and revise it — and keep the template forever after coaching.',
+      '<b>Phase 2</b> — planned, not built yet.',
+    ],
+  },
+
+  hab:{
+    layer:'Phase 2 · Habits', layerColor:'#6a5a8a', layerBg:'#ece7f2',
+    title:'Habits — a daily tracker inside the life OS',
+    desc:'<b>Phase 2 (planned — not built yet).</b> A habit tracker. A habit comes from life purpose → vision → Results Game (e.g. “exercise 30 minutes every day”). The client lists their habits and clicks “done” each day; streaks and trends build up. Introduced later, once the Results Game is running — it completes the “life operating system”, everything in one place.',
+    flowTitle:'HABITS — AT A GLANCE',
+    flow:[
+      {type:'node',text:'A habit to build (e.g. “exercise 30 min daily”)',style:'anchor'},
+      {type:'label',text:'from life purpose → vision → Results Game'},
+      {type:'arrow'},{type:'node',text:'Listed in the tracker'},
+      {type:'arrow'},{type:'node',text:'Each day: click “done”'},
+      {type:'label',text:'a row per day in the Habits Log'},
+      {type:'arrow'},{type:'node',text:'Streaks & trends build up'},
+      {type:'arrow'},{type:'node',text:'Reviewed in the coaching meeting'},
+    ],
+    phases:[
+      {name:'A · SET THE HABIT', meta:'from a Results Game item', steps:[
+        {lane:'coach',n:'1',title:'Choose something to track',desc:'From a Results Game item (e.g. “work out 5 days a week”), the client chooses to track it as a habit.',chips:[chip('r','READ Results Game')]},
+        {lane:'notion',n:'2',title:'List it in HabitsDB',desc:'Each habit is listed in HabitsDB, connected to its life area.',chips:[chip('w','WRITE HabitsDB')]},
+      ]},
+      {name:'B · TRACK IT DAILY', meta:'one click a day', steps:[
+        {lane:'client',n:'3',title:'Click “done” each day',desc:'In the front-end tracker, the client marks the habit done — a very quick tap.',chips:[]},
+        {lane:'notion',n:'4',title:'A row in the Habits Log',desc:'Each “done” creates a row — date + which habit. This log is the source for all trends.',chips:[chip('w','WRITE Habits Log')]},
+        {lane:'notion',n:'5',title:'Streaks & trends',desc:'Streaks and trends are built from the Habits Log for the client to see.',chips:[]},
+      ]},
+      {name:'C · REVIEW TOGETHER', meta:'in the meeting', steps:[
+        {lane:'coach',n:'6',title:'Did you hit it?',desc:'In the meeting: did you achieve the habit? If yes, what made you do it? If no, what happened? — a coaching conversation.',chips:[]},
+        {lane:'cca',n:'7',title:'Part of the whole life OS',desc:'The CCA sees the habit data alongside everything else — vision down to everyday living, in one place.',chips:[chip('note','CCA · companion')]},
+      ]},
+    ],
+    tableHead:['Database','Space','Read / Write','Role in this module'],
+    table:[
+      ['HabitsDB','Backend','WRITE','Every habit the client tracks, connected to a life area'],
+      ['Habits Log','Backend','WRITE','One row per “done” (date + habit) — the source for trends'],
+      ['Life Area','Look-up','READ','Each habit is tied to a life area'],
+      ['Results Game','Backend','READ','Where the habit originates'],
+    ],
+    notes:[
+      '<b>Two databases:</b> HabitsDB (the list of habits) and Habits Log (a row each time “done” is clicked). The Log is the source for every streak and trend.',
+      'Introduced <b>after the Results Game is running</b>, not day one — it completes the life operating system, with everything in one place.',
+      '<b>Phase 2</b> — planned, not built yet.',
+    ],
+  },
+
+  recar:{
+    layer:'Phase 2 · Re-careering', layerColor:'#6a5a8a', layerBg:'#ece7f2',
+    title:'Re-careering — a career-clarity process',
+    desc:'<b>Phase 2 (planned — not built yet).</b> Like Goal Planning but focused on career. A process (an HTML form exists) Dinesh runs to help a client get clarity on what they really want in their career — from their top values, qualities and interests down to two or three specific, realistic roles, with actions tied to the Results Game. It’s a one-time conversation that only happens with the coach (the client can’t run it alone) and it stays with them forever. There is <b>no dedicated Notion database</b> — it’s a flow of conversation.',
+    flowTitle:'RE-CAREERING — AT A GLANCE',
+    flow:[
+      {type:'node',text:'Top values · qualities · interests (for career)',style:'anchor'},
+      {type:'arrow'},{type:'node',text:'Pick top 3–5 values, top 5 qualities, top 5 interests'},
+      {type:'arrow'},{type:'node',text:'Pick one value + one quality + one interest'},
+      {type:'arrow'},{type:'node',text:'Which roles fit? → shortlist 5–7 roles'},
+      {type:'arrow'},{type:'node',text:'~12 questions per role'},
+      {type:'arrow'},{type:'node',text:'Visualise the role (looks / feels like)'},
+      {type:'arrow'},{type:'node',text:'Narrow to 2–3 realistic roles',style:'anchor'},
+      {type:'arrow'},{type:'node',text:'3–4 actions → Results Game'},
+    ],
+    phases:[
+      {name:'A · START FROM WHO THEY ARE', meta:'values, qualities, interests', steps:[
+        {lane:'coach',n:'1',title:'Look at their career foundations',desc:'Start from the client’s top values, qualities and interests/skills for their career.',chips:[chip('r','READ Values + Qualities + Interests')]},
+        {lane:'client',n:'2',title:'Pick and narrow',desc:'From their top 10 values pick 3–5 for career; pick top 5 qualities and top 5 interests — then one of each.',chips:[]},
+      ]},
+      {name:'B · FIND THE ROLES', meta:'shortlist and interrogate', steps:[
+        {lane:'coach',n:'3',title:'Which roles fit?',desc:'Which roles/jobs fit that value + quality + interest — shortlist 5–7.',chips:[]},
+        {lane:'client',n:'4',title:'~12 questions per role',desc:'For each role, answer ~12 questions (interest maximised, type of organisation…), then find where that job actually is.',chips:[]},
+      ]},
+      {name:'C · MAKE IT REAL', meta:'narrow to real, realistic roles', steps:[
+        {lane:'coach',n:'5',title:'Visualise & narrow',desc:'A visualisation exercise — what the role looks and feels like — narrowing to 2–3 specific, realistic roles.',chips:[]},
+        {lane:'client',n:'6',title:'3–4 actions',desc:'Come up with 3–4 concrete actions — which are tied to the Results Game and tracked.',chips:[chip('loop','→ Results Game')]},
+      ]},
+    ],
+    tableHead:['Database','Space','Read / Write','Role in this module'],
+    table:[
+      ['Values DB','Backend','READ','Top values for career'],
+      ['Qualities DB','Backend','READ','Top qualities for career'],
+      ['Interests-Skills DB','Backend','READ','Top interests / skills'],
+      ['(No Re-careering DB)','—','—','A process, not a stored artifact'],
+      ['Results Game','Backend','forward','Where the 3–4 actions get tracked'],
+    ],
+    notes:[
+      '<b>No dedicated database</b> — re-careering is a flow of conversation, not a stored artifact. The actions it produces get tracked in the Results Game.',
+      'A <b>one-time conversation that only happens with the coach</b> — the client can’t run it alone — and the clarity stays with them forever.',
+      '<b>Open question (raised on the call):</b> how re-careering fits the architecture isn’t settled — Sanya to try it in a couple of places and see what fits.',
+      '<b>Phase 2</b> — planned, not built yet.',
+    ],
+  },
+
+  supp:{
+    layer:'Phase 2 · Support Network', layerColor:'#6a5a8a', layerBg:'#ece7f2',
+    title:'Support Network — mapping who can help',
+    desc:'<b>Phase 2 (planned — not built yet).</b> A ~30–40 minute exercise mapping the client’s people into an inner circle, significant support, and casual support — so that when they’re stuck, they know who to reach out to. It sits in the Support Network database (names + bracket + an A/B/C action), and the CCA uses it to nudge the client to ask the right person for help.',
+    flowTitle:'SUPPORT NETWORK — AT A GLANCE',
+    flow:[
+      {type:'node',text:'Map your people into three circles',style:'anchor'},
+      {type:'tree',cols:[
+        {top:'Inner circle',bottom:'closest support'},
+        {top:'Significant support',bottom:'important, reliable'},
+        {top:'Casual support',bottom:'lighter ties'},
+      ]},
+      {type:'label',text:'plus A/B/C per person: Avoid/reduce · Begin/increase · Continue'},
+      {type:'arrow'},{type:'node',text:'Four questions (missing? mutual? gaps? over-reliance?)'},
+      {type:'arrow'},{type:'node',text:'Saved to the Support Network DB'},
+      {type:'arrow'},{type:'node',text:'CCA nudges: “have you asked …?”'},
+    ],
+    phases:[
+      {name:'A · MAP THE NETWORK', meta:'~30–40 minutes', steps:[
+        {lane:'coach',n:'1',title:'Put people into three circles',desc:'The client places the important people in their life into inner circle, significant support, and casual support.',chips:[]},
+        {lane:'notion',n:'2',title:'Save names + bracket + A/B/C',desc:'Saved to the Support Network DB. Each person carries an A/B/C — A = avoid / reduce contact, B = begin / increase contact, C = continue maintaining (used for people who sit outside the circles too).',chips:[chip('w','WRITE Support Network DB')]},
+      ]},
+      {name:'B · FOUR QUESTIONS', meta:'quality, gaps, over-reliance', steps:[
+        {lane:'coach',n:'3',title:'Ask the four questions',desc:'Who’s missing that you’d want on the map? Would you appear on their map (is it mutual)? What support do you need that you don’t have? Is there a name you over-rely on?',chips:[]},
+        {lane:'client',n:'4',title:'Gaps become actions',desc:'A missing support (e.g. “no mentor”) or a contact to build becomes something to act on — often tied into the games.',chips:[chip('loop','→ Results / Well-Being Game')]},
+      ]},
+      {name:'C · USE IT WHEN STUCK', meta:'the point of the map', steps:[
+        {lane:'client',n:'5',title:'Look at the map',desc:'When stuck or needing help, the client checks the map — who to reach out to, quickly and structured.',chips:[]},
+        {lane:'cca',n:'6',title:'The CCA nudges for help',desc:'The CCA reads the map and nudges — “have you thought of asking [name] for help?” — especially when the client isn’t seeking enough help.',chips:[chip('note','CCA · companion'),chip('r','READ Support Network')]},
+      ]},
+    ],
+    tableHead:['Database','Space','Read / Write','Role in this module'],
+    table:[
+      ['Support Network DB','Backend','WRITE','Names + bracket (inner / significant / casual) + A/B/C action'],
+      ['Results / Well-Being Game','Backend','forward','Where “build this contact” actions get tracked'],
+      ['Life areas / context','Look-up','READ','What the CCA uses to nudge for the right help'],
+    ],
+    notes:[
+      '<b>The three circles:</b> inner circle · significant support · casual support. Plus an <b>A/B/C</b> per person (including those outside the circles): A = avoid / reduce contact, B = begin / increase contact, C = continue maintaining.',
+      '<b>The four questions:</b> who’s missing? · would you appear on their map (mutual)? · what support do you need that you don’t have? · any name you over-rely on?',
+      'The CCA uses the map to <b>nudge the client to seek help</b> from the right person when they’re stuck.',
+      '<b>Phase 2</b> — planned, not built yet.',
+    ],
+  },
+
+  close:{
+    layer:'Graduation \u00b7 Closing the Engagement', layerColor:'#8a6113', layerBg:'#f3e7c9',
+    title:'Closing the Client Engagement \u2014 in full depth',
+    desc:'Graduation is not an admin step \u2014 it\u2019s one of the most significant coaching acts of the whole program. Done well, it consolidates everything the client built, honours how far they\u2019ve come, and sends them forward with their own resources. Done poorly, the program just trails off. One session, six layers, worked in sequence but always at the client\u2019s pace. Sourced from the Closing the Client Engagement module page (Teri-E Belf, SUN Level 2), the Prompt Reference, and Master SOP Stage 9.',
+    flowTitle:'CLOSING THE ENGAGEMENT \u2014 AT A GLANCE',
+    flow:[
+      {type:'node',text:'Readiness: all modules + Results Game cycle complete'},
+      {type:'arrow'},{type:'node',text:'Session before: reviews all 6 artefacts together'},
+      {type:'arrow'},{type:'node',text:'Client presents the full system \u2014 coach witnesses',style:'anchor'},
+      {type:'label',text:'six layers, in sequence, at their pace'},
+      {type:'tree',cols:[
+        {items:['Overall \u2192 Feelings','Let them lead the close','Check completeness first']},
+        {items:['Learning \u2192 Celebration','The whole journey, not today','Honour specifically, not generally']},
+        {items:['Next Steps \u2192 Accountability','Life beyond the program','\u201cReady to go on yourself?\u201d',],style:'anchor'},
+      ]},
+      {type:'arrow'},{type:'node',text:'Grounding check \u2014 \u201cokay to go back into the real world?\u201d'},
+      {type:'arrow'},{type:'node',text:'CCA handed over \u2014 theirs for life',style:'anchor'},
+      {type:'label',text:'the door stays open \u2014'},
+      {type:'node',text:'Status: Graduated',style:'db'},
+    ],
+    phases:[
+      {name:'A \u00b7 WHEN THIS APPLIES', meta:'one session only, tightly scoped', steps:[
+        {lane:'coach',n:'1',title:'Readiness signals',desc:'Client has completed all modules and the Results Game cycle. The coach senses the program approaching natural completion. The client has started referencing life beyond the program on their own.',chips:[]},
+        {lane:'coach',n:'2',title:'Never used for a regular session close',desc:'These questions are too large for an individual meeting \u2014 they\u2019ll feel premature. Regular closes use Zone 11 of the Coaching Flow reference instead. This module is exclusively the final session.',chips:[chip('dec','program close \u2260 meeting close')]},
+        {lane:'coach',n:'3',title:'The CCA does not run this \u2014 coach only',desc:'Explicit scope line from the module itself: \u201cNo. Coach can only share with client.\u201d Not a task the agent is ever handed.',chips:[chip('dec','CCA scope: coach-only, not delegable')]},
+        {lane:'coach',n:'4',title:'One session, forty-five minutes',desc:'Same across every recommended journey type \u2014 Re-Careering, Midlife Reboot, Early Career, Next Chapter \u2014 the same four archetypes this whole practice is built around.',chips:[]},
+      ]},
+      {name:'B \u00b7 THE SESSION BEFORE \u2014 PRE-GRADUATION PREP', meta:'nothing here is a surprise on the day', steps:[
+        {lane:'coach',n:'5',title:'Reviews all six artefacts together',desc:'Life Purpose Statement, Visions by life area, Annual Committed Choices, Results Game, Well-Being Game, Guidelines for Living \u2014 the same six the client has been building the whole engagement.',chips:[chip('loop','\u2190 every prior module')]},
+        {lane:'coach',n:'6',title:'This is where the Guidelines \u201cmaking sense\u201d exercise naturally lands',desc:'The late-engagement integration session from the Guidelines module \u2014 organizing everything into a shape that means something to them \u2014 is the direct run-up to this one.',chips:[chip('loop','\u2190 Guidelines, Phase F')]},
+        {lane:'client',n:'7',title:'Runs a Results Game debrief independently',desc:'Brings it to the final session themselves \u2014 the first real proof of self-reliance, before graduation even formally begins.',chips:[]},
+      ]},
+      {name:'C \u00b7 THE GRADUATION SESSION', meta:'they present, you witness', steps:[
+        {lane:'client',n:'8',title:'Presents their full system',desc:'The coach witnesses. Does not lead, does not steer \u2014 this is the client running the show they built.',chips:[]},
+        {lane:'coach',n:'9',title:'Deepens the Life Purpose Statement one final time',desc:'Adds what the whole journey revealed \u2014 the last refinement, not a rewrite.',chips:[chip('loop','\u2190 Life Purpose')]},
+      ]},
+      {name:'D \u00b7 PROTECTING THE MOMENT', meta:'Teri\u2019s own coaching note, verbatim', steps:[
+        {lane:'coach',n:'10',title:'Protects emotional state \u2014 without skipping the learning',desc:'\u201cProtect the client\u2019s emotional state at close \u2014 but not at the cost of consolidating the learning. The client doesn\u2019t have to leave jumping for joy. Trust that they can handle their emotions after the session. Let them sit with what\u2019s real.\u201d',chips:[]},
+        {lane:'coach',n:'11',title:'Doesn\u2019t rush the accountability question',desc:'\u201cTo what extent are you ready to go on yourself?\u201d is one of the most important questions in the entire program \u2014 it surfaces the self-reliance the whole engagement has been building toward.',chips:[chip('dec','the one question not to rush')]},
+        {lane:'coach',n:'12',title:'Grounding check before they leave',desc:'\u201cAre you okay to go back out into the real world?\u201d',chips:[]},
+      ]},
+      {name:'E \u00b7 CCA HANDOVER & CLOSING THE RECORD', meta:'the admin side, done last', steps:[
+        {lane:'coach',n:'13',title:'Hands over the CCA \u2014 confirms it, doesn\u2019t just declare it',desc:'Confirms the client actually has access, knows how to use it, and doesn\u2019t need Dinesh to operate it for them. A graduation gift, not a goodbye \u2014 it carries the whole arc forward.',chips:[]},
+        {lane:'caa',n:'14',title:'Runs Post-Session (Post Call) one final time',desc:'Same generic 5-step as every other session \u2014 session status set to Complete.',chips:[chip('note','Claude \u00b7 coach-assist')]},
+        {lane:'notion',n:'15',title:'Client Page set to Graduated',desc:'Status updated, Last Updated stamped, graduation date recorded on the page.',chips:[chip('w','WRITE Client Page (Status, graduation date)')]},
+        {lane:'coach',n:'16',title:'Sends a closing message',desc:'Drafted from the Communications templates, same approval discipline as every other client-facing send.',chips:[chip('gate','Dinesh approval, by established pattern')]},
+      ]},
+    ],
+    refTableTitle:'Reference \u2014 the six-layer closing frame',
+    refTableHead:['Layer','What it\u2019s for','Key questions'],
+    refTable:[
+      ['1 \u00b7 Overall','Set the tone \u2014 let the client lead the close','\u201cHow would you like to complete the coaching program?\u201d'],
+      ['2 \u00b7 Feelings','Check completeness before moving to learning','\u201cTo what extent do you feel complete \u2014 or what is needed for you to feel complete?\u201d \u00b7 \u201cHow do you feel at this point as our coaching comes to a conclusion?\u201d'],
+      ['3 \u00b7 Learning','Consolidate the whole journey, not just today','\u201cWhat progress have we made together since we began?\u201d \u00b7 \u201cWhat is your most important takeaway?\u201d \u00b7 \u201cHow would you like to review your progress from the entire program?\u201d'],
+      ['4 \u00b7 Celebration / Acknowledgement','Honour the work specifically \u2014 never generally','Acknowledge their progress and way of being, specifically \u00b7 name an observation about their growth \u00b7 \u201cIn which way can we celebrate these successes?\u201d'],
+      ['5 \u00b7 Next Steps','Build forward into life beyond the program','\u201cWhat are you going to do next \u2014 what will it look and feel like?\u201d \u00b7 \u201cWhere would you like to go from here?\u201d \u00b7 \u201cHow does our relationship change now?\u201d \u00b7 \u201cWhat might block your path?\u201d \u00b7 \u201cWhat do you have to support you \u2014 people, money, energy, time?\u201d'],
+      ['6 \u00b7 Accountability','The self-reliance test \u2014 what the whole program built toward','\u201cTo what extent are you ready to go on yourself, with your supports and resources?\u201d'],
+    ],
+    tableHead:['Database','Space','Read / Write','Role in this module'],
+    table:[
+      ['Client Page','Client space','WRITE','Status \u2192 Graduated, graduation date, Last Updated stamp'],
+      ['Sessions DB','Backend','WRITE','Final session marked Complete via the Post-Call prompt'],
+      ['All six artefact DBs','Backend','READ','Life Purpose, Visions, Annual Choices, Results Game, Well-Being Game, Guidelines \u2014 reviewed together the session before'],
+      ['CCA Claude Project','Claude Projects','\u2014','Handed over, not rebuilt \u2014 the same instance carries forward for life'],
+    ],
+    notes:[
+      'Completion signals, stated plainly on the source page: the client has named what they\u2019re taking away, acknowledged their own growth across the journey, identified their support resources going forward, and expressed readiness to continue independently. That\u2019s the actual definition of done for this module \u2014 not a checklist item, a felt outcome.',
+      '<b>Graduation is not a handoff.</b> Consistent with Decision 7 already logged: the door stays open. The client keeps the CCA indefinitely, moving to a subscription model \u2014 this module is the ceremony, not an offboarding.',
+      'The four \u201crecommended journey types\u201d named on the source page \u2014 Re-Careering with Purpose, Midlife Career Reboot, Early Career with Purpose, Next Chapter of Life \u2014 are the same four client archetypes (T1\u2013T4) this whole practice is organized around.',
+      'A reference PDF (<i>Ways to Partner with the Client to Close the Meeting</i>, Teri-E Belf) is attached to the source page \u2014 not reproduced here, since it\u2019s an external document rather than Dinesh\u2019s own adaptation.',
+    ],
+  },
+};
+
+/* =================== RENDER =================== */
+const TABS=['e2e','agents','lp','vis','val','dec','poss','cho','rg','wb','gl','close','proj','goal','hab','recar','supp'];
+
+/* =================== AGENT PROMPT BOXES =================== */
+const AGENTS=[
+  {k:'caa', code:'CAA', cls:'caa', name:'Coach-Assist Agent', state:'built',
+   desc:'Claude on the coach side — preps sessions, clusters words, drafts summaries and emails. Everything gated by Dinesh before it writes or sends.',
+   placeholder:'System prompt for CAA…\n\ne.g. You are Dinesh’s coach-assist. Before each session build a pre-call brief from the CIF and prior sessions. Never write to a database without showing the mapping table for approval first.'},
+  {k:'cca', code:'CCA', cls:'cca', name:'Client’s Companion Agent', state:'built',
+   desc:'The client’s own companion — reads their Life Purpose and Visions, pulls stories back as triggers, steers direction. Theirs for life after graduation.',
+   placeholder:'System prompt for CCA…\n\ne.g. You are the client’s companion. Frame every conversation around their purpose, vision and guidelines. Pull specific stories back as triggers. Only Explore mode may write to the Decision Tool.'},
+  {k:'cos', code:'COS', cls:'cos', name:'Coach Ops / Scheduling', state:'sketch',
+   desc:'Aspirational, not built. Confirms bookings, reminds the day before, holds "not now" follow-up dates and resurfaces them. Drafts only — nothing sends without review.',
+   placeholder:'System prompt for COS…\n\ne.g. You handle scheduling ops. Confirm each booking, send a day-before reminder draft, and hold any "not now" follow-up date to resurface it to Dinesh when it arrives. Draft only — never send externally without approval.'},
+  {k:'cit', code:'CIT', cls:'cit', name:'Coach-in-Training / QA', state:'sketch',
+   desc:'Session quality scoring, alongside the pre/post-call prep. Starting point is Dinesh’s existing ChatGPT agent, not a fresh design.',
+   placeholder:'System prompt for CIT…\n\ne.g. You score session quality after each call against the coaching framework, and flag where technique drifted. Start from the existing ChatGPT agent’s rubric.'},
+  {k:'cga', code:'CGA', cls:'cga', name:'Consent / Gate Agent', state:'built',
+   desc:'The audit gate. Checks consent before anything is shared or written; blocks and keeps reminding when the client hasn’t signed. A manual override exists.',
+   placeholder:'System prompt for CGA…\n\ne.g. You are the consent gate. Before any share or write, check the Master List consent tick. If not signed, block the action and remind: "you can’t share this, the client hasn’t signed." Allow a logged manual override.'},
+  {k:'auto', code:'AUTO', cls:'auto', name:'Automation', state:'sketch',
+   desc:'The plumbing between the pieces — form submissions, Notion row creation, calendar sync, and the links that thread data across databases.',
+   placeholder:'Automation notes / prompt…\n\ne.g. When a CIF form is submitted, create the row and auto-fill every column except the Master List link. When a booking lands on Zcal, surface it in the Notion meetings view.'},
+  {k:'bot', code:'BOT', cls:'bot', name:'Bot', state:'sketch',
+   desc:'The client-facing conversational surface — how the client actually talks to the system day to day.',
+   placeholder:'System prompt for the Bot…\n\ne.g. You are the client-facing bot. Keep replies short and warm, in the client’s NLP style. Hand anything coaching-substantive over to the CCA.'},
+];
+
+/* ---- storage: backend when available, localStorage always as mirror/fallback ---- */
+const LS_KEY='bridge_agent_prompts_v1';
+let STORE_MODE='local'; // 'cloud' once backend responds ok
+function lsRead(){try{return JSON.parse(localStorage.getItem(LS_KEY)||'{}');}catch(e){return {};}}
+function lsWrite(o){try{localStorage.setItem(LS_KEY,JSON.stringify(o));}catch(e){}}
+async function loadPrompts(){
+  const local=lsRead();
+  try{
+    const r=await fetch('/api/prompts',{method:'GET'});
+    if(r.ok){const j=await r.json();
+      if(j&&j.configured){STORE_MODE='cloud';return {...local,...(j.prompts||{})};}
+    }
+  }catch(e){/* offline / static host — fall back */}
+  return local;
+}
+async function savePrompt(key,value){
+  const all=lsRead();all[key]={value,updated:Date.now()};lsWrite(all);
+  try{
+    const r=await fetch('/api/prompts',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({key,value})});
+    if(r.ok){const j=await r.json();if(j&&j.configured){STORE_MODE='cloud';return true;}}
+  }catch(e){/* fall back to local only */}
+  return false;
+}
+function fmtTime(ts){if(!ts)return '';const d=new Date(ts);
+  return d.toLocaleDateString(undefined,{month:'short',day:'numeric'})+' '+d.toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit'});}
+
+async function renderAgents(){
+  const mount=document.getElementById('mount');mount.innerHTML='';
+  document.getElementById('legend').style.display='none';
+  const intro=el('div','mintro');
+  intro.innerHTML='<span class="layerTag" style="color:#5a8a6a;background:#e6f1ea">The agents · editable</span><div class="mt">Agent prompt boxes</div><div class="md">One box per agent. Type a system prompt or note into any box and hit Save — it’s stored and comes back next time you open the page. The prompt acts as that agent’s standing instruction / comment.</div>';
+  mount.appendChild(intro);
+
+  const banner=el('div','abanner');
+  banner.innerHTML='<b>How storage works.</b> <span id="storepill" class="astorepill local">saved on this device</span><br>'+
+    'When a backend (Vercel KV) is connected, prompts are saved to the cloud and shared across everyone who opens the page. Until then they’re saved in this browser via localStorage — nothing is lost, it just doesn’t sync across devices yet. See <b>README.md</b> for the one-time Vercel setup.';
+  mount.appendChild(banner);
+
+  const saved=await loadPrompts();
+  document.getElementById('storepill').className='astorepill '+(STORE_MODE==='cloud'?'cloud':'local');
+  document.getElementById('storepill').textContent=STORE_MODE==='cloud'?'saved to the cloud':'saved on this device';
+
+  const grid=el('div','agrid');
+  AGENTS.forEach(a=>{
+    const rec=saved[a.k]||{};
+    const box=el('div','abox '+a.cls);
+    const stateCls=a.state==='built'?'built':'sketch';
+    const stateTxt=a.state==='built'?'in use':'sketch';
+    box.innerHTML=
+      `<div class="aboxtop"><span class="acode">${a.code}</span><span class="aname">${a.name}</span>`+
+      `<span class="astate ${stateCls}">${stateTxt}</span></div>`+
+      `<div class="adesc">${a.desc}</div>`+
+      `<div class="albl">System prompt <span class="hint">— stored, acts as this agent’s comment</span></div>`;
+    const ta=el('textarea');ta.placeholder=a.placeholder;ta.value=rec.value||'';
+    box.appendChild(ta);
+    const row=el('div','abtnrow');
+    const btn=el('button','asave');btn.textContent='Save';
+    const status=el('span','asaved');status.innerHTML=rec.updated?`saved · ${fmtTime(rec.updated)}`:'not saved yet';
+    row.appendChild(btn);row.appendChild(status);
+    box.appendChild(row);
+
+    let dirty=false;
+    ta.addEventListener('input',()=>{dirty=true;status.textContent='unsaved changes';btn.disabled=false;});
+    btn.addEventListener('click',async()=>{
+      btn.disabled=true;status.textContent='saving…';
+      const ok=await savePrompt(a.k,ta.value);
+      status.innerHTML=`<b>saved</b> · ${fmtTime(Date.now())}${ok?'':' (this device)'}`;
+      document.getElementById('storepill').className='astorepill '+(STORE_MODE==='cloud'?'cloud':'local');
+      document.getElementById('storepill').textContent=STORE_MODE==='cloud'?'saved to the cloud':'saved on this device';
+      dirty=false;
+    });
+    grid.appendChild(box);
+  });
+  mount.appendChild(grid);
+}
+function renderLegend(){
+  const L=document.getElementById('legend');L.style.display='flex';L.innerHTML='';
+  LANES.forEach(l=>{const g=el('span','grp');g.innerHTML=`<i style="background:var(--${l.k})"></i>${l.n}`;L.appendChild(g);});
+  const g0=el('span','grp');g0.innerHTML='<i style="background:var(--system)"></i>SYSTEM';L.appendChild(g0);
+  const gg=el('span','grp');gg.innerHTML='<i style="background:var(--gate)"></i>CGA <span style="font-weight:400;color:var(--muted)">(gate moments)</span>';L.appendChild(gg);
+  const gc=el('span','grp');gc.innerHTML='<i style="background:var(--cos);border:1px dashed #a8823a"></i>COS <span style="font-weight:400;color:var(--muted)">(sketch, not built)</span>';L.appendChild(gc);
+  L.appendChild(el('span','legsep'));
+  [['chip r','READ'],['chip w','WRITE'],['chip man','MANUAL'],['chip gate','GATE'],['chip loop','LOOP'],['chip note','AI']].forEach(([c,t])=>{
+    const g=el('span','grp');g.innerHTML=`<span class="${c}" style="margin:0">${t}</span>`;L.appendChild(g);});
+}
+
+function renderE2E(){
+  const mount=document.getElementById('mount');mount.innerHTML='';
+  const intro=el('div','mintro');
+  intro.innerHTML='<span class="layerTag" style="color:#2f7d8f;background:#e0eef0">Zcal → Notion · the full pipeline</span><div class="mt">End-to-end flow</div><div class="md">Every step from the first booking to the databases, in order — foundation and engine. Colour shows who acts; the blue tag under a step is the database it touches; cream boxes carry the nuance behind a stage.</div>';
+  mount.appendChild(intro);
+  const flow=el('div','e2e');
+  E2E.forEach(b=>{
+    if(b.band){const d=el('div','band');d.innerHTML=`<span class="bn">${b.band}</span><span class="bs">${b.sub||''}</span>`;flow.appendChild(d);}
+    else if(b.arrow){flow.appendChild(el('div','earw'));}
+    else if(b.note){const n=el('div','notebox');n.innerHTML='<span class="nlbl">Why it matters</span>'+b.note;flow.appendChild(n);}
+    else if(b.cosnote){const n=el('div','cosnote');n.innerHTML='<span class="nlbl">COS · aspirational, not built</span>'+b.cosnote;flow.appendChild(n);}
+    else if(b.citmark){const n=el('div','citmark');n.innerHTML=b.citmark;flow.appendChild(n);}
+    else if(b.decision){const dd=el('div','edece');dd.innerHTML=`<div class="q">◆ ${b.decision}</div>`;flow.appendChild(dd);const br=el('div','ebranches');br.innerHTML=`<div class="ebr no">${b.no}</div><div class="ebr yes">${b.yes}</div>`;flow.appendChild(br);}
+    else if(b.eloop){flow.appendChild(el('div','eloop',b.eloop));}
+    else if(b.end){flow.appendChild(el('div','eend',b.end));}
+    else{const s=el('div','estep '+b.actor);const tag=b.actor==='gate'?'GATE':b.actor.toUpperCase();const db=b.db?`<span class="chip db">${b.db}</span>`:'';const cga=b.actor==='gate'?'<span class="cgatag">CGA</span>':'';const fut=b.actor==='cos'?'<span class="futuretag">not built yet</span>':'';
+      s.innerHTML=`<div class="etop"><span class="atag ${b.actor}">${tag}</span>${cga}${fut}</div><div class="etitle">${b.title}</div><div class="edesc">${b.desc}</div>${(db||b.chips)?`<div class="echips">${db}${chipsHTML(b.chips)}</div>`:''}`;flow.appendChild(s);}
+  });
+  mount.appendChild(flow);
+}
+
+function fnode(text,style,extra){const n=el('div','fnode'+(style?' '+style:'')+(extra?' '+extra:''));n.textContent=text;return n;}
+function buildTree(cols){const row=el('div','tree-row');row.style.setProperty('--tcols',cols.length);row.style.setProperty('--tside',(50/cols.length)+'%');cols.forEach(c=>{const col=el('div','tree-col');const items=c.items||[c.top,c.bottom];items.forEach((text,i)=>{if(i>0)col.appendChild(el('div','farrow','▼'));col.appendChild(fnode(text,c.style,'small'));});row.appendChild(col);});return row;}
+function flowBox(flow){const box=el('div','flowbox');flow.forEach(f=>{if(f.type==='node')box.appendChild(fnode(f.text,f.style));else if(f.type==='arrow')box.appendChild(el('div','farrow','▼'));else if(f.type==='label')box.appendChild(el('div','flabel',f.text));else if(f.type==='tree')box.appendChild(buildTree(f.cols));});return box;}
+function flowSection(flow,title){const d=el('details','ph flowph');d.open=true;const steps=flow.filter(f=>f.type==='node').length;const sum=el('summary');sum.innerHTML=`<span class="chev"></span><span class="phname">${title}</span><span class="phmeta">${steps} steps · overview</span>`;d.appendChild(sum);const body=el('div','phbody flowbody');body.appendChild(flowBox(flow));d.appendChild(body);return d;}
+
+function laneHeaderRow(){const row=el('div','lanehead');LANES.forEach(l=>{const c=el('div','lh '+l.k);c.innerHTML=`<div class="lhn">${l.n}</div><div class="lhs">${l.s}</div>`;row.appendChild(c);});return row;}
+function stepCard(step){const planned=step.planned?' planned':'';const card=el('div','card '+step.lane+planned);const laneName=LANES.find(l=>l.k===step.lane).n;const hasGate=(step.chips||[]).some(c=>c.t==='gate');const cga=hasGate?'<span class="cgatag">CGA</span>':'';const plannedTag=step.planned?'<span class="plannedtag">planned \u2014 not built</span>':'';card.innerHTML=`<div class="ctop"><span class="lane-tag lt ${step.lane}">${laneName}</span><span class="cnum">STEP ${step.n}</span>${cga}${plannedTag}</div><div class="ctitle">${step.title}</div><div class="cdesc">${step.desc}</div>${step.chips&&step.chips.length?`<div class="cchips">${chipsHTML(step.chips)}</div>`:''}`;return card;}
+function swimRow(step){const row=el('div','srow');LANES.forEach(l=>{const cell=el('div','sc '+l.k+(l.k===step.lane?'':' empty'));if(l.k===step.lane)cell.appendChild(stepCard(step));row.appendChild(cell);});return row;}
+
+function renderModule(key){
+  const m=MODULES[key];const mount=document.getElementById('mount');mount.innerHTML='';
+  const intro=el('div','mintro');
+  intro.innerHTML=`<span class="layerTag" style="color:${m.layerColor};background:${m.layerBg}">${m.layer}</span><div class="mt">${m.title}</div><div class="md">${m.desc}</div>`;
+  mount.appendChild(intro);
+  if(m.flow) mount.appendChild(flowSection(m.flow,m.flowTitle));
+  mount.appendChild(laneHeaderRow());
+  m.phases.forEach((p,pi)=>{
+    const d=el('details','ph');if(pi<2)d.open=true;
+    const sum=el('summary');sum.innerHTML=`<span class="chev"></span><span class="phname">${p.name}</span><span class="phmeta">${p.steps.length} steps · ${p.meta}</span>`;
+    d.appendChild(sum);const body=el('div','phbody');
+    p.steps.forEach((s,si)=>{body.appendChild(swimRow(s));if(si<p.steps.length-1)body.appendChild(el('div','conn','▼'));});
+    d.appendChild(body);mount.appendChild(d);
+  });
+  if(m.refTable){
+    const rd=el('details','ph refdetails');
+    const rsum=el('summary');rsum.innerHTML=`<span class="chev"></span><span class="phname">${m.refTableTitle}</span><span class="phmeta">${m.refTable.length} entries · reference</span>`;
+    rd.appendChild(rsum);
+    const rbody=el('div','phbody reftablewrap');
+    const rtbl=el('table','tbl reftbl');
+    rtbl.innerHTML='<thead><tr>'+m.refTableHead.map(h=>`<th>${h}</th>`).join('')+'</tr></thead>';
+    const rtb=el('tbody');
+    m.refTable.forEach(r=>{const tr=el('tr');tr.innerHTML=r.map(c=>`<td>${c}</td>`).join('');rtb.appendChild(tr);});
+    rtbl.appendChild(rtb);rbody.appendChild(rtbl);
+    rd.appendChild(rbody);mount.appendChild(rd);
+  }
+  mount.appendChild(el('div','sech','Database touchpoints'));
+  const tbl=el('table','tbl');
+  tbl.innerHTML='<thead><tr>'+m.tableHead.map(h=>`<th>${h}</th>`).join('')+'</tr></thead>';
+  const tb=el('tbody');
+  m.table.forEach(r=>{const tr=el('tr');tr.innerHTML=r.map((c,i)=>{if(i===2)c=c.replace(/READ/g,'<span class="rd">READ</span>').replace(/WRITE/g,'<span class="wr">WRITE</span>');return `<td>${c}</td>`;}).join('');tb.appendChild(tr);});
+  tbl.appendChild(tb);mount.appendChild(tbl);
+  (m.notes||[]).forEach(n=>{const b=el('div','notebox');b.innerHTML='<span class="nlbl">Note</span>'+n;mount.appendChild(b);});
+}
+
+function show(k){
+  TABS.forEach(x=>{document.getElementById('b-'+x).className=(x===k)?'active':'';});
+  if(k==='agents'){renderAgents();return;}
+  renderLegend();
+  if(k==='e2e')renderE2E(); else renderModule(k);
+}
+
+document.getElementById('foot').innerHTML=
+  '<b>Source.</b> Original mapped by Saniya from Dinesh Bhatia\u2019s walkthroughs (13 Aug + follow-up) \u2014 his current live coaching + Notion process, as he described it. Foundation (Life Purpose, Visions), Engine (Values & Qualities, the two Games, Guidelines), and Closing the Engagement (graduation) all covered. Nothing in the underlying content was assumed.<br><b>This version.</b> The AI lane split into CAA / CCA, the CGA tags on gate moments, and the module-by-module depth pass (Life Purpose, Results Game, Guidelines, Well-Being Game, Values & Qualities, Closing) were added by Claude, working with Dinesh, as a discussion draft \u2014 grounded in each module\u2019s own source page plus the Prompt Reference and Master SOP, not invented. Review before treating as final.<br>The Bridge to "I" · real flow · Zcal → graduation.';
+
+show('e2e');
+</script>
+</body>
+</html>

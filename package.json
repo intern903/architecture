@@ -1,0 +1,9 @@
+{
+  "name": "bridge-architecture",
+  "version": "1.0.0",
+  "private": true,
+  "description": "The Bridge to \"I\" — coaching architecture map with editable, stored agent prompt boxes.",
+  "dependencies": {
+    "@vercel/kv": "^3.0.0"
+  }
+}
