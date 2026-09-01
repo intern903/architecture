@@ -10,7 +10,7 @@
     --client:#b07d2c; --coach:#7a5fb0; --caa:#4f7a48; --cca:#a35a8c; --system:#2f7d8f; --notion:#3a6e9e; --gate:#b0562c;
     --clientbg:#faf4ea; --coachbg:#f2ecfa; --caabg:#eef4ec; --ccabg:#f7ecf3; --systembg:#e5f0f1; --notionbg:#eaf1f7; --gatebg:#f8e9df;
     --read:#35618f; --write:#9a5a12; --gold:#8a6113; --accent:#c58a1e;
-    --new:#1f7a4d; --newbg:#e2f3ea; --cos:#a8823a;
+    --new:#1f7a4d; --newbg:#e2f3ea; --cos:#a8823a; --cosbg:#fbf6ec; --cit:#6f7a48; --citbg:#eef1e8; --cga:#b0714a; --cgabg:#f6ece2; --bot:#2f8f9e; --botbg:#e2eff1; --auto:#a85a2a; --autobg:#f7ebe2;
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--ink);
@@ -110,7 +110,7 @@
   .ph[open]>summary .chev{transform:rotate(90deg)}
   .phname{font-size:12.5px;font-weight:800;color:#3f372f;letter-spacing:.04em}
   .phmeta{margin-left:auto;font-size:11px;font-weight:600;color:#9a8f82}
-  .phbody{padding:6px 12px 14px}
+  .phbody{padding:6px 0 14px}
   .flowbody{padding:12px 12px 16px}
   .flowbox{display:flex;flex-direction:column;align-items:center}
   .fnode{background:#fff;border:1px solid var(--line2);border-radius:9px;padding:9px 14px;text-align:center;font-size:12.5px;font-weight:700;color:var(--ink);max-width:360px}
@@ -125,15 +125,23 @@
   .tree-col::before{content:'';position:absolute;top:0;left:50%;width:2px;height:16px;background:var(--line2);transform:translateX(-50%)}
   .tree-col .fnode{max-width:100%}
 
-  .lanehead{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;position:sticky;top:0;z-index:5;background:var(--bg);padding:8px 0 6px}
+  .lanehead{display:grid;grid-template-columns:minmax(146px,1fr) minmax(146px,1fr) minmax(146px,1fr) minmax(146px,1fr) 84px 84px 84px minmax(140px,1fr) 104px 104px;gap:8px;position:relative;z-index:5;background:var(--bg);padding:8px 0 6px;min-width:1246px}
   .lh{border-radius:8px 8px 0 0;padding:8px 10px;text-align:center;border:1px solid var(--line);border-bottom:2px solid var(--lc)}
   .lh .lhn{font-size:12.5px;font-weight:800;letter-spacing:.04em;color:var(--lc)}
   .lh .lhs{font-size:10.5px;color:var(--muted);margin-top:1px}
   .lh.client{background:var(--clientbg);--lc:var(--client)} .lh.coach{background:var(--coachbg);--lc:var(--coach)}
   .lh.caa{background:var(--caabg);--lc:var(--caa)} .lh.cca{background:var(--ccabg);--lc:var(--cca)} .lh.notion{background:var(--notionbg);--lc:var(--notion)}
-  .srow{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+  .lh.cos{background:var(--cosbg);--lc:var(--cos)} .lh.cit{background:var(--citbg);--lc:var(--cit)} .lh.cga{background:var(--cgabg);--lc:var(--cga)} .lh.bot{background:var(--botbg);--lc:var(--bot);border-left:2px solid var(--line2)} .lh.auto{background:var(--autobg);--lc:var(--auto)}
+  .srow{display:grid;grid-template-columns:minmax(146px,1fr) minmax(146px,1fr) minmax(146px,1fr) minmax(146px,1fr) 84px 84px 84px minmax(140px,1fr) 104px 104px;gap:8px;min-width:1246px}
+  .swimscroll{overflow-x:auto;overflow-y:visible;-webkit-overflow-scrolling:touch;padding-bottom:6px}
+  .swimscroll>.ph{min-width:1246px;overflow:visible;border-radius:10px}
+  .swimscroll>.ph>summary{border-radius:10px 10px 0 0}
+  .sc.modecell{display:flex;align-items:center;justify-content:center}
+  .modemark{font-size:10px;font-weight:800;letter-spacing:.04em;color:#fff;padding:5px 9px;border-radius:20px;text-align:center}
+  .modemark.bot{background:var(--bot)} .modemark.auto{background:var(--auto)}
   .sc{border-radius:8px;min-height:8px}
   .sc.client{background:var(--clientbg)} .sc.coach{background:var(--coachbg)} .sc.caa{background:var(--caabg)} .sc.cca{background:var(--ccabg)} .sc.notion{background:var(--notionbg)}
+  .sc.cos{background:var(--cosbg)} .sc.cit{background:var(--citbg)} .sc.cga{background:var(--cgabg)} .sc.bot{background:var(--botbg);border-left:2px solid var(--line2)} .sc.auto{background:var(--autobg)}
   .sc.empty{opacity:.5}
   .conn{display:flex;justify-content:center;color:#c3b8a8;font-size:11px;margin:2px 0}
   .card{background:#fff;border:1px solid var(--line);border-left:3px solid var(--cc);border-radius:7px;padding:9px 11px;margin:4px}
@@ -169,39 +177,32 @@
   .whatsnew h4{margin:10px 0 3px;font-size:12.5px;color:var(--ink)}
   .whatsnew ul{margin:2px 0 8px;padding-left:18px}
   .whatsnew li{margin-bottom:3px}
-  /* ---- Agent prompt boxes ---- */
-  .agrid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:6px}
-  .abox{background:#fff;border:1px solid var(--line);border-top:3px solid var(--ac,var(--muted));border-radius:11px;
-    padding:13px 15px 14px;display:flex;flex-direction:column;box-shadow:0 1px 2px rgba(0,0,0,.03)}
-  .abox.caa{--ac:var(--caa)} .abox.cca{--ac:var(--cca)} .abox.cos{--ac:var(--cos)}
-  .abox.cit{--ac:#5b7fb0} .abox.cga{--ac:var(--gate)} .abox.auto{--ac:#5a8a6a} .abox.bot{--ac:#7a5fb0}
-  .aboxtop{display:flex;align-items:center;gap:9px;margin-bottom:3px}
-  .acode{font-family:ui-monospace,monospace;font-size:12px;font-weight:800;letter-spacing:.05em;color:#fff;
-    background:var(--ac,var(--muted));border-radius:6px;padding:3px 9px;flex:none}
-  .aname{font-size:13.5px;font-weight:700;color:var(--ink)}
-  .astate{margin-left:auto;font-size:8.5px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;
-    border-radius:999px;padding:2px 8px;border:1px solid var(--line2);color:var(--muted);background:#f7f4ef;white-space:nowrap}
-  .astate.built{color:var(--new);background:var(--newbg);border-color:#b7ddc7}
-  .astate.sketch{color:#a8823a;background:#fdf7e8;border-color:#e2cf9a}
-  .adesc{font-size:11.5px;color:var(--muted);line-height:1.45;margin:2px 0 9px}
-  .albl{font-size:9.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;display:flex;align-items:center;gap:6px}
-  .albl .hint{font-weight:600;letter-spacing:0;text-transform:none;color:#b0a596;font-size:10px}
-  .abox textarea{width:100%;min-height:120px;resize:vertical;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
-    font-size:12px;line-height:1.5;color:var(--ink);background:#fbfaf7;border:1px solid var(--line2);border-radius:8px;
-    padding:9px 11px;outline:none}
-  .abox textarea:focus{border-color:var(--ac,var(--accent));background:#fff;box-shadow:0 0 0 3px rgba(197,138,30,.10)}
-  .abtnrow{display:flex;align-items:center;gap:10px;margin-top:9px}
-  .asave{border:none;cursor:pointer;font-family:inherit;font-size:12px;font-weight:700;color:#fff;
-    background:var(--ac,#2b241f);border-radius:7px;padding:8px 16px}
-  .asave:hover{filter:brightness(1.06)} .asave:disabled{opacity:.5;cursor:default;filter:none}
-  .asaved{font-size:11px;color:var(--muted)} .asaved b{color:var(--new)}
-  .abanner{background:#fff;border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:10px;
-    padding:12px 15px;margin-bottom:16px;font-size:12.5px;color:#6b5f4f;line-height:1.55}
-  .abanner b{color:var(--ink)}
-  .astorepill{font-size:10.5px;font-weight:700;border-radius:999px;padding:2px 10px;margin-left:6px;white-space:nowrap}
-  .astorepill.cloud{color:var(--new);background:var(--newbg);border:1px solid #b7ddc7}
-  .astorepill.local{color:#a8823a;background:#fdf7e8;border:1px solid #e2cf9a}
-  @media(max-width:720px){.lanehead,.srow{grid-template-columns:1fr 1fr}.tree-row{grid-template-columns:1fr}.tree-row::before{display:none}.agrid{grid-template-columns:1fr}}
+  /* ---- editable swim-lane notes ---- */
+  .sc{position:relative}
+  .addnote{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;border:1px dashed transparent;
+    border-radius:8px;color:transparent;font-size:16px;font-weight:800;cursor:pointer;background:transparent}
+  .sc.empty:hover .addnote,.sc.modecell:hover .addnote{color:#b7ab9c;border-color:var(--line2);background:rgba(255,255,255,.35)}
+  .sc.modecell .addnote{inset:auto 0 0 0;top:auto;height:20px}
+  .notecard{background:#fffef9;border:1px solid #e7dcc0;border-left:3px solid var(--gold);border-radius:7px;
+    padding:6px 7px;margin:3px;font-size:11px;line-height:1.4;color:#5a5045;white-space:pre-wrap;word-break:break-word;cursor:text}
+  .notecard .ntag{display:block;font-size:8px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;color:var(--gold);margin-bottom:2px}
+  .noteedit{margin:3px}
+  .noteedit textarea{width:100%;min-height:64px;resize:vertical;font-family:inherit;font-size:11px;line-height:1.4;
+    color:var(--ink);background:#fff;border:1px solid var(--line2);border-radius:7px;padding:6px 7px;outline:none}
+  .noteedit textarea:focus{border-color:var(--gold);box-shadow:0 0 0 2px rgba(138,97,19,.12)}
+  .noterow{display:flex;gap:6px;align-items:center;margin-top:4px;flex-wrap:wrap}
+  .nbtn{border:none;cursor:pointer;font-family:inherit;font-size:10.5px;font-weight:700;border-radius:6px;padding:5px 10px}
+  .nbtn.save{background:var(--gold);color:#fff} .nbtn.cancel{background:#efe9e0;color:#6b5f4f} .nbtn.del{background:#f6e3df;color:#a23b2f;margin-left:auto}
+  .nbtn:disabled{opacity:.5;cursor:default}
+  .nstatus{font-size:9.5px;color:#9a8f82}
+  .storebar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#fff;border:1px solid var(--line);
+    border-left:4px solid var(--accent);border-radius:10px;padding:9px 14px;margin:0 0 14px;font-size:12px;color:#6b5f4f}
+  .storebar b{color:var(--ink)}
+  .storepill{font-size:10.5px;font-weight:800;border-radius:999px;padding:2px 10px;white-space:nowrap}
+  .storepill.cloud{color:var(--new);background:var(--newbg);border:1px solid #b7ddc7}
+  .storepill.local{color:#a8823a;background:#fdf7e8;border:1px solid #e2cf9a}
+  .storehint{font-size:11px;color:#9a8f82}
+  @media(max-width:720px){.tree-row{grid-template-columns:1fr}.tree-row::before{display:none}}
 </style>
 </head>
 <body>
@@ -245,7 +246,12 @@ const LANES=[
   {k:'coach', n:'COACH', s:'Dinesh · coach-side'},
   {k:'caa',   n:'CAA',   s:'Claude · coach-assist'},
   {k:'cca',   n:'CCA',   s:'the client\u2019s companion'},
+  {k:'cos',   n:'COS',   s:'chief-of-staff · not built'},
+  {k:'cit',   n:'CIT',   s:'coach-in-training · not built'},
+  {k:'cga',   n:'CGA',   s:'governance · at gates'},
   {k:'notion',n:'NOTION',s:'the databases'},
+  {k:'bot',   n:'BOT',   s:'thinks in real time'},
+  {k:'auto',  n:'AUTOMATION', s:'fixed, predefined'},
 ];
 
 /* =================== END-TO-END =================== */
@@ -416,7 +422,7 @@ const MODULES={
         {lane:'client',n:'15',title:'Compiles every bolded word',desc:'\u201cLet your intuition guide the selection. Do not use the intellect to analyze. Let what jumps out, jump out.\u201d',chips:[]},
         {lane:'client',n:'16',title:'Clusters the words that group together',desc:'Marks the natural groupings across all stories.',chips:[]},
         {lane:'coach',n:'17',title:'Names the best headline per cluster',desc:'Repeats until 4\u20135 words or phrases remain \u2014 no more. These become the <i>only</i> words used to draft the statement.',chips:[]},
-        {lane:'caa',n:'18',title:'Assists the clustering pass after the call',desc:'\u201cCan you cluster these into groups?\u201d \u2014 Claude helps organize, the client and coach still name the headlines live.',chips:[chip('note','Claude \u00b7 coach-assist'),chip('r','READ Life Purpose DB')]},
+        {lane:'caa',mode:'bot',n:'18',title:'Assists the clustering pass after the call',desc:'\u201cCan you cluster these into groups?\u201d \u2014 Claude helps organize, the client and coach still name the headlines live.',chips:[chip('note','Claude \u00b7 coach-assist'),chip('r','READ Life Purpose DB')]},
         {lane:'notion',n:'19',title:'Cluster field + a \u201cJump out\u201d checkbox',desc:'Groups the words by cluster; a checkbox marks exactly which key words became power words, so every power word stays traceable back to its source story.',chips:[chip('w','WRITE Life Purpose DB (Cluster, Jump out words)')]},
       ]},
       {name:'E \u00b7 DRAFT THE STATEMENT', meta:'8 criteria, the Weasels, never the coach', steps:[
@@ -433,21 +439,21 @@ const MODULES={
         {lane:'coach',n:'28',title:'Opens the next session by re-checking',desc:'Debriefs how the statement has been living with them. Has a word shifted? Re-checks Congruence at the physical place against the refined version.',chips:[]},
       ]},
       {name:'G \u00b7 AFTER THE CALL \u2014 TWO SEPARATE CAA PROMPTS', meta:'not one pass \u2014 two, each gated', steps:[
-        {lane:'caa',n:'29',title:'Runs Post-Session (Post Call) \u2014 the generic 5-step',desc:'Sessions DB, Coach Workspace, Client Daily Home, Action Items, Master Network \u2014 same sequence as every session.',chips:[chip('note','Claude \u00b7 coach-assist')]},
-        {lane:'caa',n:'30',title:'Then runs the separate Life Purpose prompt \u2014 Part 1',desc:'Reads the full transcript, every prior session, Master Network, CIF, and existing Life Purpose DB rows. Drafts 2\u20134 line first-person story summaries and maps each to its existing row by <b>Order number</b> \u2014 never guessed from text.',chips:[chip('note','Claude \u00b7 coach-assist'),chip('r','READ Sessions, CIF, Master Network, Life Purpose DB')]},
+        {lane:'caa',mode:'bot',n:'29',title:'Runs Post-Session (Post Call) \u2014 the generic 5-step',desc:'Sessions DB, Coach Workspace, Client Daily Home, Action Items, Master Network \u2014 same sequence as every session.',chips:[chip('note','Claude \u00b7 coach-assist')]},
+        {lane:'caa',mode:'bot',n:'30',title:'Then runs the separate Life Purpose prompt \u2014 Part 1',desc:'Reads the full transcript, every prior session, Master Network, CIF, and existing Life Purpose DB rows. Drafts 2\u20134 line first-person story summaries and maps each to its existing row by <b>Order number</b> \u2014 never guessed from text.',chips:[chip('note','Claude \u00b7 coach-assist'),chip('r','READ Sessions, CIF, Master Network, Life Purpose DB')]},
         {lane:'coach',n:'31',title:'Reviews the 5-column mapping table before anything writes',desc:'# \u00b7 Story title \u00b7 Summary \u00b7 Timestamp \u00b7 current DB text \u2014 confirms every mapping is correct.',chips:[chip('gate','Dinesh approval required')]},
         {lane:'notion',n:'32',title:'Updates existing rows only \u2014 never creates new ones',desc:'Key Words field is never touched \u2014 that\u2019s Dinesh\u2019s live session capture, preserved exactly.',chips:[chip('w','WRITE Life Purpose DB (existing rows only)')]},
-        {lane:'caa',n:'33',title:'Part 2 \u2014 drafts the Top Values table',desc:'Only values with 2+ pieces of real evidence across every source \u2014 never padded to hit a target number.',chips:[chip('note','Claude \u00b7 coach-assist')]},
+        {lane:'caa',mode:'bot',n:'33',title:'Part 2 \u2014 drafts the Top Values table',desc:'Only values with 2+ pieces of real evidence across every source \u2014 never padded to hit a target number.',chips:[chip('note','Claude \u00b7 coach-assist')]},
         {lane:'coach',n:'34',title:'Reviews the ranked values table',desc:'Rank \u00b7 Value \u00b7 Times evident \u00b7 Evidence quote or behaviour.',chips:[chip('gate','Dinesh approval required')]},
         {lane:'notion',n:'35',title:'Writes to Values DB with a mandatory category lookup',desc:'Checked against an 11-category reference taxonomy (Relationships & Connection, Freedom & Expression, Well-Being & Self-Care, Purpose & Vocation, Service & Contribution, Financial & Material, Inner Life & Meaning, Character & Integrity, Self & Identity, Growth & Learning, Security & Structure). A genuinely new value auto-creates a new reference row.',chips:[chip('w','WRITE Values DB + Values Reference DB')]},
-        {lane:'caa',n:'36',title:'Part 3 \u2014 drafts the Post Life Purpose Email',desc:'Opening hook from Coaching Observations \u00b7 the exact, never-edited statement \u00b7 a stories table compiled across all Order-grouped rows \u00b7 a power-words table filtered to only the rows where \u201cJump out words\u201d is checked.',chips:[chip('note','Claude \u00b7 coach-assist')]},
+        {lane:'caa',mode:'bot',n:'36',title:'Part 3 \u2014 drafts the Post Life Purpose Email',desc:'Opening hook from Coaching Observations \u00b7 the exact, never-edited statement \u00b7 a stories table compiled across all Order-grouped rows \u00b7 a power-words table filtered to only the rows where \u201cJump out words\u201d is checked.',chips:[chip('note','Claude \u00b7 coach-assist')]},
         {lane:'coach',n:'37',title:'Approves before anything sends',desc:'\u201cI will not send without your approval\u201d \u2014 stated every time, no exceptions.',chips:[chip('gate','Dinesh approval required')]},
         {lane:'coach',n:'38',title:'Updates Client Page \u00a75 (Bridge Artefacts)',desc:'The statement lands where every other artefact lives.',chips:[chip('w','WRITE Client Page \u00a75')]},
         {lane:'coach',n:'39',title:'Cross-checks the Well-Being Game',desc:'If qualities are already surfacing in the stories, they get noted here \u2014 and once 2+ sessions of transcript exist, the separate Well-Being Game Setup prompt runs to identify qualities from the transcripts directly.',chips:[chip('loop','\u2192 seeds Well-Being Game')]},
       ]},
       {name:'H \u00b7 IT BECOMES THE NORTH STAR', meta:'ongoing', steps:[
-        {lane:'cca',n:'40',title:'CCA reads it in every chat',desc:'\u201cIf your purpose is this, your vision is this, your guideline is this\u2026\u201d frames every conversation.',chips:[chip('note','CCA \u00b7 companion'),chip('r','READ Life Purpose')]},
-        {lane:'cca',n:'41',title:'CCA pulls stories as triggers',desc:'\u201cRemember in Nainital you could think openly \u2014 try stepping into nature.\u201d The chat is a reminder.',chips:[chip('r','READ Life Purpose (stories)')]},
+        {lane:'cca',mode:'bot',n:'40',title:'CCA reads it in every chat',desc:'\u201cIf your purpose is this, your vision is this, your guideline is this\u2026\u201d frames every conversation.',chips:[chip('note','CCA \u00b7 companion'),chip('r','READ Life Purpose')]},
+        {lane:'cca',mode:'bot',n:'41',title:'CCA pulls stories as triggers',desc:'\u201cRemember in Nainital you could think openly \u2014 try stepping into nature.\u201d The chat is a reminder.',chips:[chip('r','READ Life Purpose (stories)')]},
         {lane:'client',n:'42',title:'Also browses stories directly',desc:'On the life-purpose detail view: filter by feeling \u2192 story titles \u2192 a 2\u20133 line summary + a suggestion. Not only through chat.',chips:[]},
       ]},
     ],
@@ -503,7 +509,7 @@ const MODULES={
         {lane:'notion',n:'6',title:'Vision per area captured',desc:'A free-field statement in the main DB (images stored too). If the client wants a table, that tabular breakdown lives on their daily home page, not the main database.',chips:[chip('w','WRITE Visions DB')]},
       ]},
       {name:'C · IT GUIDES DIRECTION', meta:'ongoing', steps:[
-        {lane:'cca',n:'7',title:'CCA uses the visions',desc:'\u201cYour career is heading this way — is that right?\u201d Helps the client think through direction.',chips:[chip('note','CCA · companion'),chip('r','READ Visions')]},
+        {lane:'cca',mode:'bot',n:'7',title:'CCA uses the visions',desc:'\u201cYour career is heading this way — is that right?\u201d Helps the client think through direction.',chips:[chip('note','CCA · companion'),chip('r','READ Visions')]},
         {lane:'client',n:'8',title:'Expands on the detail view',desc:'The vision opens on <b>hover</b> (not click). The client can add power-word columns to go deeper, or keep just the first — their choice.',chips:[]},
         {lane:'notion',n:'9',title:'Images recalled on demand',desc:'If a vision is a drawing, the image is stored and can be pulled straight back into chat.',chips:[chip('r','READ Visions (image)')]},
       ]},
@@ -547,7 +553,7 @@ const MODULES={
       {name:'A \u00b7 SITS RIGHT AFTER LIFE PURPOSE', meta:'session 2 or 3, prepared in advance', steps:[
         {lane:'coach',n:'1',title:'Values and Qualities, introduced together',desc:'Typically the session right after Life Purpose. \u201cTwo sides of the same insight,\u201d not two separate modules run back to back.',chips:[chip('r','READ Life Purpose')]},
         {lane:'coach',n:'2',title:'Opens with Teri\u2019s exact segue',desc:'\u201cNow you have your Purpose \u2014 and you\u2019ve felt where it lives in your body. Your head brain also wants to participate. Values are the foundational beliefs you act on consistently\u2026 the words that describe how you feel when you are living your values \u2014 those are your Well-Being Qualities.\u201d',chips:[]},
-        {lane:'caa',n:'3',title:'Pre-Session Prompt surfaces hypotheses \u2014 background only',desc:'Automatically pulls candidate Values and Qualities already noticed during the Exploratory and Life Purpose work. Starting hypotheses only \u2014 never offered to the client unprompted, surfaced only if they\u2019re stuck. Their own selection always wins.',chips:[chip('note','Claude \u00b7 coach-assist'),chip('dec','hypotheses only, never offered first')]},
+        {lane:'caa',mode:'bot',n:'3',title:'Pre-Session Prompt surfaces hypotheses \u2014 background only',desc:'Automatically pulls candidate Values and Qualities already noticed during the Exploratory and Life Purpose work. Starting hypotheses only \u2014 never offered to the client unprompted, surfaced only if they\u2019re stuck. Their own selection always wins.',chips:[chip('note','Claude \u00b7 coach-assist'),chip('dec','hypotheses only, never offered first')]},
         {lane:'coach',n:'4',title:'Confirms AI Consent if not already recorded',desc:'Part of this session\u2019s outcome checklist, not a separate step elsewhere.',chips:[]},
       ]},
       {name:'B \u00b7 THE V-A-L-U-E FRAMEWORK', meta:'what a value actually is', steps:[
@@ -637,7 +643,7 @@ const MODULES={
       ]},
       {name:'C · DECIDE', meta:'a tool, not an oracle', steps:[
         {lane:'client',n:'5',title:'The clearest option shows itself',desc:'The highest-weighted option points the way — the client still decides.',chips:[]},
-        {lane:'cca',n:'6',title:'The CCA can walk it through',desc:'In Explore mode the CCA helps the client reason through the decision.',chips:[chip('note','CCA · companion'),chip('r','READ Decisions')]},
+        {lane:'cca',mode:'bot',n:'6',title:'The CCA can walk it through',desc:'In Explore mode the CCA helps the client reason through the decision.',chips:[chip('note','CCA · companion'),chip('r','READ Decisions')]},
       ]},
     ],
     tableHead:['Database','Space','Read / Write','Role in this module'],
@@ -719,7 +725,7 @@ const MODULES={
       ]},
       {name:'C · INTO THE YEAR', meta:'foundation feeds the engine', steps:[
         {lane:'coach',n:'5',title:'The choices shape the year’s results',desc:'The year’s commitments become the results that get played, fortnight by fortnight.',chips:[chip('loop','→ Results Game')]},
-        {lane:'cca',n:'6',title:'The CCA keeps the client oriented',desc:'It reads the choices (with vision and purpose) to keep the client pointed the right way.',chips:[chip('note','CCA · companion'),chip('r','READ Annual Choices')]},
+        {lane:'cca',mode:'bot',n:'6',title:'The CCA keeps the client oriented',desc:'It reads the choices (with vision and purpose) to keep the client pointed the right way.',chips:[chip('note','CCA · companion'),chip('r','READ Annual Choices')]},
       ]},
     ],
     tableHead:['Database','Space','Read / Write','Role in this module'],
@@ -777,7 +783,7 @@ const MODULES={
       {name:'C \u00b7 CAPTURED, THEN LIVED', meta:'2\u20133 weeks', steps:[
         {lane:'notion',n:'12',title:'Results captured with priority order and points',desc:'Points assigned in reverse by priority order \u2014 top item gets the most points, bottom item the fewest (e.g. 8 items \u2192 8, 7, 6\u2026down to 1).',chips:[chip('w','WRITE Results Game DB'),chip('man','points = reverse of priority order')]},
         {lane:'client',n:'13',title:'Lives it',desc:'Real life between sessions \u2014 no check-in required to \u201ccount.\u201d',chips:[]},
-        {lane:'cca',n:'14',title:'CCA supports between sessions',desc:'Reminds the client of their Results Game, reflects their own words back to them \u2014 per Master SOP Stage 8. Does not score or judge.',chips:[chip('note','CCA \u00b7 companion')]},
+        {lane:'cca',mode:'bot',n:'14',title:'CCA supports between sessions',desc:'Reminds the client of their Results Game, reflects their own words back to them \u2014 per Master SOP Stage 8. Does not score or judge.',chips:[chip('note','CCA \u00b7 companion')]},
       ]},
       {name:'D \u00b7 NEXT SESSION \u2014 DEBRIEF & SCORE', meta:'well-being first, then the game', steps:[
         {lane:'coach',n:'15',title:'Opens with the Well-Being Game check-in',desc:'Master SOP Stage 8 orders the cycle this way on purpose \u2014 feeling state first, then the doing debrief.',chips:[chip('loop','\u2190 Well-Being Game check-in')]},
@@ -793,12 +799,12 @@ const MODULES={
         {lane:'coach',n:'23',title:'Builds the next Results Game, same session',desc:'The cycle repeats immediately \u2014 new priorities, new doing/being results, same rules.',chips:[chip('loop','\u2192 back to Phase A')]},
       ]},
       {name:'F \u00b7 AFTER THE SESSION', meta:'two prompts \u2014 one real, one still on paper', steps:[
-        {lane:'caa',n:'24',title:'Runs Post-Session (Post Call) \u2014 the generic 5-step',desc:'Same sequence as every session \u2014 Sessions DB, Coach Workspace, Client Daily Home, Action Items, Master Network.',chips:[chip('note','Claude \u00b7 coach-assist')]},
-        {lane:'caa',n:'25',title:'Drafts the Post Results Game Email',desc:'Four jobs: puts the game in the client\u2019s hands in writing, anchors the doing/being frame, offers 3\u20134 light \u201cinvitations to notice\u201d drawn only from the session, confirms the next session.',chips:[chip('note','Claude \u00b7 coach-assist')]},
+        {lane:'caa',mode:'bot',n:'24',title:'Runs Post-Session (Post Call) \u2014 the generic 5-step',desc:'Same sequence as every session \u2014 Sessions DB, Coach Workspace, Client Daily Home, Action Items, Master Network.',chips:[chip('note','Claude \u00b7 coach-assist')]},
+        {lane:'caa',mode:'bot',n:'25',title:'Drafts the Post Results Game Email',desc:'Four jobs: puts the game in the client\u2019s hands in writing, anchors the doing/being frame, offers 3\u20134 light \u201cinvitations to notice\u201d drawn only from the session, confirms the next session.',chips:[chip('note','Claude \u00b7 coach-assist')]},
         {lane:'notion',n:'26',title:'Uses a screenshot, never typed text',desc:'A snip of the client\u2019s actual Results Game view, Doing + Being columns \u2014 so it reads as their own space, not a re-typed summary.',chips:[]},
         {lane:'coach',n:'27',title:'Approves before it sends',desc:'Same rule as every other agent-drafted communication in this system \u2014 not restated on this specific page, but consistent throughout.',chips:[chip('gate','Dinesh approval, by established pattern')]},
         {lane:'notion',n:'28',title:'Visions section joins permanently, once ready',desc:'Once the Life Purpose statement has fully landed and Visions are built, a Visions screenshot is added \u2014 and stays in every future email for that client.',chips:[chip('loop','\u2190 Visions, once complete')]},
-        {lane:'caa',n:'29',title:'Game Scorecard Prompt \u2014 the planned replacement for step 19',desc:'Would capture both games in one pass right after the debrief: Results Game score, status, debrief note, and learning per item; Well-Being score, previous score, trend, and session note per quality \u2014 both parts gated for approval before any write.',chips:[chip('note','Claude \u00b7 coach-assist')],planned:true},
+        {lane:'caa',mode:'auto',n:'29',title:'Game Scorecard Prompt \u2014 the planned replacement for step 19',desc:'Would capture both games in one pass right after the debrief: Results Game score, status, debrief note, and learning per item; Well-Being score, previous score, trend, and session note per quality \u2014 both parts gated for approval before any write.',chips:[chip('note','Claude \u00b7 coach-assist')],planned:true},
         {lane:'coach',n:'30',title:'Locked so far, undesigned so far',desc:'Locked: kept separate from Post-Call; covers both games together; runs right after debrief while scores are fresh; writes to Results Game DB + Well-Being Game DB. Still undesigned: the exact step flow, how Previous Score carries forward, the trend calculation, and the approval wording itself.',chips:[]},
       ]},
     ],
@@ -862,9 +868,9 @@ const MODULES={
     ],
     phases:[
       {name:'A \u00b7 SEEDED BEFORE THE LIVE SESSION', meta:'CAA prep, not a cold start', steps:[
-        {lane:'caa',n:'1',title:'Runs the Well-Being Game Setup prompt',desc:'Can start as early as 2+ sessions into Life Purpose. Reads every session transcript, Master Network, and the CIF \u2014 identifies feeling states and being-qualities the client has already named or demonstrated.',chips:[chip('note','Claude \u00b7 coach-assist'),chip('r','READ Sessions, Master Network, CIF')]},
-        {lane:'caa',n:'2',title:'Keeps only qualities with 2+ pieces of evidence',desc:'No padding to hit a number \u2014 the same evidence discipline as the Life Purpose values pass.',chips:[]},
-        {lane:'caa',n:'3',title:'Checks the Qualities DB, adds new entries first',desc:'Five categories: Inner State, Energy & Drive, Mind & Thinking, Character & Values, Relationships. A genuinely new quality gets added with a category before it\u2019s ever shown to Dinesh.',chips:[chip('w','WRITE Qualities DB (if new)')]},
+        {lane:'caa',mode:'bot',n:'1',title:'Runs the Well-Being Game Setup prompt',desc:'Can start as early as 2+ sessions into Life Purpose. Reads every session transcript, Master Network, and the CIF \u2014 identifies feeling states and being-qualities the client has already named or demonstrated.',chips:[chip('note','Claude \u00b7 coach-assist'),chip('r','READ Sessions, Master Network, CIF')]},
+        {lane:'caa',mode:'auto',n:'2',title:'Keeps only qualities with 2+ pieces of evidence',desc:'No padding to hit a number \u2014 the same evidence discipline as the Life Purpose values pass.',chips:[]},
+        {lane:'caa',mode:'auto',n:'3',title:'Checks the Qualities DB, adds new entries first',desc:'Five categories: Inner State, Energy & Drive, Mind & Thinking, Character & Values, Relationships. A genuinely new quality gets added with a category before it\u2019s ever shown to Dinesh.',chips:[chip('w','WRITE Qualities DB (if new)')]},
         {lane:'coach',n:'4',title:'Reviews the approval table',desc:'Quality \u00b7 Times Evident \u00b7 Evidence \u00b7 Category \u00b7 Exists in Qualities DB (Y/N) \u2014 held as informed background, not shown to the client.',chips:[chip('gate','Dinesh approval required')]},
         {lane:'notion',n:'5',title:'Well-Being Game rows created \u2014 Client Definition left blank',desc:'Quality, Times Evident, Evidence, and Master List are filled in now. The Client Definition field stays empty on purpose \u2014 it\u2019s filled only after the client names it themselves, live.',chips:[chip('w','WRITE Well-Being Game DB (setup rows)')]},
       ]},
@@ -892,13 +898,13 @@ const MODULES={
       {name:'E \u00b7 SCORE & REFLECT', meta:'every ~3 weeks, alongside the Results Game', steps:[
         {lane:'coach',n:'21',title:'Scores each quality 1\u201310',desc:'\u201cWhere do you feel you are on each?\u201d \u2014 same cadence as the Results Game debrief.',chips:[]},
         {lane:'coach',n:'22',title:'\u201cWhat made you shift?\u201d',desc:'A deeper conversation about what moved the quality up or down since last time.',chips:[]},
-        {lane:'caa',n:'23',title:'Game Scorecard Prompt would capture this \u2014 not built yet',desc:'Planned Part 2: Score, Previous Score, Trend (Up/Stable/Down), Session Note per quality, gated for approval. Today, Dinesh enters both games\u2019 scores by hand \u2014 explicitly not worth automating yet, same 50x-rule decision as the Results Game side.',chips:[chip('note','Claude \u00b7 coach-assist')],planned:true},
+        {lane:'caa',mode:'auto',n:'23',title:'Game Scorecard Prompt would capture this \u2014 not built yet',desc:'Planned Part 2: Score, Previous Score, Trend (Up/Stable/Down), Session Note per quality, gated for approval. Today, Dinesh enters both games\u2019 scores by hand \u2014 explicitly not worth automating yet, same 50x-rule decision as the Results Game side.',chips:[chip('note','Claude \u00b7 coach-assist')],planned:true},
         {lane:'notion',n:'24',title:'Scores logged in the period, by hand today',desc:'Captured alongside the Results Game score in the same Game Period row.',chips:[chip('w','WRITE Well-Being Game DB'),chip('man','manual today, by decision not oversight')]},
       ]},
       {name:'F \u00b7 WHAT IT REVEALS', meta:'the trend, and the correlation', steps:[
-        {lane:'cca',n:'25',title:'Shift conversations feed Guidelines',desc:'What surfaces in the \u201cwhat shifted?\u201d talk becomes a candidate guideline \u2014 same guardrail as every other source.',chips:[chip('loop','\u2192 Guidelines')]},
+        {lane:'cca',mode:'bot',n:'25',title:'Shift conversations feed Guidelines',desc:'What surfaces in the \u201cwhat shifted?\u201d talk becomes a candidate guideline \u2014 same guardrail as every other source.',chips:[chip('loop','\u2192 Guidelines')]},
         {lane:'coach',n:'26',title:'Correlates with the Results Game',desc:'Doing well \u2194 feeling well. Some clients feel-first, some do-first; the pattern becomes clear over 6\u20137 engagements.',chips:[chip('r','READ Game Period DB')]},
-        {lane:'cca',n:'27',title:'Powers the visualisation Dinesh is most excited about',desc:'Next time the client feels off, they \u2014 and the CCA \u2014 check both games together and decide what to change.',chips:[chip('note','CCA \u00b7 companion')]},
+        {lane:'cca',mode:'bot',n:'27',title:'Powers the visualisation Dinesh is most excited about',desc:'Next time the client feels off, they \u2014 and the CCA \u2014 check both games together and decide what to change.',chips:[chip('note','CCA \u00b7 companion')]},
       ]},
     ],
     tableHead:['Database','Space','Read / Write','Role in this module'],
@@ -949,7 +955,7 @@ const MODULES={
         {lane:'coach',n:'2',title:'Three live sources, named explicitly',desc:'The Results Game, the Well-Being Game, or a regular coaching conversation \u2014 any of the three can surface one.',chips:[]},
         {lane:'coach',n:'3',title:'Asks one of two exact questions',desc:'\u201cWhat guideline allowed you to succeed?\u201d or \u201cWhat guideline would have helped you not miss?\u201d \u2014 the second is asked far more often, since most debriefs start from a miss.',chips:[]},
         {lane:'coach',n:'4',title:'A fourth source: mining the Life Purpose stories',desc:'Going back over the peak-fulfilment stories and asking what guideline was already in play during those successes \u2014 insight the client lived before it was ever named.',chips:[chip('loop','\u2190 Life Purpose stories')]},
-        {lane:'cca',n:'5',title:'Also anytime via the CCA',desc:'\u201cIs there something here that could become a guideline?\u201d \u2014 captured in the client\u2019s own words, always inside the defined guardrail.',chips:[chip('note','CCA \u00b7 companion'),chip('w','WRITE Guidelines DB')]},
+        {lane:'cca',mode:'bot',n:'5',title:'Also anytime via the CCA',desc:'\u201cIs there something here that could become a guideline?\u201d \u2014 captured in the client\u2019s own words, always inside the defined guardrail.',chips:[chip('note','CCA \u00b7 companion'),chip('w','WRITE Guidelines DB')]},
       ]},
       {name:'B \u00b7 MICRO OR MACRO \u2014 BOTH ARE REAL GUIDELINES', meta:'a distinction the earlier draft missed', steps:[
         {lane:'coach',n:'6',title:'Micro guidelines \u2014 tied to one situation',desc:'\u201cI remember to take my eyeglasses prescription with me when I go to buy new frames.\u201d Specific, situational, still worth keeping.',chips:[]},
@@ -967,7 +973,7 @@ const MODULES={
         {lane:'coach',n:'14',title:'Turns a captured line into something integrated',desc:'The difference between a guideline that gets logged and one that actually changes how the client moves.',chips:[]},
       ]},
       {name:'E \u00b7 HOW THEY\u2019RE USED', meta:'the memory at work', steps:[
-        {lane:'cca',n:'15',title:'The CCA reads them',desc:'Alongside the vision for that life area and the life purpose, to help the client think through a new situation.',chips:[chip('r','READ Guidelines + Visions + Life Purpose')]},
+        {lane:'cca',mode:'bot',n:'15',title:'The CCA reads them',desc:'Alongside the vision for that life area and the life purpose, to help the client think through a new situation.',chips:[chip('r','READ Guidelines + Visions + Life Purpose')]},
         {lane:'client',n:'16',title:'During coaching: Dinesh-reviewed',desc:'Every new guideline is crosschecked for as long as the engagement is active.',chips:[chip('gate','coach crosscheck')]},
         {lane:'client',n:'17',title:'After graduation: self-directed, forever',desc:'The client keeps writing and refining guidelines through the CCA on their own \u2014 no more crosscheck from Dinesh.',chips:[]},
       ]},
@@ -1018,7 +1024,7 @@ const MODULES={
       {name:'C · BREAK IT DOWN & TRACK', meta:'via Goal Planning + the game', steps:[
         {lane:'coach',n:'4',title:'Use Goal Planning to break it into steps',desc:'The project is broken into steps using the Goal Planning process (see its tab). Example: MBA → entrance exam, find the institute, arrange financing…',chips:[]},
         {lane:'client',n:'5',title:'Pick the next 2–3 steps',desc:'Each meeting, choose what to achieve between now and the next meeting.',chips:[]},
-        {lane:'cca',n:'6',title:'Tracked in the Results Game',desc:'The steps are tracked fortnightly; the CCA can show progress on the project.',chips:[chip('note','CCA · companion'),chip('loop','→ Results Game')]},
+        {lane:'cca',mode:'bot',n:'6',title:'Tracked in the Results Game',desc:'The steps are tracked fortnightly; the CCA can show progress on the project.',chips:[chip('note','CCA · companion'),chip('loop','→ Results Game')]},
       ]},
     ],
     tableHead:['Database','Space','Read / Write','Role in this module'],
@@ -1104,7 +1110,7 @@ const MODULES={
       ]},
       {name:'C · REVIEW TOGETHER', meta:'in the meeting', steps:[
         {lane:'coach',n:'6',title:'Did you hit it?',desc:'In the meeting: did you achieve the habit? If yes, what made you do it? If no, what happened? — a coaching conversation.',chips:[]},
-        {lane:'cca',n:'7',title:'Part of the whole life OS',desc:'The CCA sees the habit data alongside everything else — vision down to everyday living, in one place.',chips:[chip('note','CCA · companion')]},
+        {lane:'cca',mode:'bot',n:'7',title:'Part of the whole life OS',desc:'The CCA sees the habit data alongside everything else — vision down to everyday living, in one place.',chips:[chip('note','CCA · companion')]},
       ]},
     ],
     tableHead:['Database','Space','Read / Write','Role in this module'],
@@ -1194,7 +1200,7 @@ const MODULES={
       ]},
       {name:'C · USE IT WHEN STUCK', meta:'the point of the map', steps:[
         {lane:'client',n:'5',title:'Look at the map',desc:'When stuck or needing help, the client checks the map — who to reach out to, quickly and structured.',chips:[]},
-        {lane:'cca',n:'6',title:'The CCA nudges for help',desc:'The CCA reads the map and nudges — “have you thought of asking [name] for help?” — especially when the client isn’t seeking enough help.',chips:[chip('note','CCA · companion'),chip('r','READ Support Network')]},
+        {lane:'cca',mode:'bot',n:'6',title:'The CCA nudges for help',desc:'The CCA reads the map and nudges — “have you thought of asking [name] for help?” — especially when the client isn’t seeking enough help.',chips:[chip('note','CCA · companion'),chip('r','READ Support Network')]},
       ]},
     ],
     tableHead:['Database','Space','Read / Write','Role in this module'],
@@ -1254,7 +1260,7 @@ const MODULES={
       ]},
       {name:'E \u00b7 CCA HANDOVER & CLOSING THE RECORD', meta:'the admin side, done last', steps:[
         {lane:'coach',n:'13',title:'Hands over the CCA \u2014 confirms it, doesn\u2019t just declare it',desc:'Confirms the client actually has access, knows how to use it, and doesn\u2019t need Dinesh to operate it for them. A graduation gift, not a goodbye \u2014 it carries the whole arc forward.',chips:[]},
-        {lane:'caa',n:'14',title:'Runs Post-Session (Post Call) one final time',desc:'Same generic 5-step as every other session \u2014 session status set to Complete.',chips:[chip('note','Claude \u00b7 coach-assist')]},
+        {lane:'caa',mode:'bot',n:'14',title:'Runs Post-Session (Post Call) one final time',desc:'Same generic 5-step as every other session \u2014 session status set to Complete.',chips:[chip('note','Claude \u00b7 coach-assist')]},
         {lane:'notion',n:'15',title:'Client Page set to Graduated',desc:'Status updated, Last Updated stamped, graduation date recorded on the page.',chips:[chip('w','WRITE Client Page (Status, graduation date)')]},
         {lane:'coach',n:'16',title:'Sends a closing message',desc:'Drafted from the Communications templates, same approval discipline as every other client-facing send.',chips:[chip('gate','Dinesh approval, by established pattern')]},
       ]},
@@ -1288,134 +1294,109 @@ const MODULES={
 /* =================== RENDER =================== */
 const TABS=['e2e','lp','vis','val','dec','poss','cho','rg','wb','gl','close','proj','goal','hab','recar','supp'];
 
-/* =================== AGENT PROMPT BOXES =================== */
-const AGENTS=[
-  {k:'caa', code:'CAA', cls:'caa', name:'Coach-Assist Agent', state:'built',
-   desc:'Claude on the coach side — preps sessions, clusters words, drafts summaries and emails. Everything gated by Dinesh before it writes or sends.',
-   placeholder:'System prompt for CAA…\n\ne.g. You are Dinesh’s coach-assist. Before each session build a pre-call brief from the CIF and prior sessions. Never write to a database without showing the mapping table for approval first.'},
-  {k:'cca', code:'CCA', cls:'cca', name:'Client’s Companion Agent', state:'built',
-   desc:'The client’s own companion — reads their Life Purpose and Visions, pulls stories back as triggers, steers direction. Theirs for life after graduation.',
-   placeholder:'System prompt for CCA…\n\ne.g. You are the client’s companion. Frame every conversation around their purpose, vision and guidelines. Pull specific stories back as triggers. Only Explore mode may write to the Decision Tool.'},
-  {k:'cos', code:'COS', cls:'cos', name:'Coach Ops / Scheduling', state:'sketch',
-   desc:'Aspirational, not built. Confirms bookings, reminds the day before, holds "not now" follow-up dates and resurfaces them. Drafts only — nothing sends without review.',
-   placeholder:'System prompt for COS…\n\ne.g. You handle scheduling ops. Confirm each booking, send a day-before reminder draft, and hold any "not now" follow-up date to resurface it to Dinesh when it arrives. Draft only — never send externally without approval.'},
-  {k:'cit', code:'CIT', cls:'cit', name:'Coach-in-Training / QA', state:'sketch',
-   desc:'Session quality scoring, alongside the pre/post-call prep. Starting point is Dinesh’s existing ChatGPT agent, not a fresh design.',
-   placeholder:'System prompt for CIT…\n\ne.g. You score session quality after each call against the coaching framework, and flag where technique drifted. Start from the existing ChatGPT agent’s rubric.'},
-  {k:'cga', code:'CGA', cls:'cga', name:'Consent / Gate Agent', state:'built',
-   desc:'The audit gate. Checks consent before anything is shared or written; blocks and keeps reminding when the client hasn’t signed. A manual override exists.',
-   placeholder:'System prompt for CGA…\n\ne.g. You are the consent gate. Before any share or write, check the Master List consent tick. If not signed, block the action and remind: "you can’t share this, the client hasn’t signed." Allow a logged manual override.'},
-  {k:'auto', code:'AUTO', cls:'auto', name:'Automation', state:'sketch',
-   desc:'The plumbing between the pieces — form submissions, Notion row creation, calendar sync, and the links that thread data across databases.',
-   placeholder:'Automation notes / prompt…\n\ne.g. When a CIF form is submitted, create the row and auto-fill every column except the Master List link. When a booking lands on Zcal, surface it in the Notion meetings view.'},
-  {k:'bot', code:'BOT', cls:'bot', name:'Bot', state:'sketch',
-   desc:'The client-facing conversational surface — how the client actually talks to the system day to day.',
-   placeholder:'System prompt for the Bot…\n\ne.g. You are the client-facing bot. Keep replies short and warm, in the client’s NLP style. Hand anything coaching-substantive over to the CCA.'},
-];
-
-/* ---- storage: backend when available, localStorage always as mirror/fallback ---- */
-const LS_KEY='bridge_agent_prompts_v1';
-let STORE_MODE='local';     // 'cloud' once backend responds ok
-let PROMPTS=null;           // cached { "tab::agent": {value,updated} }
-let PROMPTS_LOADING=null;   // in-flight load promise
+/* =================== SWIM-LANE NOTES · storage =================== */
+/* Backend (Vercel KV) when connected → shared by everyone. localStorage mirror/fallback otherwise. */
+const LS_KEY='bridge_lane_notes_v1';
+let STORE_MODE='local';     // 'cloud' once the backend confirms KV is connected
+let NOTES=null;             // cached { key: {value,updated} }
+let NOTES_LOADING=null;
 function lsRead(){try{return JSON.parse(localStorage.getItem(LS_KEY)||'{}');}catch(e){return {};}}
 function lsWrite(o){try{localStorage.setItem(LS_KEY,JSON.stringify(o));}catch(e){}}
-function ensurePrompts(){
-  if(PROMPTS) return Promise.resolve(PROMPTS);
-  if(PROMPTS_LOADING) return PROMPTS_LOADING;
+function ensureNotes(){
+  if(NOTES) return Promise.resolve(NOTES);
+  if(NOTES_LOADING) return NOTES_LOADING;
   const local=lsRead();
-  PROMPTS_LOADING=fetch('/api/prompts',{method:'GET'})
+  NOTES_LOADING=fetch('/api/prompts',{method:'GET'})
     .then(r=>r.ok?r.json():null)
-    .then(j=>{ if(j&&j.configured){STORE_MODE='cloud';PROMPTS={...local,...(j.prompts||{})};}
-              else{PROMPTS=local;} return PROMPTS; })
-    .catch(()=>{ PROMPTS=local; return PROMPTS; });
-  return PROMPTS_LOADING;
+    .then(j=>{ if(j&&j.configured){STORE_MODE='cloud';NOTES={...local,...(j.prompts||{})};}
+               else{NOTES=local;} updateStoreBars(); return NOTES; })
+    .catch(()=>{ NOTES=local; updateStoreBars(); return NOTES; });
+  return NOTES_LOADING;
 }
-async function savePrompt(key,value){
+async function saveNote(key,value){
   const rec={value,updated:Date.now()};
   const all=lsRead();all[key]=rec;lsWrite(all);
-  if(PROMPTS) PROMPTS[key]=rec;
+  if(NOTES) NOTES[key]=rec;
+  let ok=false;
   try{
     const r=await fetch('/api/prompts',{method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({key,value})});
-    if(r.ok){const j=await r.json();if(j&&j.configured){STORE_MODE='cloud';return true;}}
-  }catch(e){/* fall back to local only */}
-  return false;
+    if(r.ok){const j=await r.json();if(j&&j.configured){STORE_MODE='cloud';ok=true;}}
+  }catch(e){/* offline / no backend */}
+  updateStoreBars();
+  return ok;
 }
 function fmtTime(ts){if(!ts)return '';const d=new Date(ts);
   return d.toLocaleDateString(undefined,{month:'short',day:'numeric'})+' '+d.toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit'});}
-function storePillText(){return STORE_MODE==='cloud'?'saved to the cloud':'saved on this device';}
-
-/* Agent prompt boxes, scoped to one tab — appended to the bottom of every tab. */
-function renderAgentBoxes(tabKey){
-  const mount=document.getElementById('mount');
-  const wrap=el('details','ph flowph');wrap.open=true;wrap.style.marginTop='22px';
-  const sum=el('summary');
-  sum.innerHTML='<span class="chev"></span><span class="phname">✎ AGENT PROMPTS &amp; NOTES — this tab</span>'+
-    '<span class="phmeta"><span class="astorepill local" id="storepill-'+tabKey+'">saved on this device</span></span>';
-  wrap.appendChild(sum);
-  const body=el('div','phbody');
-  const hint=el('div','abanner');
-  hint.innerHTML='<b>Write a message / prompt for each agent, just for this tab.</b> Type into any box and hit Save — it’s stored and comes back next time. Each tab keeps its own set, so an agent can have different instructions per module.';
-  body.appendChild(hint);
-  const grid=el('div','agrid');
-
-  const controls=[];
-  AGENTS.forEach(a=>{
-    const box=el('div','abox '+a.cls);
-    const stateCls=a.state==='built'?'built':'sketch';
-    const stateTxt=a.state==='built'?'in use':'sketch';
-    box.innerHTML=
-      `<div class="aboxtop"><span class="acode">${a.code}</span><span class="aname">${a.name}</span>`+
-      `<span class="astate ${stateCls}">${stateTxt}</span></div>`+
-      `<div class="adesc">${a.desc}</div>`+
-      `<div class="albl">Message / prompt <span class="hint">— stored, acts as this agent’s comment</span></div>`;
-    const ta=el('textarea');ta.placeholder=a.placeholder;
-    box.appendChild(ta);
-    const row=el('div','abtnrow');
-    const btn=el('button','asave');btn.textContent='Save';btn.disabled=true;
-    const status=el('span','asaved');status.textContent='loading…';
-    row.appendChild(btn);row.appendChild(status);box.appendChild(row);
-
-    const storeKey=tabKey+'::'+a.k;
-    ta.addEventListener('input',()=>{status.textContent='unsaved changes';btn.disabled=false;});
-    btn.addEventListener('click',async()=>{
-      btn.disabled=true;status.textContent='saving…';
-      const ok=await savePrompt(storeKey,ta.value);
-      status.innerHTML=`<b>saved</b> · ${fmtTime(Date.now())}${ok?'':' (this device)'}`;
-      const pill=document.getElementById('storepill-'+tabKey);
-      if(pill){pill.className='astorepill '+(STORE_MODE==='cloud'?'cloud':'local');pill.textContent=storePillText();}
-    });
-    controls.push({a,ta,btn,status,storeKey});
-    grid.appendChild(box);
-  });
-  body.appendChild(grid);wrap.appendChild(body);
-  // place the boxes at the TOP of the tab (right under the intro) so they're visible without scrolling
-  const intro=mount.querySelector('.mintro');
-  if(intro&&intro.nextSibling){mount.insertBefore(wrap,intro.nextSibling);}
-  else{mount.appendChild(wrap);}
-
-  // fill values once storage resolves
-  ensurePrompts().then(saved=>{
-    controls.forEach(c=>{
-      const rec=saved[c.storeKey]||{};
-      c.ta.value=rec.value||'';
-      c.btn.disabled=true;
-      c.status.innerHTML=rec.updated?`saved · ${fmtTime(rec.updated)}`:'not saved yet';
-    });
-    const pill=document.getElementById('storepill-'+tabKey);
-    if(pill){pill.className='astorepill '+(STORE_MODE==='cloud'?'cloud':'local');pill.textContent=storePillText();}
-  });
+function storeText(){return STORE_MODE==='cloud'?'Shared cloud storage · everyone sees saves':'This device only · connect KV to share (see README)';}
+function updateStoreBars(){document.querySelectorAll('.storepill').forEach(p=>{
+  p.className='storepill '+(STORE_MODE==='cloud'?'cloud':'local');
+  p.textContent=STORE_MODE==='cloud'?'SHARED · cloud':'THIS DEVICE';});
+  document.querySelectorAll('.storehint').forEach(h=>{h.textContent=storeText();});}
+function storeBar(){
+  const bar=el('div','storebar');
+  bar.innerHTML='<b>✎ Editable swim lane.</b> Hover any empty cell and click <b>＋</b> to add a message, then Save. '+
+    '<span class="storepill local">THIS DEVICE</span> <span class="storehint">'+storeText()+'</span>';
+  return bar;
 }
+
+/* one annotatable cell */
+function makeNoteCell(cell,laneKey,laneName,storeKey){
+  function render(){
+    cell.innerHTML='';
+    const rec=(NOTES&&NOTES[storeKey])||{};
+    const hasVal=rec.value&&rec.value.trim()!=='';
+    cell.classList.toggle('empty',!hasVal);
+    if(hasVal){
+      const card=el('div','notecard');
+      card.innerHTML=`<span class="ntag">${laneName} · note</span>`;
+      card.appendChild(document.createTextNode(rec.value));
+      card.title='Click to edit';
+      card.addEventListener('click',edit);
+      cell.appendChild(card);
+    }else{
+      const add=el('div','addnote');add.textContent='＋';add.title='Add a message';
+      add.addEventListener('click',edit);
+      cell.appendChild(add);
+    }
+  }
+  function edit(){
+    const rec=(NOTES&&NOTES[storeKey])||{};
+    cell.innerHTML='';cell.classList.remove('empty');
+    const wrap=el('div','noteedit');
+    const ta=el('textarea');ta.value=rec.value||'';ta.placeholder=`Message for ${laneName}…`;
+    wrap.appendChild(ta);
+    const row=el('div','noterow');
+    const save=el('button','nbtn save');save.textContent='Save';
+    const cancel=el('button','nbtn cancel');cancel.textContent='Cancel';
+    const st=el('span','nstatus');st.textContent=rec.updated?'saved '+fmtTime(rec.updated):'';
+    row.appendChild(save);row.appendChild(cancel);
+    if(rec.value){const del=el('button','nbtn del');del.textContent='Delete';
+      del.addEventListener('click',async()=>{del.disabled=true;st.textContent='deleting…';await saveNote(storeKey,'');render();});
+      row.appendChild(del);}
+    row.appendChild(st);
+    wrap.appendChild(row);cell.appendChild(wrap);
+    ta.focus();
+    cancel.addEventListener('click',render);
+    save.addEventListener('click',async()=>{
+      save.disabled=true;st.textContent='saving…';
+      await saveNote(storeKey,ta.value);
+      render();
+    });
+  }
+  render();
+  return {refresh:render,storeKey};
+}
+let NOTE_CELLS=[];
+
 function renderLegend(){
   const L=document.getElementById('legend');L.style.display='flex';L.innerHTML='';
   LANES.forEach(l=>{const g=el('span','grp');g.innerHTML=`<i style="background:var(--${l.k})"></i>${l.n}`;L.appendChild(g);});
   const g0=el('span','grp');g0.innerHTML='<i style="background:var(--system)"></i>SYSTEM';L.appendChild(g0);
-  const gg=el('span','grp');gg.innerHTML='<i style="background:var(--gate)"></i>CGA <span style="font-weight:400;color:var(--muted)">(gate moments)</span>';L.appendChild(gg);
-  const gc=el('span','grp');gc.innerHTML='<i style="background:var(--cos);border:1px dashed #a8823a"></i>COS <span style="font-weight:400;color:var(--muted)">(sketch, not built)</span>';L.appendChild(gc);
   L.appendChild(el('span','legsep'));
   [['chip r','READ'],['chip w','WRITE'],['chip man','MANUAL'],['chip gate','GATE'],['chip loop','LOOP'],['chip note','AI']].forEach(([c,t])=>{
     const g=el('span','grp');g.innerHTML=`<span class="${c}" style="margin:0">${t}</span>`;L.appendChild(g);});
+  const gn=el('span','grp');gn.style.cssText='color:var(--muted);font-weight:400;font-size:11px';gn.textContent='BOT / AUTOMATION tags on agent steps = draft (from the bot-vs-automation doc) — confirm';L.appendChild(gn);
 }
 
 function renderE2E(){
@@ -1446,7 +1427,12 @@ function flowSection(flow,title){const d=el('details','ph flowph');d.open=true;c
 
 function laneHeaderRow(){const row=el('div','lanehead');LANES.forEach(l=>{const c=el('div','lh '+l.k);c.innerHTML=`<div class="lhn">${l.n}</div><div class="lhs">${l.s}</div>`;row.appendChild(c);});return row;}
 function stepCard(step){const planned=step.planned?' planned':'';const card=el('div','card '+step.lane+planned);const laneName=LANES.find(l=>l.k===step.lane).n;const hasGate=(step.chips||[]).some(c=>c.t==='gate');const cga=hasGate?'<span class="cgatag">CGA</span>':'';const plannedTag=step.planned?'<span class="plannedtag">planned \u2014 not built</span>':'';card.innerHTML=`<div class="ctop"><span class="lane-tag lt ${step.lane}">${laneName}</span><span class="cnum">STEP ${step.n}</span>${cga}${plannedTag}</div><div class="ctitle">${step.title}</div><div class="cdesc">${step.desc}</div>${step.chips&&step.chips.length?`<div class="cchips">${chipsHTML(step.chips)}</div>`:''}`;return card;}
-function swimRow(step){const row=el('div','srow');LANES.forEach(l=>{const cell=el('div','sc '+l.k+(l.k===step.lane?'':' empty'));if(l.k===step.lane)cell.appendChild(stepCard(step));row.appendChild(cell);});return row;}
+function swimRow(step,tabKey){const row=el('div','srow');LANES.forEach(l=>{let cell;
+    if(l.k===step.lane){cell=el('div','sc '+l.k);cell.appendChild(stepCard(step));}
+    else if((l.k==='bot'||l.k==='auto')&&step.mode===l.k){cell=el('div','sc '+l.k+' modecell');const mk=el('div','modemark '+l.k);mk.textContent=(l.k==='bot'?'BOT':'AUTOMATION');cell.appendChild(mk);}
+    else{cell=el('div','sc '+l.k+' empty');const laneName=LANES.find(x=>x.k===l.k).n;
+         NOTE_CELLS.push(makeNoteCell(cell,l.k,laneName,tabKey+'::'+step.n+'::'+l.k));}
+    row.appendChild(cell);});return row;}
 
 function renderModule(key){
   const m=MODULES[key];const mount=document.getElementById('mount');mount.innerHTML='';
@@ -1454,14 +1440,18 @@ function renderModule(key){
   intro.innerHTML=`<span class="layerTag" style="color:${m.layerColor};background:${m.layerBg}">${m.layer}</span><div class="mt">${m.title}</div><div class="md">${m.desc}</div>`;
   mount.appendChild(intro);
   if(m.flow) mount.appendChild(flowSection(m.flow,m.flowTitle));
-  mount.appendChild(laneHeaderRow());
+  mount.appendChild(storeBar());
+  NOTE_CELLS=[];
+  const swim=el('div','swimscroll');mount.appendChild(swim);swim.appendChild(laneHeaderRow());
   m.phases.forEach((p,pi)=>{
     const d=el('details','ph');if(pi<2)d.open=true;
     const sum=el('summary');sum.innerHTML=`<span class="chev"></span><span class="phname">${p.name}</span><span class="phmeta">${p.steps.length} steps · ${p.meta}</span>`;
     d.appendChild(sum);const body=el('div','phbody');
-    p.steps.forEach((s,si)=>{body.appendChild(swimRow(s));if(si<p.steps.length-1)body.appendChild(el('div','conn','▼'));});
-    d.appendChild(body);mount.appendChild(d);
+    p.steps.forEach((s,si)=>{body.appendChild(swimRow(s,key));if(si<p.steps.length-1)body.appendChild(el('div','conn','▼'));});
+    d.appendChild(body);swim.appendChild(d);
   });
+  requestAnimationFrame(()=>{swim.scrollLeft=0;});
+  ensureNotes().then(()=>{NOTE_CELLS.forEach(c=>c.refresh());updateStoreBars();});
   if(m.refTable){
     const rd=el('details','ph refdetails');
     const rsum=el('summary');rsum.innerHTML=`<span class="chev"></span><span class="phname">${m.refTableTitle}</span><span class="phmeta">${m.refTable.length} entries · reference</span>`;
@@ -1487,7 +1477,6 @@ function show(k){
   TABS.forEach(x=>{document.getElementById('b-'+x).className=(x===k)?'active':'';});
   renderLegend();
   if(k==='e2e')renderE2E(); else renderModule(k);
-  renderAgentBoxes(k);
 }
 
 document.getElementById('foot').innerHTML=

@@ -1,43 +1,42 @@
-# The Bridge to "I" — architecture map + agent prompt boxes
+# The Bridge to "I" — architecture map with an editable swim lane
 
-A single-page map of Dinesh's coaching flow, plus an **Agents** tab where you can
-type and **store** a system prompt / note for each agent:
+A single-page map of Dinesh's coaching flow. The swim lane on every module tab
+has **10 lanes**:
 
-- **CAA** — Coach-Assist Agent
-- **CCA** — Client's Companion Agent
-- **COS** — Coach Ops / Scheduling
-- **CIT** — Coach-in-Training / QA
-- **CGA** — Consent / Gate Agent
-- **AUTO** — Automation
-- **BOT** — Bot
+**CLIENT · COACH · CAA · CCA · COS · CIT · CGA · NOTION · BOT · AUTOMATION**
 
-Each box's text acts as that agent's standing instruction (a "comment") and is saved.
+On any module tab you can **add a message into any swim-lane cell**: hover an
+empty cell, click the **＋**, type, and **Save**. The note shows as a small card
+in that lane, on that step's row (e.g. a note in the CIT lane next to Step 1).
+Click a saved note to edit or delete it.
+
+## Where notes are stored (important)
+
+Notes save through `/api/prompts` (a Vercel serverless function). Storage has
+two modes, shown by the pill in the **"✎ Editable swim lane"** bar on each tab:
+
+- **THIS DEVICE** — no cloud store connected yet, so notes are kept only in the
+  current browser (localStorage). They are **not** shared with other people.
+- **SHARED · cloud** — a Vercel KV store is connected, so notes are saved
+  server-side and **everyone who opens the page sees them**.
+
+To get shared storage for everyone, do the one-time setup below.
 
 ## Deploy on Vercel
 
-1. Push this repo to GitHub (already done on the working branch).
-2. In Vercel → **Add New… → Project** → import this repo → **Deploy**.
-   No build step is needed — it's a static page plus one serverless function
-   in `api/`.
+1. Import this repo in Vercel → **Deploy** (no build step; static page + `api/`).
 
-That's it — the site works immediately. Out of the box, prompts are saved in the
-visitor's **own browser** (localStorage): nothing is lost, but they don't sync
-across devices or people.
+The site works immediately in **THIS DEVICE** mode.
 
-## Turn on shared cloud storage (optional, ~2 min)
-
-To make saved prompts persist server-side and be shared by everyone who opens
-the page, connect a KV store:
+## Turn on shared storage for everyone (~2 min) — required for "everyone sees it"
 
 1. Vercel project → **Storage** → **Create Database** → **KV** (Upstash Redis) →
    connect it to this project.
-2. Vercel auto-adds the env vars `KV_REST_API_URL` and `KV_REST_API_TOKEN`.
+2. Vercel auto-adds env vars `KV_REST_API_URL` and `KV_REST_API_TOKEN`.
 3. **Redeploy**.
 
-The `api/prompts.js` function detects those env vars automatically. When present,
-it reads/writes the shared store and the page shows **"saved to the cloud"**;
-when absent, it reports `configured: false` and the page falls back to
-localStorage and shows **"saved on this device"**. No code change needed either way.
+`api/prompts.js` detects those env vars automatically. Once present, the pill
+flips to **SHARED · cloud** and notes persist for all visitors. No code change.
 
 ## Local development
 
@@ -46,12 +45,14 @@ npm install
 npx vercel dev
 ```
 
-Without KV env vars set locally, the API returns `configured: false` and the page
-uses localStorage — same graceful fallback as production.
+Without KV env vars, the API returns `configured: false` and the page runs in
+**THIS DEVICE** mode — same graceful fallback as production.
 
 ## Files
 
-- `index.html` — the whole page (map + Agents tab). Storage logic lives in the
-  inline `<script>` (`loadPrompts` / `savePrompt`).
-- `api/prompts.js` — `GET` returns all stored prompts; `POST {key,value}` saves one.
-- `vercel.json`, `package.json` — Vercel config and the single `@vercel/kv` dependency.
+- `index.html` — the whole page. Swim-lane note logic is in the inline `<script>`
+  (`ensureNotes` / `saveNote` / `makeNoteCell`). Notes are keyed
+  `tab::step::lane`.
+- `api/prompts.js` — `GET` returns all saved notes; `POST {key,value}` saves one
+  (empty value deletes).
+- `vercel.json`, `package.json` — Vercel config + the single `@vercel/kv` dep.
