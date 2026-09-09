@@ -1355,13 +1355,15 @@ function storeBar(){
   bar.innerHTML='<b>✎ Fully editable swim lane.</b> <b>✎</b> edit · <b>✕</b> delete (goes to Trash) · <b>＋ message</b> · <b>＋ Add row</b>. '+
     '<span class="storepill local">THIS DEVICE</span> <span class="storehint">'+storeText()+'</span>';
   const spacer=el('span');spacer.style.flex='1';bar.appendChild(spacer);
-  const exp=el('button','tbtn');exp.textContent='⤓ Backup';exp.title='Download every row & note as an HTML file (viewable in a browser and re-importable)';
+  const exp=el('button','tbtn');exp.textContent='⤓ Backup (changes)';exp.title='Download only your changes — edits, added/deleted rows and messages — as a re-importable HTML file';
   exp.addEventListener('click',exportBackup);
-  const imp=el('button','tbtn');imp.textContent='⤒ Restore file';imp.title='Import a backup file (HTML or JSON)';
+  const snap=el('button','tbtn');snap.textContent='⤓ Full snapshot';snap.title='Download the whole current swim lane (every tab, every step with your changes applied, and all messages) as a readable HTML file';
+  snap.addEventListener('click',()=>ensureNotes().then(exportFullSnapshot));
+  const imp=el('button','tbtn');imp.textContent='⤒ Restore file';imp.title='Import a backup file (HTML or JSON) — restores from a “changes” backup';
   const fi=el('input');fi.type='file';fi.accept='text/html,.html,application/json,.json';fi.style.display='none';
   fi.addEventListener('change',()=>{if(fi.files[0])importBackup(fi.files[0]);fi.value='';});
   imp.addEventListener('click',()=>fi.click());
-  bar.appendChild(exp);bar.appendChild(imp);bar.appendChild(fi);
+  bar.appendChild(exp);bar.appendChild(snap);bar.appendChild(imp);bar.appendChild(fi);
   return bar;
 }
 
@@ -1433,6 +1435,51 @@ async function importBackup(file){
   for(const [k,rec] of entries){const val=(rec&&typeof rec==='object')?rec.value:rec;await saveNote(k,val);}
   if(CURRENT&&CURRENT!=='e2e')renderModule(CURRENT);else show(CURRENT);
   alert('Import complete — '+entries.length+' entries restored.');
+}
+
+/* ---- full snapshot: the whole current version (base + changes), readable HTML ---- */
+function snapshotReadable(){
+  let body='';
+  TABS.filter(t=>MODULES[t]).forEach(tab=>{
+    const m=MODULES[tab];
+    body+=`<h2>${m.title} <span class="k">${escHtml(tab)}</span></h2>`;
+    m.phases.forEach((p,pi)=>{
+      const rows=phaseRows(tab,pi,p.steps);
+      if(!rows.length)return;
+      body+=`<h3>${escHtml(p.name)}</h3>`;
+      rows.forEach(r=>{
+        body+=`<div class="rowc"><div class="rh"><b>${r.base?('Step '+escHtml(r.id)):'New row'}</b> · ${escHtml(laneName(r.lane))}${r.planned?' · planned':''}</div>`+
+          `<div class="rt">${r.title||'<i>(untitled)</i>'}</div>`+
+          (r.desc?`<div class="rd">${r.desc}</div>`:'');
+        const msgs=[];
+        LANES.forEach(l=>{const rec=NOTES&&NOTES[tab+'::'+r.id+'::'+l.k];const v=rec&&(typeof rec==='object'?rec.value:rec);if(v&&v.trim())msgs.push(l.n+': '+v);});
+        if(msgs.length){body+='<ul class="msgs">';msgs.forEach(mm=>{body+=`<li>${escHtml(mm)}</li>`;});body+='</ul>';}
+        body+='</div>';
+      });
+    });
+  });
+  return body||'<p>Nothing to show yet.</p>';
+}
+function exportFullSnapshot(){
+  const when=new Date().toLocaleString();
+  const doc='<!doctype html><html><head><meta charset="utf-8"><title>Bridge swim-lane — full snapshot</title>'+
+    '<style>body{font-family:system-ui,Segoe UI,Arial,sans-serif;max-width:900px;margin:24px auto;padding:0 16px;color:#2b2521;background:#f4f2ee}'+
+    'h1{font-size:20px}h2{font-size:16px;margin:26px 0 2px;border-top:2px solid #c58a1e;padding-top:14px}'+
+    'h3{font-size:12px;letter-spacing:.04em;color:#7a7067;margin:14px 0 6px;text-transform:uppercase}'+
+    '.k{font:11px ui-monospace,monospace;color:#9a8f82}'+
+    '.rowc{background:#fff;border:1px solid #e3ddd4;border-left:3px solid #c58a1e;border-radius:8px;padding:9px 12px;margin:6px 0}'+
+    '.rh{font-size:10.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:#7a7067;margin-bottom:2px}'+
+    '.rt{font-size:13.5px;font-weight:700;color:#2b2521}.rd{font-size:12.5px;color:#5a5045;margin-top:2px;line-height:1.5}'+
+    '.msgs{margin:6px 0 0;padding-left:18px}.msgs li{font-size:12px;color:#6b4a1e;margin:2px 0}'+
+    '.banner{background:#fff;border:1px solid #e3ddd4;border-left:4px solid #4f7a48;border-radius:8px;padding:12px 14px;font-size:13px;line-height:1.55;margin-bottom:6px}</style></head>'+
+    '<body><h1>The Bridge to “I” — full snapshot</h1>'+
+    '<div class="banner"><b>Full current version.</b> Every tab’s swim lane as it stands now — the built-in steps with your edits applied, added rows included, deleted rows removed, and every message shown under its step. A readable record to keep or print. Exported '+escHtml(when)+'.</div>'+
+    snapshotReadable()+
+    '</body></html>';
+  const blob=new Blob([doc],{type:'text/html'});
+  const url=URL.createObjectURL(blob);const a=document.createElement('a');
+  a.href=url;a.download='bridge-swimlane-full-'+new Date().toISOString().slice(0,19).replace(/[:T]/g,'-')+'.html';
+  document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);
 }
 
 /* ---- trash: soft-deleted rows, restorable ---- */

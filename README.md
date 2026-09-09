@@ -22,13 +22,17 @@ Every deleted row goes to the **🗑 Trash** panel at the top of the tab, with
 purges. So a delete is always reversible.
 
 ### Backup / Restore (protection against total loss)
-The store bar has two buttons:
-- **⤓ Backup** — downloads every row, edit and note across all tabs as one
-  self-contained **HTML** file. You can open it in any browser to read it, and
-  it can be re-imported (the data is embedded inside the file).
-- **⤒ Restore file** — imports a backup file (HTML, or an older JSON export),
-  overwriting matching entries with the file's versions (anything not in the
-  file is left alone).
+The store bar has three buttons:
+- **⤓ Backup (changes)** — downloads only your **changes** (edits, added/deleted
+  rows and messages) as a self-contained **HTML** file. Readable in a browser,
+  and **re-importable** (the raw data is embedded in the file).
+- **⤓ Full snapshot** — downloads the **whole current version**: every tab's
+  swim lane with your edits applied, added rows in, deleted rows out, and every
+  message under its step. A readable HTML record to keep or print. (Read-only —
+  use the changes backup to restore.)
+- **⤒ Restore file** — imports a **changes** backup (HTML, or an older JSON
+  export), overwriting matching entries with the file's versions (anything not
+  in the file is left alone).
 
 This is your insurance if the store is ever wiped or corrupted — keep a backup
 file and you can always re-import it.
