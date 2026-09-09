@@ -202,6 +202,25 @@
   .storepill.cloud{color:var(--new);background:var(--newbg);border:1px solid #b7ddc7}
   .storepill.local{color:#a8823a;background:#fdf7e8;border:1px solid #e2cf9a}
   .storehint{font-size:11px;color:#9a8f82}
+  /* ---- full edit: card controls, row editor, add/restore ---- */
+  .card{position:relative}
+  .cardctl{position:absolute;top:5px;right:5px;display:none;gap:3px}
+  .card:hover .cardctl{display:flex}
+  .cbtn{border:none;cursor:pointer;font-size:10px;line-height:1;border-radius:5px;padding:3px 5px;background:#efe9e0;color:#6b5f4f;font-weight:700}
+  .cbtn.del{background:#f6e3df;color:#a23b2f}
+  .cardedit{display:flex;flex-direction:column;gap:5px}
+  .cardedit input,.cardedit select,.cardedit textarea{font-family:inherit;font-size:11px;border:1px solid var(--line2);border-radius:6px;padding:5px 7px;background:#fff;color:var(--ink);width:100%}
+  .cardedit textarea{min-height:60px;resize:vertical;line-height:1.4}
+  .cardedit .lbl{font-size:8.5px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;color:var(--muted)}
+  .noteadd{display:inline-flex;align-items:center;gap:4px;cursor:pointer;font-size:10px;font-weight:700;color:#b7ab9c;
+    border:1px dashed var(--line2);border-radius:6px;padding:4px 8px;margin:3px;background:rgba(255,255,255,.4)}
+  .noteadd:hover{color:var(--gold);border-color:var(--gold);background:#fffdf6}
+  .sc.empty{min-height:34px}
+  .phactions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:8px 4px 2px;border-top:1px dashed var(--line2);margin-top:6px}
+  .addrow{border:1px solid var(--caa);background:#eef4ec;color:var(--caa);cursor:pointer;font-family:inherit;font-size:11.5px;font-weight:700;border-radius:7px;padding:6px 12px}
+  .addrow:hover{background:#e4efe0}
+  .restore{font-size:11px;color:#a23b2f;background:none;border:none;cursor:pointer;text-decoration:underline;font-family:inherit}
+  .rowwrap>.conn{margin:2px 0}
   @media(max-width:720px){.tree-row{grid-template-columns:1fr}.tree-row::before{display:none}}
 </style>
 </head>
@@ -1335,34 +1354,51 @@ function updateStoreBars(){document.querySelectorAll('.storepill').forEach(p=>{
   document.querySelectorAll('.storehint').forEach(h=>{h.textContent=storeText();});}
 function storeBar(){
   const bar=el('div','storebar');
-  bar.innerHTML='<b>✎ Editable swim lane.</b> Hover any empty cell and click <b>＋</b> to add a message, then Save. '+
+  bar.innerHTML='<b>✎ Fully editable swim lane.</b> Click a step card’s <b>✎</b> to edit it or <b>✕</b> to delete the row · click <b>＋ message</b> in any cell to add a note · use <b>＋ Add row</b> under a phase to create a row. '+
     '<span class="storepill local">THIS DEVICE</span> <span class="storehint">'+storeText()+'</span>';
   return bar;
 }
 
-/* one annotatable cell */
-function makeNoteCell(cell,laneKey,laneName,storeKey){
+/* ---- row overlay (create / edit / delete / retrieve), stored per tab ---- */
+function getOverlay(tab){
+  const raw=(NOTES&&NOTES['rows:'+tab]&&NOTES['rows:'+tab].value)||'';
+  let o={};try{o=raw?JSON.parse(raw):{};}catch(e){o={};}
+  o.edits=o.edits||{};o.added=o.added||[];o.deleted=o.deleted||[];
+  return o;
+}
+async function saveOverlay(tab,o){await saveNote('rows:'+tab,JSON.stringify(o));}
+function newRowId(){return 'x'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
+/* merge base steps + overlay → the rows to render for one phase */
+function phaseRows(tab,phaseIndex,baseSteps){
+  const o=getOverlay(tab);const del=new Set(o.deleted);
+  const rows=baseSteps.filter(s=>!del.has(String(s.n))).map(s=>{const e=o.edits[String(s.n)]||{};
+    return {id:String(s.n),base:true,lane:e.lane||s.lane,title:e.title!=null?e.title:s.title,
+            desc:e.desc!=null?e.desc:s.desc,chips:s.chips,mode:s.mode,planned:s.planned};});
+  o.added.filter(a=>a.phase===phaseIndex).forEach(a=>{const e=o.edits[a.id]||{};
+    rows.push({id:a.id,base:false,lane:e.lane||'coach',title:e.title||'',desc:e.desc||'',chips:[],mode:null,planned:false});});
+  return rows;
+}
+
+/* one annotatable cell (a message box), rendered into an owned host element */
+function makeNoteCell(host,laneKey,laneName,storeKey){
   function render(){
-    cell.innerHTML='';
+    host.innerHTML='';
     const rec=(NOTES&&NOTES[storeKey])||{};
     const hasVal=rec.value&&rec.value.trim()!=='';
-    cell.classList.toggle('empty',!hasVal);
     if(hasVal){
       const card=el('div','notecard');
       card.innerHTML=`<span class="ntag">${laneName} · note</span>`;
       card.appendChild(document.createTextNode(rec.value));
-      card.title='Click to edit';
-      card.addEventListener('click',edit);
-      cell.appendChild(card);
+      card.title='Click to edit';card.addEventListener('click',edit);
+      host.appendChild(card);
     }else{
-      const add=el('div','addnote');add.textContent='＋';add.title='Add a message';
-      add.addEventListener('click',edit);
-      cell.appendChild(add);
+      const add=el('div','noteadd');add.innerHTML='＋ message';add.title='Add a message';
+      add.addEventListener('click',edit);host.appendChild(add);
     }
   }
   function edit(){
     const rec=(NOTES&&NOTES[storeKey])||{};
-    cell.innerHTML='';cell.classList.remove('empty');
+    host.innerHTML='';
     const wrap=el('div','noteedit');
     const ta=el('textarea');ta.value=rec.value||'';ta.placeholder=`Message for ${laneName}…`;
     wrap.appendChild(ta);
@@ -1374,15 +1410,9 @@ function makeNoteCell(cell,laneKey,laneName,storeKey){
     if(rec.value){const del=el('button','nbtn del');del.textContent='Delete';
       del.addEventListener('click',async()=>{del.disabled=true;st.textContent='deleting…';await saveNote(storeKey,'');render();});
       row.appendChild(del);}
-    row.appendChild(st);
-    wrap.appendChild(row);cell.appendChild(wrap);
-    ta.focus();
+    row.appendChild(st);wrap.appendChild(row);host.appendChild(wrap);ta.focus();
     cancel.addEventListener('click',render);
-    save.addEventListener('click',async()=>{
-      save.disabled=true;st.textContent='saving…';
-      await saveNote(storeKey,ta.value);
-      render();
-    });
+    save.addEventListener('click',async()=>{save.disabled=true;st.textContent='saving…';await saveNote(storeKey,ta.value);render();});
   }
   render();
   return {refresh:render,storeKey};
@@ -1426,13 +1456,95 @@ function flowBox(flow){const box=el('div','flowbox');flow.forEach(f=>{if(f.type=
 function flowSection(flow,title){const d=el('details','ph flowph');d.open=true;const steps=flow.filter(f=>f.type==='node').length;const sum=el('summary');sum.innerHTML=`<span class="chev"></span><span class="phname">${title}</span><span class="phmeta">${steps} steps · overview</span>`;d.appendChild(sum);const body=el('div','phbody flowbody');body.appendChild(flowBox(flow));d.appendChild(body);return d;}
 
 function laneHeaderRow(){const row=el('div','lanehead');LANES.forEach(l=>{const c=el('div','lh '+l.k);c.innerHTML=`<div class="lhn">${l.n}</div><div class="lhs">${l.s}</div>`;row.appendChild(c);});return row;}
-function stepCard(step){const planned=step.planned?' planned':'';const card=el('div','card '+step.lane+planned);const laneName=LANES.find(l=>l.k===step.lane).n;const hasGate=(step.chips||[]).some(c=>c.t==='gate');const cga=hasGate?'<span class="cgatag">CGA</span>':'';const plannedTag=step.planned?'<span class="plannedtag">planned \u2014 not built</span>':'';card.innerHTML=`<div class="ctop"><span class="lane-tag lt ${step.lane}">${laneName}</span><span class="cnum">STEP ${step.n}</span>${cga}${plannedTag}</div><div class="ctitle">${step.title}</div><div class="cdesc">${step.desc}</div>${step.chips&&step.chips.length?`<div class="cchips">${chipsHTML(step.chips)}</div>`:''}`;return card;}
-function swimRow(step,tabKey){const row=el('div','srow');LANES.forEach(l=>{let cell;
-    if(l.k===step.lane){cell=el('div','sc '+l.k);cell.appendChild(stepCard(step));}
-    else if((l.k==='bot'||l.k==='auto')&&step.mode===l.k){cell=el('div','sc '+l.k+' modecell');const mk=el('div','modemark '+l.k);mk.textContent=(l.k==='bot'?'BOT':'AUTOMATION');cell.appendChild(mk);}
-    else{cell=el('div','sc '+l.k+' empty');const laneName=LANES.find(x=>x.k===l.k).n;
-         NOTE_CELLS.push(makeNoteCell(cell,l.k,laneName,tabKey+'::'+step.n+'::'+l.k));}
-    row.appendChild(cell);});return row;}
+function laneName(k){const l=LANES.find(x=>x.k===k);return l?l.n:k;}
+function fixConns(body){const wraps=[...body.querySelectorAll('.rowwrap')];wraps.forEach((w,i)=>{const c=w.querySelector('.conn');if(c)c.style.display=(i===wraps.length-1)?'none':'';});}
+
+/* the editable step card inside its lane cell */
+function buildCardInto(cell,r,tab,pi,baseSteps,body){
+  const card=el('div','card '+r.lane+(r.planned?' planned':''));
+  function view(){
+    const hasGate=(r.chips||[]).some(c=>c.t==='gate');
+    const cga=hasGate?'<span class="cgatag">CGA</span>':'';
+    const plannedTag=r.planned?'<span class="plannedtag">planned \u2014 not built</span>':'';
+    const num=r.base?('STEP '+r.id):'NEW';
+    const title=(r.title&&r.title.trim())?r.title:'<span style="color:#b7ab9c">(untitled)</span>';
+    card.innerHTML=`<div class="cardctl"><button class="cbtn edit" title="Edit this box">\u270e</button><button class="cbtn del" title="Delete this row">\u2715</button></div>`+
+      `<div class="ctop"><span class="lane-tag lt ${r.lane}">${laneName(r.lane)}</span><span class="cnum">${num}</span>${cga}${plannedTag}</div>`+
+      `<div class="ctitle">${title}</div>`+
+      `<div class="cdesc">${r.desc||''}</div>`+
+      (r.chips&&r.chips.length?`<div class="cchips">${chipsHTML(r.chips)}</div>`:'');
+    card.querySelector('.cbtn.edit').addEventListener('click',edit);
+    card.querySelector('.cbtn.del').addEventListener('click',del);
+  }
+  function edit(){
+    card.innerHTML='';
+    const box=el('div','cardedit');
+    const l1=el('span','lbl');l1.textContent='Lane';box.appendChild(l1);
+    const sel=el('select');LANES.forEach(l=>{const op=el('option');op.value=l.k;op.textContent=l.n;if(l.k===r.lane)op.selected=true;sel.appendChild(op);});box.appendChild(sel);
+    const l2=el('span','lbl');l2.textContent='Title';box.appendChild(l2);
+    const ti=el('input');ti.value=r.title||'';box.appendChild(ti);
+    const l3=el('span','lbl');l3.textContent='Description';box.appendChild(l3);
+    const de=el('textarea');de.value=r.desc||'';box.appendChild(de);
+    const row=el('div','noterow');
+    const save=el('button','nbtn save');save.textContent='Save';
+    const cancel=el('button','nbtn cancel');cancel.textContent='Cancel';
+    const st=el('span','nstatus');
+    row.appendChild(save);row.appendChild(cancel);row.appendChild(st);box.appendChild(row);
+    card.appendChild(box);ti.focus();
+    cancel.addEventListener('click',view);
+    save.addEventListener('click',async()=>{save.disabled=true;st.textContent='saving\u2026';
+      const o=getOverlay(tab);o.edits[r.id]={...(o.edits[r.id]||{}),lane:sel.value,title:ti.value,desc:de.value};
+      await saveOverlay(tab,o);renderPhaseBody(body,tab,pi,baseSteps);});
+  }
+  async function del(){
+    if(!window.confirm('Delete this row from the swim lane?'))return;
+    const o=getOverlay(tab);
+    if(r.base){if(!o.deleted.includes(r.id))o.deleted.push(r.id);}
+    else{o.added=o.added.filter(a=>a.id!==r.id);delete o.edits[r.id];}
+    await saveOverlay(tab,o);renderPhaseBody(body,tab,pi,baseSteps);
+  }
+  view();cell.appendChild(card);
+}
+
+/* one full swim-lane row (10 cells); every cell can hold a message */
+function buildRowElement(r,tab,pi,baseSteps,body){
+  const rowEl=el('div','srow');
+  LANES.forEach(l=>{
+    const cell=el('div','sc '+l.k);
+    if(l.k===r.lane){buildCardInto(cell,r,tab,pi,baseSteps,body);}
+    else if((l.k==='bot'||l.k==='auto')&&r.mode===l.k){const mk=el('div','modemark '+l.k);mk.textContent=(l.k==='bot'?'BOT':'AUTOMATION');cell.appendChild(mk);}
+    const host=el('div','notehost');cell.appendChild(host);
+    makeNoteCell(host,l.k,laneName(l.k),tab+'::'+r.id+'::'+l.k);
+    rowEl.appendChild(cell);
+  });
+  return rowEl;
+}
+
+/* render (or re-render) one phase's rows + the add/restore toolbar */
+function renderPhaseBody(body,tab,pi,baseSteps){
+  body.innerHTML='';
+  phaseRows(tab,pi,baseSteps).forEach(r=>{
+    const wrap=el('div','rowwrap');
+    wrap.appendChild(buildRowElement(r,tab,pi,baseSteps,body));
+    wrap.appendChild(el('div','conn','\u25bc'));
+    body.appendChild(wrap);
+  });
+  const actions=el('div','phactions');
+  const addBtn=el('button','addrow');addBtn.textContent='\uff0b Add row';
+  addBtn.addEventListener('click',async()=>{
+    const o=getOverlay(tab);const id=newRowId();o.added.push({id,phase:pi});o.edits[id]={lane:'coach',title:'',desc:''};
+    await saveOverlay(tab,o);renderPhaseBody(body,tab,pi,baseSteps);
+    const wraps=body.querySelectorAll('.rowwrap');const last=wraps[wraps.length-1];const eb=last&&last.querySelector('.cbtn.edit');if(eb)eb.click();
+  });
+  actions.appendChild(addBtn);
+  const o=getOverlay(tab);const hidden=baseSteps.filter(s=>o.deleted.includes(String(s.n)));
+  if(hidden.length){const rb=el('button','restore');rb.textContent='Restore '+hidden.length+' hidden row'+(hidden.length>1?'s':'');
+    rb.addEventListener('click',async()=>{const oo=getOverlay(tab);const ids=hidden.map(h=>String(h.n));oo.deleted=oo.deleted.filter(x=>!ids.includes(x));await saveOverlay(tab,oo);renderPhaseBody(body,tab,pi,baseSteps);});
+    actions.appendChild(rb);}
+  body.appendChild(actions);
+  fixConns(body);
+}
+let PHASE_BODIES=[];
 
 function renderModule(key){
   const m=MODULES[key];const mount=document.getElementById('mount');mount.innerHTML='';
@@ -1441,17 +1553,18 @@ function renderModule(key){
   mount.appendChild(intro);
   if(m.flow) mount.appendChild(flowSection(m.flow,m.flowTitle));
   mount.appendChild(storeBar());
-  NOTE_CELLS=[];
+  PHASE_BODIES=[];
   const swim=el('div','swimscroll');mount.appendChild(swim);swim.appendChild(laneHeaderRow());
   m.phases.forEach((p,pi)=>{
     const d=el('details','ph');if(pi<2)d.open=true;
-    const sum=el('summary');sum.innerHTML=`<span class="chev"></span><span class="phname">${p.name}</span><span class="phmeta">${p.steps.length} steps · ${p.meta}</span>`;
+    const sum=el('summary');sum.innerHTML=`<span class="chev"></span><span class="phname">${p.name}</span><span class="phmeta">${p.meta} · editable</span>`;
     d.appendChild(sum);const body=el('div','phbody');
-    p.steps.forEach((s,si)=>{body.appendChild(swimRow(s,key));if(si<p.steps.length-1)body.appendChild(el('div','conn','▼'));});
+    renderPhaseBody(body,key,pi,p.steps);
+    PHASE_BODIES.push({body,tab:key,pi,baseSteps:p.steps});
     d.appendChild(body);swim.appendChild(d);
   });
   requestAnimationFrame(()=>{swim.scrollLeft=0;});
-  ensureNotes().then(()=>{NOTE_CELLS.forEach(c=>c.refresh());updateStoreBars();});
+  ensureNotes().then(()=>{PHASE_BODIES.forEach(x=>renderPhaseBody(x.body,x.tab,x.pi,x.baseSteps));updateStoreBars();});
   if(m.refTable){
     const rd=el('details','ph refdetails');
     const rsum=el('summary');rsum.innerHTML=`<span class="chev"></span><span class="phname">${m.refTableTitle}</span><span class="phmeta">${m.refTable.length} entries · reference</span>`;

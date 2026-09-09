@@ -5,10 +5,18 @@ has **10 lanes**:
 
 **CLIENT · COACH · CAA · CCA · COS · CIT · CGA · NOTION · BOT · AUTOMATION**
 
-On any module tab you can **add a message into any swim-lane cell**: hover an
-empty cell, click the **＋**, type, and **Save**. The note shows as a small card
-in that lane, on that step's row (e.g. a note in the CIT lane next to Step 1).
-Click a saved note to edit or delete it.
+Every module tab's swim lane is **fully editable**:
+
+- **Edit any existing box** — hover a step card, click **✎**, change its lane,
+  title and description, **Save**.
+- **Add a message to any cell** (including under an existing card) — click
+  **＋ message**, type, **Save**. Click a saved note to edit or delete it.
+- **Create a row** — **＋ Add row** under any phase; it opens ready to edit.
+- **Delete a row** — the **✕** on a card. Deleting a built-in row hides it and a
+  **Restore N hidden rows** link appears so it's reversible.
+- **Retrieve** — everything reloads from storage on open.
+
+All of this is keyed per tab and saved through the backend.
 
 ## Where notes are stored (important)
 
