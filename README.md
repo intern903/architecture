@@ -12,9 +12,24 @@ Every module tab's swim lane is **fully editable**:
 - **Add a message to any cell** (including under an existing card) — click
   **＋ message**, type, **Save**. Click a saved note to edit or delete it.
 - **Create a row** — **＋ Add row** under any phase; it opens ready to edit.
-- **Delete a row** — the **✕** on a card. Deleting a built-in row hides it and a
-  **Restore N hidden rows** link appears so it's reversible.
+- **Delete a row** — the **✕** on a card sends it to **Trash** (built-in *and*
+  your own rows). Nothing is lost on a normal delete.
 - **Retrieve** — everything reloads from storage on open.
+
+### Trash (safe delete)
+Every deleted row goes to the **🗑 Trash** panel at the top of the tab, with
+**Restore**. Only an explicit **Delete forever** (on your own rows) actually
+purges. So a delete is always reversible.
+
+### Backup / Restore (protection against total loss)
+The store bar has two buttons:
+- **⤓ Backup** — downloads every row, edit and note across all tabs as one JSON
+  file. Grab one before any big cleanup.
+- **⤒ Restore file** — imports a backup JSON, overwriting matching entries with
+  the file's versions (anything not in the file is left alone).
+
+This is your insurance if the store is ever wiped or corrupted — keep a backup
+file and you can always re-import it.
 
 All of this is keyed per tab and saved through the backend.
 

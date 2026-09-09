@@ -221,6 +221,20 @@
   .addrow:hover{background:#e4efe0}
   .restore{font-size:11px;color:#a23b2f;background:none;border:none;cursor:pointer;text-decoration:underline;font-family:inherit}
   .rowwrap>.conn{margin:2px 0}
+  .tbtn{border:1px solid var(--line2);background:#fff;color:#6b5f4f;cursor:pointer;font-family:inherit;font-size:11px;font-weight:700;border-radius:7px;padding:6px 11px;margin-left:6px}
+  .tbtn:hover{background:#f3efe8}
+  .trashwrap{margin:0 0 14px}
+  .trashwrap .ph{border-color:#e6c3bb}
+  .trashwrap>.ph>summary{background:#f7ece9;border-bottom-color:#e6c3bb}
+  .trashempty{font-size:12px;color:#9a8f82;padding:4px 2px}
+  .trashrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:8px 6px;border-bottom:1px solid #f0ece5}
+  .trashrow:last-child{border-bottom:none}
+  .trashrow .tt{font-size:12px;color:var(--ink);font-weight:600;flex:1;min-width:160px}
+  .trashrow .tmeta{font-size:10px;color:#9a8f82}
+  .trashrow .kind{font-size:8.5px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;border-radius:4px;padding:1px 6px}
+  .trashrow .kind.base{color:var(--coach);background:#eae1f6} .trashrow .kind.added{color:var(--caa);background:#e2eede}
+  .trashrow .restore{color:var(--new);text-decoration:none;border:1px solid #b7ddc7;background:var(--newbg);border-radius:6px;padding:5px 10px;font-weight:700;font-size:11px}
+  .trashrow .forever{color:#a23b2f;background:#f6e3df;border:1px solid #e6c3bb;border-radius:6px;padding:5px 10px;font-weight:700;font-size:11px;cursor:pointer;font-family:inherit}
   @media(max-width:720px){.tree-row{grid-template-columns:1fr}.tree-row::before{display:none}}
 </style>
 </head>
@@ -1354,10 +1368,81 @@ function updateStoreBars(){document.querySelectorAll('.storepill').forEach(p=>{
   document.querySelectorAll('.storehint').forEach(h=>{h.textContent=storeText();});}
 function storeBar(){
   const bar=el('div','storebar');
-  bar.innerHTML='<b>✎ Fully editable swim lane.</b> Click a step card’s <b>✎</b> to edit it or <b>✕</b> to delete the row · click <b>＋ message</b> in any cell to add a note · use <b>＋ Add row</b> under a phase to create a row. '+
+  bar.innerHTML='<b>✎ Fully editable swim lane.</b> <b>✎</b> edit · <b>✕</b> delete (goes to Trash) · <b>＋ message</b> · <b>＋ Add row</b>. '+
     '<span class="storepill local">THIS DEVICE</span> <span class="storehint">'+storeText()+'</span>';
+  const spacer=el('span');spacer.style.flex='1';bar.appendChild(spacer);
+  const exp=el('button','tbtn');exp.textContent='⤓ Backup';exp.title='Download every row & note as a JSON file';
+  exp.addEventListener('click',exportBackup);
+  const imp=el('button','tbtn');imp.textContent='⤒ Restore file';imp.title='Import a backup JSON';
+  const fi=el('input');fi.type='file';fi.accept='application/json,.json';fi.style.display='none';
+  fi.addEventListener('change',()=>{if(fi.files[0])importBackup(fi.files[0]);fi.value='';});
+  imp.addEventListener('click',()=>fi.click());
+  bar.appendChild(exp);bar.appendChild(imp);bar.appendChild(fi);
   return bar;
 }
+
+/* ---- backup: export / import the whole dataset as JSON ---- */
+function exportBackup(){
+  const map=NOTES||lsRead();
+  const payload={_meta:{app:'bridge-swimlane',version:1,exported:new Date().toISOString(),mode:STORE_MODE},data:map};
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);const a=document.createElement('a');
+  a.href=url;a.download='bridge-swimlane-backup-'+new Date().toISOString().slice(0,19).replace(/[:T]/g,'-')+'.json';
+  document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);
+}
+async function importBackup(file){
+  let obj;try{obj=JSON.parse(await file.text());}catch(e){alert('That file isn’t valid JSON.');return;}
+  const map=obj&&obj.data?obj.data:obj;
+  if(!map||typeof map!=='object'){alert('Unrecognized backup file.');return;}
+  const entries=Object.entries(map).filter(([k,rec])=>typeof ((rec&&typeof rec==='object')?rec.value:rec)==='string');
+  if(!entries.length){alert('No entries found in that file.');return;}
+  if(!window.confirm('Import '+entries.length+' entries? Matching rows/notes will be overwritten with the file’s versions. (Anything not in the file is left as-is.)'))return;
+  for(const [k,rec] of entries){const val=(rec&&typeof rec==='object')?rec.value:rec;await saveNote(k,val);}
+  if(CURRENT&&CURRENT!=='e2e')renderModule(CURRENT);else show(CURRENT);
+  alert('Import complete — '+entries.length+' entries restored.');
+}
+
+/* ---- trash: soft-deleted rows, restorable ---- */
+function rerenderAllPhases(){PHASE_BODIES.forEach(x=>renderPhaseBody(x.body,x.tab,x.pi,x.baseSteps));}
+function trashEntries(tab){
+  const m=MODULES[tab];if(!m)return [];
+  const o=getOverlay(tab);const del=new Set(o.deleted);const out=[];
+  m.phases.forEach((p,pi)=>p.steps.forEach(s=>{if(del.has(String(s.n))){const e=o.edits[String(s.n)]||{};
+    out.push({id:String(s.n),base:true,phase:pi,title:(e.title!=null?e.title:s.title)||'(untitled)',lane:e.lane||s.lane});}}));
+  o.added.forEach(a=>{if(del.has(a.id)){const e=o.edits[a.id]||{};
+    out.push({id:a.id,base:false,phase:a.phase,title:e.title||'(untitled)',lane:e.lane||'coach'});}});
+  return out;
+}
+function refreshTrash(){if(TRASH_REF&&TRASH_REF.host)renderTrashInto(TRASH_REF.host,TRASH_REF.tab);}
+function renderTrashInto(host,tab){
+  const prev=host.querySelector('details');const wasOpen=prev?prev.open:false;
+  host.innerHTML='';
+  const entries=trashEntries(tab);
+  const d=el('details','ph');d.open=wasOpen;
+  const sum=el('summary');sum.innerHTML='<span class="chev"></span><span class="phname">🗑 Trash — deleted rows</span>'+
+    '<span class="phmeta">'+entries.length+' in trash · restorable</span>';
+  d.appendChild(sum);
+  const body=el('div','phbody');
+  if(!entries.length){body.appendChild(el('div','trashempty','Nothing deleted. Rows you delete land here and can be restored anytime — nothing is lost unless you choose “Delete forever”.'));}
+  entries.forEach(e=>{
+    const r=el('div','trashrow');
+    const kind=el('span','kind '+(e.base?'base':'added'));kind.textContent=e.base?'built-in':'your row';
+    const tt=el('span','tt');tt.textContent=(e.title&&e.title.replace(/<[^>]*>/g,'').trim())||'(untitled)';
+    const meta=el('span','tmeta');meta.textContent=laneName(e.lane)+' · phase '+(e.phase+1);
+    const rest=el('button','restore');rest.textContent='Restore';
+    rest.addEventListener('click',async()=>{const o=getOverlay(tab);o.deleted=o.deleted.filter(x=>x!==e.id);await saveOverlay(tab,o);rerenderAllPhases();refreshTrash();});
+    r.appendChild(kind);r.appendChild(tt);r.appendChild(meta);r.appendChild(rest);
+    if(!e.base){const fv=el('button','forever');fv.textContent='Delete forever';
+      fv.addEventListener('click',async()=>{if(!window.confirm('Permanently delete “'+tt.textContent+'”? This cannot be undone.'))return;
+        const o=getOverlay(tab);o.added=o.added.filter(a=>a.id!==e.id);delete o.edits[e.id];o.deleted=o.deleted.filter(x=>x!==e.id);await saveOverlay(tab,o);
+        for(const l of LANES){const k=tab+'::'+e.id+'::'+l.k;if(NOTES&&NOTES[k]&&NOTES[k].value)await saveNote(k,'');}
+        rerenderAllPhases();refreshTrash();});
+      r.appendChild(fv);}
+    body.appendChild(r);
+  });
+  d.appendChild(body);host.appendChild(d);
+}
+let TRASH_REF=null;let CURRENT='e2e';
 
 /* ---- row overlay (create / edit / delete / retrieve), stored per tab ---- */
 function getOverlay(tab){
@@ -1374,7 +1459,7 @@ function phaseRows(tab,phaseIndex,baseSteps){
   const rows=baseSteps.filter(s=>!del.has(String(s.n))).map(s=>{const e=o.edits[String(s.n)]||{};
     return {id:String(s.n),base:true,lane:e.lane||s.lane,title:e.title!=null?e.title:s.title,
             desc:e.desc!=null?e.desc:s.desc,chips:s.chips,mode:s.mode,planned:s.planned};});
-  o.added.filter(a=>a.phase===phaseIndex).forEach(a=>{const e=o.edits[a.id]||{};
+  o.added.filter(a=>a.phase===phaseIndex&&!del.has(a.id)).forEach(a=>{const e=o.edits[a.id]||{};
     rows.push({id:a.id,base:false,lane:e.lane||'coach',title:e.title||'',desc:e.desc||'',chips:[],mode:null,planned:false});});
   return rows;
 }
@@ -1497,11 +1582,10 @@ function buildCardInto(cell,r,tab,pi,baseSteps,body){
       await saveOverlay(tab,o);renderPhaseBody(body,tab,pi,baseSteps);});
   }
   async function del(){
-    if(!window.confirm('Delete this row from the swim lane?'))return;
+    if(!window.confirm('Delete this row? It moves to Trash and can be restored anytime.'))return;
     const o=getOverlay(tab);
-    if(r.base){if(!o.deleted.includes(r.id))o.deleted.push(r.id);}
-    else{o.added=o.added.filter(a=>a.id!==r.id);delete o.edits[r.id];}
-    await saveOverlay(tab,o);renderPhaseBody(body,tab,pi,baseSteps);
+    if(!o.deleted.includes(r.id))o.deleted.push(r.id);   // soft delete for BOTH base and added rows
+    await saveOverlay(tab,o);renderPhaseBody(body,tab,pi,baseSteps);refreshTrash();
   }
   view();cell.appendChild(card);
 }
@@ -1537,10 +1621,6 @@ function renderPhaseBody(body,tab,pi,baseSteps){
     const wraps=body.querySelectorAll('.rowwrap');const last=wraps[wraps.length-1];const eb=last&&last.querySelector('.cbtn.edit');if(eb)eb.click();
   });
   actions.appendChild(addBtn);
-  const o=getOverlay(tab);const hidden=baseSteps.filter(s=>o.deleted.includes(String(s.n)));
-  if(hidden.length){const rb=el('button','restore');rb.textContent='Restore '+hidden.length+' hidden row'+(hidden.length>1?'s':'');
-    rb.addEventListener('click',async()=>{const oo=getOverlay(tab);const ids=hidden.map(h=>String(h.n));oo.deleted=oo.deleted.filter(x=>!ids.includes(x));await saveOverlay(tab,oo);renderPhaseBody(body,tab,pi,baseSteps);});
-    actions.appendChild(rb);}
   body.appendChild(actions);
   fixConns(body);
 }
@@ -1553,6 +1633,7 @@ function renderModule(key){
   mount.appendChild(intro);
   if(m.flow) mount.appendChild(flowSection(m.flow,m.flowTitle));
   mount.appendChild(storeBar());
+  const trashWrap=el('div','trashwrap');mount.appendChild(trashWrap);TRASH_REF={host:trashWrap,tab:key};renderTrashInto(trashWrap,key);
   PHASE_BODIES=[];
   const swim=el('div','swimscroll');mount.appendChild(swim);swim.appendChild(laneHeaderRow());
   m.phases.forEach((p,pi)=>{
@@ -1564,7 +1645,7 @@ function renderModule(key){
     d.appendChild(body);swim.appendChild(d);
   });
   requestAnimationFrame(()=>{swim.scrollLeft=0;});
-  ensureNotes().then(()=>{PHASE_BODIES.forEach(x=>renderPhaseBody(x.body,x.tab,x.pi,x.baseSteps));updateStoreBars();});
+  ensureNotes().then(()=>{PHASE_BODIES.forEach(x=>renderPhaseBody(x.body,x.tab,x.pi,x.baseSteps));refreshTrash();updateStoreBars();});
   if(m.refTable){
     const rd=el('details','ph refdetails');
     const rsum=el('summary');rsum.innerHTML=`<span class="chev"></span><span class="phname">${m.refTableTitle}</span><span class="phmeta">${m.refTable.length} entries · reference</span>`;
@@ -1587,6 +1668,7 @@ function renderModule(key){
 }
 
 function show(k){
+  CURRENT=k;
   TABS.forEach(x=>{document.getElementById('b-'+x).className=(x===k)?'active':'';});
   renderLegend();
   if(k==='e2e')renderE2E(); else renderModule(k);
