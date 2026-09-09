@@ -1067,7 +1067,7 @@ const MODULES={
     ],
     phases:[
       {name:'A · FORM THE GOAL', meta:'well-formed, and why it matters', steps:[
-        {lane:'client',n:'1',title:'My goal',desc:'Write it as though describing it to a friend, then test it against five marks: specific, measurable, attainable, positively stated, and it names how you want to be.',chips:[chip('dec','specific · measurable · attainable · positive · names how you want to be')]},
+        {lane:'coach',n:'1',title:'My goal',desc:'Write it as though describing it to a friend, then test it against five marks: specific, measurable, attainable, positively stated, and it names how you want to be.',chips:[chip('dec','specific · measurable · attainable · positive · names how you want to be')]},
         {lane:'client',n:'2',title:'How this connects to my purpose',desc:'In your own words — not a tidy sentence for anyone else. If it will not connect, it is usually someone else’s goal; bring it to the next session.',chips:[chip('r','READ Life Purpose')]},
         {lane:'client',n:'3',title:'Where I am now',desc:'What you have already done about this goal, if anything — including the false starts, especially the false starts.',chips:[]},
         {lane:'client',n:'4',title:'Why this is important to me',desc:'Not why it is sensible. Why it matters, to you, now.',chips:[]},
@@ -1081,8 +1081,8 @@ const MODULES={
       {name:'C · PLAN, DECIDE & CLOSE', meta:'steps, go / no-go, reward, remember', steps:[
         {lane:'client',n:'9',title:'My action steps',desc:'Start every step with Go to · Write · Contact · Schedule · Think about. Put a date only against the very next step and anything with a deadline someone else set.',chips:[chip('loop','→ Results Game')]},
         {lane:'client',n:'10',title:'The hardest step, and the next one',desc:'The step you are most likely to avoid — and your single very next action, the one thing you do first.',chips:[]},
-        {lane:'client',n:'11',title:'Is this worth my time, effort and money?',desc:'Answer this last, having read back everything above. Yes → start with your next action. No → a clear no, arrived at honestly, is a good outcome. Not sure → talk it through first.',chips:[chip('dec','go / no-go')]},
-        {lane:'client',n:'12',title:'How I will reward myself',desc:'Plan this now, while you are still enthusiastic — across mind, body, emotion and spirit; free, inexpensive, and worth saving for.',chips:[]},
+        {lane:'coach',n:'11',title:'Is this worth my time, effort and money?',desc:'Answer this last, having read back everything above. Yes → start with your next action. No → a clear no, arrived at honestly, is a good outcome. Not sure → talk it through first.',chips:[chip('dec','go / no-go')]},
+        {lane:'coach',n:'12',title:'How I will reward myself',desc:'Plan this now, while you are still enthusiastic — across mind, body, emotion and spirit; free, inexpensive, and worth saving for.',chips:[]},
         {lane:'client',n:'13',title:'What I want to remember from today',desc:'One line, written before you close it — things learned in one setting stay there unless you carry them out deliberately.',chips:[]},
       ]},
     ],
@@ -1355,27 +1355,76 @@ function storeBar(){
   bar.innerHTML='<b>✎ Fully editable swim lane.</b> <b>✎</b> edit · <b>✕</b> delete (goes to Trash) · <b>＋ message</b> · <b>＋ Add row</b>. '+
     '<span class="storepill local">THIS DEVICE</span> <span class="storehint">'+storeText()+'</span>';
   const spacer=el('span');spacer.style.flex='1';bar.appendChild(spacer);
-  const exp=el('button','tbtn');exp.textContent='⤓ Backup';exp.title='Download every row & note as a JSON file';
+  const exp=el('button','tbtn');exp.textContent='⤓ Backup';exp.title='Download every row & note as an HTML file (viewable in a browser and re-importable)';
   exp.addEventListener('click',exportBackup);
-  const imp=el('button','tbtn');imp.textContent='⤒ Restore file';imp.title='Import a backup JSON';
-  const fi=el('input');fi.type='file';fi.accept='application/json,.json';fi.style.display='none';
+  const imp=el('button','tbtn');imp.textContent='⤒ Restore file';imp.title='Import a backup file (HTML or JSON)';
+  const fi=el('input');fi.type='file';fi.accept='text/html,.html,application/json,.json';fi.style.display='none';
   fi.addEventListener('change',()=>{if(fi.files[0])importBackup(fi.files[0]);fi.value='';});
   imp.addEventListener('click',()=>fi.click());
   bar.appendChild(exp);bar.appendChild(imp);bar.appendChild(fi);
   return bar;
 }
 
-/* ---- backup: export / import the whole dataset as JSON ---- */
+/* ---- backup: export a self-contained HTML file (readable + re-importable) ---- */
+function escHtml(x){return String(x).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function backupReadable(map){
+  const notes={},overlays={};
+  Object.entries(map).forEach(([k,rec])=>{
+    const val=(rec&&typeof rec==='object')?rec.value:rec;
+    if(typeof val!=='string'||val==='')return;
+    if(k.indexOf('rows:')===0){overlays[k.slice(5)]=val;return;}
+    const parts=k.split('::');if(parts.length===3){(notes[parts[0]]=notes[parts[0]]||[]).push({row:parts[1],lane:parts[2],val});}
+  });
+  const tabs=[...new Set([...Object.keys(notes),...Object.keys(overlays)])].sort();
+  let body='';
+  tabs.forEach(tab=>{
+    const title=(MODULES[tab]&&MODULES[tab].title)||tab;
+    body+=`<h2>${escHtml(title)} <span class="k">${escHtml(tab)}</span></h2>`;
+    if(overlays[tab]){let o={};try{o=JSON.parse(overlays[tab]);}catch(e){}
+      const added=(o.added||[]).length,deleted=(o.deleted||[]).length,edited=Object.keys(o.edits||{}).length;
+      body+=`<p class="meta">Row changes — ${edited} edited · ${added} added · ${deleted} in trash</p>`;
+      const rows=Object.entries(o.edits||{}).map(([id,e])=>({id,lane:e.lane||'',title:e.title||'',desc:e.desc||'',del:(o.deleted||[]).includes(id)}));
+      if(rows.length){body+='<table><tr><th>Row</th><th>Lane</th><th>Title</th><th>Description</th><th>State</th></tr>';
+        rows.forEach(r=>{body+=`<tr><td>${escHtml(r.id)}</td><td>${escHtml(r.lane)}</td><td>${escHtml(r.title)}</td><td>${escHtml(r.desc)}</td><td>${r.del?'in trash':''}</td></tr>`;});
+        body+='</table>';}
+    }
+    if(notes[tab]&&notes[tab].length){
+      notes[tab].sort((a,b)=>a.row.localeCompare(b.row,undefined,{numeric:true})||a.lane.localeCompare(b.lane));
+      body+='<table><tr><th>Row</th><th>Lane</th><th>Message</th></tr>';
+      notes[tab].forEach(n=>{body+=`<tr><td>${escHtml(n.row)}</td><td>${escHtml(n.lane)}</td><td>${escHtml(n.val)}</td></tr>`;});
+      body+='</table>';
+    }
+  });
+  return body||'<p>No saved rows or messages yet.</p>';
+}
 function exportBackup(){
   const map=NOTES||lsRead();
   const payload={_meta:{app:'bridge-swimlane',version:1,exported:new Date().toISOString(),mode:STORE_MODE},data:map};
-  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+  const json=JSON.stringify(payload).replace(/</g,'\\u003c'); // keep it from closing the script early
+  const when=new Date().toLocaleString();
+  const doc='<!doctype html><html><head><meta charset="utf-8"><title>Bridge swim-lane backup</title>'+
+    '<style>body{font-family:system-ui,Segoe UI,Arial,sans-serif;max-width:900px;margin:24px auto;padding:0 16px;color:#2b2521;background:#f4f2ee}'+
+    'h1{font-size:20px}h2{font-size:15px;margin:22px 0 4px;border-top:1px solid #d8d0c5;padding-top:14px}'+
+    '.k{font:11px ui-monospace,monospace;color:#9a8f82}.meta{font-size:12px;color:#7a7067;margin:2px 0 8px}'+
+    'table{border-collapse:collapse;width:100%;margin:6px 0 14px;background:#fff;border:1px solid #e3ddd4}'+
+    'th,td{border:1px solid #eee6da;padding:6px 8px;font-size:12px;text-align:left;vertical-align:top}'+
+    'th{background:#efe9e0;font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;color:#7a7067}'+
+    '.banner{background:#fff;border:1px solid #e3ddd4;border-left:4px solid #c58a1e;border-radius:8px;padding:12px 14px;font-size:13px;line-height:1.55}</style></head>'+
+    '<body><h1>The Bridge to “I” — swim-lane backup</h1>'+
+    '<div class="banner"><b>This file is your backup.</b> It’s readable on its own, and it can be re-imported: open the app, click <b>⤒ Restore file</b>, and choose this file. Exported '+escHtml(when)+' · storage: '+(STORE_MODE==='cloud'?'shared cloud':'this device')+'.</div>'+
+    backupReadable(map)+
+    '<script id="bridge-backup-data" type="application/json">'+json+'</'+'script></body></html>';
+  const blob=new Blob([doc],{type:'text/html'});
   const url=URL.createObjectURL(blob);const a=document.createElement('a');
-  a.href=url;a.download='bridge-swimlane-backup-'+new Date().toISOString().slice(0,19).replace(/[:T]/g,'-')+'.json';
+  a.href=url;a.download='bridge-swimlane-backup-'+new Date().toISOString().slice(0,19).replace(/[:T]/g,'-')+'.html';
   document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);
 }
 async function importBackup(file){
-  let obj;try{obj=JSON.parse(await file.text());}catch(e){alert('That file isn’t valid JSON.');return;}
+  const text=await file.text();
+  let jsonText=text;
+  const m=text.match(/<script id="bridge-backup-data"[^>]*>([\s\S]*?)<\/script>/);
+  if(m)jsonText=m[1];
+  let obj;try{obj=JSON.parse(jsonText);}catch(e){alert('That file isn’t a valid backup (couldn’t read its data).');return;}
   const map=obj&&obj.data?obj.data:obj;
   if(!map||typeof map!=='object'){alert('Unrecognized backup file.');return;}
   const entries=Object.entries(map).filter(([k,rec])=>typeof ((rec&&typeof rec==='object')?rec.value:rec)==='string');

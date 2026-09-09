@@ -23,10 +23,12 @@ purges. So a delete is always reversible.
 
 ### Backup / Restore (protection against total loss)
 The store bar has two buttons:
-- **⤓ Backup** — downloads every row, edit and note across all tabs as one JSON
-  file. Grab one before any big cleanup.
-- **⤒ Restore file** — imports a backup JSON, overwriting matching entries with
-  the file's versions (anything not in the file is left alone).
+- **⤓ Backup** — downloads every row, edit and note across all tabs as one
+  self-contained **HTML** file. You can open it in any browser to read it, and
+  it can be re-imported (the data is embedded inside the file).
+- **⤒ Restore file** — imports a backup file (HTML, or an older JSON export),
+  overwriting matching entries with the file's versions (anything not in the
+  file is left alone).
 
 This is your insurance if the store is ever wiped or corrupted — keep a backup
 file and you can always re-import it.
