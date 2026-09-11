@@ -651,48 +651,58 @@ const MODULES={
   dec:{
     layer:'Foundation · Decisions', layerColor:'#b07d2c', layerBg:'#f6e9d3',
     title:'Decisions — the Decision Tool',
-    desc:'A weighted-choice tool for thinking a decision through. Each option is scored across four lenses — Energy, Practicality, Purpose and Values — and the Values lens pulls in the client’s own scored values. It’s the one Foundation surface the client actively uses (in the CCA’s Explore mode).',
-    flowTitle:'THE DECISION TOOL — AT A GLANCE',
+    desc:'A guided, <b>one-question-at-a-time</b> weighted-choice tool — “the epitome of complexity to simplicity.” The client frames a decision, then scores each option against <b>their own Life Purpose power words and top values</b> (plus any parameter they choose to add, e.g. energy or practical support), weights them to 100, and rates each option 1–10. The tool computes a winning choice and score. Every decision is saved as a <b>lifelong record the client can revisit</b> — “why did I decide this? because it served my top value.” One question at a time while filling; an all-at-once table at the end.',
+    flowTitle:'THE DECISION TOOL — 12 STEPS',
     flow:[
       {type:'node',text:'A decision to think through',style:'anchor'},
-      {type:'arrow'},{type:'node',text:'List the options'},
-      {type:'arrow'},{type:'node',text:'Score each option on four lenses'},
+      {type:'arrow'},{type:'node',text:'Life area + options'},
+      {type:'arrow'},{type:'node',text:'Score against your own…'},
       {type:'tree',cols:[
-        {top:'Energy',bottom:'does it energise?'},
-        {top:'Practicality',bottom:'is it doable?'},
-        {top:'Purpose · Values',bottom:'uses scored values'},
+        {top:'Life Purpose power words',bottom:'from the statement'},
+        {top:'Top values',bottom:'pick 3–5'},
+        {top:'+ your own',bottom:'optional (e.g. energy)'},
       ]},
-      {type:'arrow'},{type:'node',text:'Weighted total per option'},
-      {type:'arrow'},{type:'node',text:'A clearer choice',style:'anchor'},
+      {type:'arrow'},{type:'node',text:'Weight them to 100 · rate each option 1–10'},
+      {type:'arrow'},{type:'node',text:'Weighted winner + score',style:'anchor'},
+      {type:'arrow'},{type:'node',text:'Save + tag: Draft / Completed / Decided',style:'db'},
     ],
     phases:[
-      {name:'A · SET IT UP', meta:'name the decision', steps:[
-        {lane:'client',n:'1',title:'Name the decision + the options',desc:'What is being decided, and what are the candidate options?',chips:[]},
-        {lane:'notion',n:'2',title:'Pull in the scored values',desc:'The Values lens draws on the client’s own values and their “how much?” scores.',chips:[chip('r','READ Values')]},
+      {name:'A · FRAME THE DECISION', meta:'steps 1–3', steps:[
+        {lane:'client',n:'1',title:'Which life area?',desc:'Pick the life area this decision sits in (e.g. career). The client runs the tool themselves, guided by the CCA in Explore mode.',chips:[chip('r','READ Life Area')]},
+        {lane:'client',n:'2',title:'Name the options',desc:'How many choices are there? Name them — one, two, three… add as many as needed.',chips:[]},
+        {lane:'client',n:'3',title:'Describe each option',desc:'A short description of each choice on the table.',chips:[]},
       ]},
-      {name:'B · SCORE THE OPTIONS', meta:'four lenses', steps:[
-        {lane:'client',n:'3',title:'Score across the four lenses',desc:'Each option is rated on Energy, Practicality, Purpose and Values.',chips:[]},
-        {lane:'notion',n:'4',title:'Weighted total per option',desc:'The scores combine into a weighted total — the Values weight comes from the client’s scored values.',chips:[chip('w','WRITE Decisions DB')]},
+      {name:'B · BRING IN PURPOSE & VALUES', meta:'steps 4–6', steps:[
+        {lane:'client',n:'4',title:'Pick the Life Purpose power words',desc:'The Life Purpose statement appears; the client picks the power words that matter most for this decision.',chips:[chip('r','READ Life Purpose')]},
+        {lane:'client',n:'5',title:'Pick 3–5 top values',desc:'From the client’s own values, choose the 3–5 most important for this decision.',chips:[chip('r','READ Values')]},
+        {lane:'client',n:'6',title:'Add your own parameter (optional)',desc:'After the power-words and values step, the client may add parameters of their own — e.g. energy, practical support.',chips:[chip('dec','optional')]},
       ]},
-      {name:'C · DECIDE', meta:'a tool, not an oracle', steps:[
-        {lane:'client',n:'5',title:'The clearest option shows itself',desc:'The highest-weighted option points the way — the client still decides.',chips:[]},
-        {lane:'cca',mode:'bot',n:'6',title:'The CCA can walk it through',desc:'In Explore mode the CCA helps the client reason through the decision.',chips:[chip('note','CCA · companion'),chip('r','READ Decisions')]},
+      {name:'C · WEIGHT & SCORE', meta:'steps 7–9', steps:[
+        {lane:'client',n:'7',title:'Weight them to 100',desc:'Assign importance across the power words, values and any added parameters so the total is 100.',chips:[]},
+        {lane:'client',n:'8',title:'Rate each option 1–10',desc:'Rate every option from 1 to 10 on each parameter.',chips:[]},
+        {lane:'notion',n:'9',title:'Compute the weighted totals',desc:'The tool multiplies each rating by its weight and totals it per option — a deterministic calculation.',chips:[chip('w','WRITE Decisions DB')],mode:'auto'},
+      ]},
+      {name:'D · DECIDE & SAVE', meta:'steps 10–12', steps:[
+        {lane:'client',n:'10',title:'The winning choice + score',desc:'“Based on all of that, here is how your decision looks” — the highest-weighted option and its score. The client still decides; it’s a thinking tool, not an oracle.',chips:[]},
+        {lane:'client',n:'11',title:'All-at-once view',desc:'One question at a time while filling; on “done”, the full table (options × parameters, weights, scores) is shown together.',chips:[]},
+        {lane:'notion',n:'12',title:'Save + tag it',desc:'Saved to the Decisions DB as a lifelong record — life area, title, winning choice + score, all choices, the full matrix snapshot and a plan of action. Tagged Draft (power words captured, no choice yet) · Completed (process done) · Decided (a choice picked).',chips:[chip('w','WRITE Decisions DB')],mode:'auto'},
       ]},
     ],
     tableHead:['Database','Space','Read / Write','Role in this module'],
     table:[
-      ['Decisions DB','Backend','WRITE (via Decision Tool)','The weighted-choice working: options × four lenses'],
-      ['Values DB','Backend','READ','The Values lens — the client’s scored values'],
+      ['Decisions DB','Backend','WRITE','Life area, decision title, winning choice + score, choices 1–5, full matrix snapshot, plan of action, status tag'],
+      ['Life Purpose DB','Backend','READ','The statement + power words scored in the decision'],
+      ['Values DB','Backend','READ','The client’s values — 3–5 chosen per decision'],
       ['Life Area','Look-up','READ','The area the decision sits in'],
-      ['Sessions DB','Backend','READ','Where the decision was worked'],
     ],
     notes:[
-      'This is the <b>one Foundation surface the client writes to</b> — the Decision Tool, used in the CCA’s Explore mode. Everything else in the Foundation is view-only.',
-      'Scoring lenses: <b>Energy · Practicality · Purpose · Values</b>. The Values lens is fed by the client’s scored values, so decisions stay true to what matters to them.',
-      'Scheduled for <b>Phase 1B</b> (Tab 4 · Tools & Reference).',
+      '<b>Scored against the client’s own Life Purpose power words and top values</b> — not a fixed set of lenses. Energy and practical support are examples of parameters a client may <i>add</i>, not defaults.',
+      '<b>Weightages total 100</b>; each option is rated 1–10 per parameter; the weighted totals pick the winner. The client still makes the call.',
+      '<b>A lifelong capture.</b> Every decision is saved and can be revisited — “why did I decide this?” Status tags: Draft · Completed · Decided.',
+      'Built <b>one question at a time</b> (complexity → simplicity), with an all-at-once table at the end. The client runs it in the CCA’s Explore mode.',
+      'Phase 1B (Tab 4 · Tools & Reference). The Decisions DB schema was previously [TBD] — these fields now define it.',
     ],
   },
-
   poss:{
     layer:'Foundation · Annual Possibilities', layerColor:'#b07d2c', layerBg:'#f6e9d3',
     title:'Annual Possibilities — the year’s holding list',
