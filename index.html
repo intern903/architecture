@@ -314,6 +314,8 @@ const E2E=[
   {arrow:1},
   {actor:'cos', title:'COS confirms the booking + reminds the day before', desc:'Sketch, not built. Today Dinesh does this by hand. Grounded in the Master SOP\u2019s own words: \u201cCOS will eventually flag new contacts for follow-up.\u201d Drafts only \u2014 nothing external sends without Dinesh\u2019s review.', chips:[chip('note','COS · aspirational')]},
 
+  {note:'<b>Phase 1.5 — the CIF moves into the UI.</b> Instead of Dinesh emailing the form, a visitor creates an account on the landing page and fills the CIF themselves; it still flows to the same databases. The manual Master-List link stays for MVP. Capturing a not-yet-client this way is Phase 1.5, not MVP.'},
+
   {band:'2 · Exploratory session', sub:'mutual fit + the goals'},
   {actor:'coach', title:'Exploratory conversation', desc:'Getting to know each other. The real aim is mutual assessment: is the client coachable, and is there fit? It\u2019s about mindset, not whether the goals are achievable.'},
   {arrow:1},
@@ -327,7 +329,10 @@ const E2E=[
   {decision:'Coachable + mutual fit?', yes:'YES → convert to client', no:'NO → stop here, no engagement'},
   {cosnote:'For a \u201cNot now\u201d outcome specifically (interested, but timing is wrong \u2014 not a hard no): <b>COS would hold the follow-up date and resurface it</b> to Dinesh when it arrives, instead of relying on memory. Today this is untracked once a \u201cnot now\u201d conversation ends.'},
 
-  {band:'3 · Conversion & consent', sub:'becoming a client, safely'},
+  {band:'3 · Access, conversion & consent', sub:'login is no longer gated behind conversion'},
+  {note:'<b>Access reordered (11 Sep, with Niket).</b> Previously the client got the front-end only after converting. Now <b>anyone can create an account, log in, and reach a personalised home / dashboard</b> with <b>pre-journey items</b> (e.g. the Life Areas cards) — and keep coming back even if they never convert. <b>Convert + consent unlocks the journey</b> (the Foundation & Engine modules), not login itself. Phase 1 for the account + gated home; Phase 1.5 for the pre-conversion capture (CIF-in-UI).'},
+  {actor:'client', title:'Creates an account + logs in', desc:'From the public landing page (nothing personalised), a visitor signs up and logs in to a personalised home. Pre-journey items are usable straight away — e.g. the Life Areas cards — and persist. This is the access baseline, available from the start; converting is not required to log in.', chips:[chip('note','Phase 1 · home; journey gated')]},
+  {arrow:1},
   {actor:'coach', title:'Ticks the client in the Master List', desc:'A mini-CRM: every contact is a row. The tick converts them to a client and generates their filtered client view. This is the key thread that connects every database.', db:'Master List'},
   {arrow:1},
   {actor:'coach', title:'Sends the virtual agreement', desc:'A confidentiality / consent agreement — with the clause that conversations are captured in the database. Signed offline.'},
@@ -336,10 +341,10 @@ const E2E=[
   {arrow:1},
   {actor:'gate', title:'GATE — Claude checks consent', desc:'Signed → more can be shared / written. Not signed → Claude blocks and keeps reminding \u201cyou can\u2019t share this, the client hasn\u2019t signed.\u201d A manual override exists.', chips:[chip('gate','audit gate')]},
   {arrow:1},
-  {actor:'notion', title:'Client gets their space + login', desc:'Only after consent does the client get their own client-space page and login. Until then they don\u2019t have access.', db:'Client space'},
+  {actor:'notion', title:'Consent unlocks the journey', desc:'On consent, the full journey opens — the Foundation & Engine modules. The account, login and home dashboard already existed before conversion; what unlocks here is the coaching journey, not access itself.', db:'Client space', chips:[chip('gate','journey unlocks')]},
 
   {band:'4 · Life Purpose module', sub:'first coaching work — full detail in the Life Purpose tab'},
-  {actor:'coach', title:'Opens the program → Life Purpose first', desc:'The bird\u2019s-eye program map (brought up for every module): each box is a module, and Life Purpose is module one.'},
+  {actor:'coach', title:'Opens the program → Life Purpose first', desc:'Now that consent has unlocked the journey, the program opens on the home page and its bird’s-eye map (brought up for every module): each box is a module, and Life Purpose is module one.'},
   {arrow:1},
   {actor:'client', title:'Shares life stories / special moments', desc:'\u201cGo back in time and tell me when you felt fully satisfied and fulfilled.\u201d'},
   {arrow:1},
