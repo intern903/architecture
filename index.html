@@ -1337,6 +1337,14 @@ function lsWrite(o){try{localStorage.setItem(LS_KEY,JSON.stringify(o));}catch(e)
 function ensureNotes(){
   if(NOTES) return Promise.resolve(NOTES);
   if(NOTES_LOADING) return NOTES_LOADING;
+  // If this page is a Full Snapshot, load state from the embedded block — no Redis fetch.
+  const embNodes=document.querySelectorAll('script[id="bridge-embedded-state"]');
+  if(embNodes.length){
+    const emb=embNodes[embNodes.length-1]; // newest wins if a snapshot was re-snapshotted
+    try{NOTES=JSON.parse(emb.textContent||'{}')||{};}catch(e){NOTES={};}
+    STORE_MODE='snapshot';updateStoreBars();
+    return Promise.resolve(NOTES);
+  }
   const local=lsRead();
   NOTES_LOADING=fetch('/api/prompts',{method:'GET'})
     .then(r=>r.ok?r.json():null)
@@ -1360,10 +1368,10 @@ async function saveNote(key,value){
 }
 function fmtTime(ts){if(!ts)return '';const d=new Date(ts);
   return d.toLocaleDateString(undefined,{month:'short',day:'numeric'})+' '+d.toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit'});}
-function storeText(){return STORE_MODE==='cloud'?'Shared cloud storage · everyone sees saves':'This device only · connect KV to share (see README)';}
+function storeText(){return STORE_MODE==='cloud'?'Shared cloud storage · everyone sees saves':(STORE_MODE==='snapshot'?'Saved snapshot · showing embedded state, offline':'This device only · connect KV to share (see README)');}
 function updateStoreBars(){document.querySelectorAll('.storepill').forEach(p=>{
   p.className='storepill '+(STORE_MODE==='cloud'?'cloud':'local');
-  p.textContent=STORE_MODE==='cloud'?'SHARED · cloud':'THIS DEVICE';});
+  p.textContent=STORE_MODE==='cloud'?'SHARED · cloud':(STORE_MODE==='snapshot'?'SNAPSHOT':'THIS DEVICE');});
   document.querySelectorAll('.storehint').forEach(h=>{h.textContent=storeText();});}
 function storeBar(){
   const bar=el('div','storebar');
@@ -1372,7 +1380,7 @@ function storeBar(){
   const spacer=el('span');spacer.style.flex='1';bar.appendChild(spacer);
   const exp=el('button','tbtn');exp.textContent='⤓ Backup (changes)';exp.title='Download only your changes — edits, added/deleted rows and messages — as a re-importable HTML file';
   exp.addEventListener('click',exportBackup);
-  const snap=el('button','tbtn');snap.textContent='⤓ Full snapshot';snap.title='Download the whole current swim lane (every tab, every step with your changes applied, and all messages) as a readable HTML file';
+  const snap=el('button','tbtn');snap.textContent='⤓ Full snapshot';snap.title='Download the complete application (full UI + the latest saved state embedded) as one standalone HTML file that opens without the server';
   snap.addEventListener('click',()=>ensureNotes().then(exportFullSnapshot));
   const imp=el('button','tbtn');imp.textContent='⤒ Restore file';imp.title='Import a backup file (HTML or JSON) — restores from a “changes” backup';
   const fi=el('input');fi.type='file';fi.accept='text/html,.html,application/json,.json';fi.style.display='none';
@@ -1439,7 +1447,11 @@ function exportBackup(){
 async function importBackup(file){
   const text=await file.text();
   let jsonText=text;
-  const m=text.match(/<script id="bridge-backup-data"[^>]*>([\s\S]*?)<\/script>/);
+  // Full-snapshot files embed their state first (a real element, before the app code);
+  // Backup (changes) files carry bridge-backup-data. Check embedded-state first so a
+  // snapshot restores from its real element, not from a string literal in the app source.
+  const m=text.match(/<script id="bridge-embedded-state"[^>]*>([\s\S]*?)<\/script>/)
+        ||text.match(/<script id="bridge-backup-data"[^>]*>([\s\S]*?)<\/script>/);
   if(m)jsonText=m[1];
   let obj;try{obj=JSON.parse(jsonText);}catch(e){alert('That file isn’t a valid backup (couldn’t read its data).');return;}
   const map=obj&&obj.data?obj.data:obj;
@@ -1475,25 +1487,43 @@ function snapshotReadable(){
   });
   return body||'<p>Nothing to show yet.</p>';
 }
-function exportFullSnapshot(){
-  const when=new Date().toLocaleString();
-  const doc='<!doctype html><html><head><meta charset="utf-8"><title>Bridge swim-lane — full snapshot</title>'+
-    '<style>body{font-family:system-ui,Segoe UI,Arial,sans-serif;max-width:900px;margin:24px auto;padding:0 16px;color:#2b2521;background:#f4f2ee}'+
-    'h1{font-size:20px}h2{font-size:16px;margin:26px 0 2px;border-top:2px solid #c58a1e;padding-top:14px}'+
-    'h3{font-size:12px;letter-spacing:.04em;color:#7a7067;margin:14px 0 6px;text-transform:uppercase}'+
-    '.k{font:11px ui-monospace,monospace;color:#9a8f82}'+
-    '.rowc{background:#fff;border:1px solid #e3ddd4;border-left:3px solid #c58a1e;border-radius:8px;padding:9px 12px;margin:6px 0}'+
-    '.rh{font-size:10.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:#7a7067;margin-bottom:2px}'+
-    '.rt{font-size:13.5px;font-weight:700;color:#2b2521}.rd{font-size:12.5px;color:#5a5045;margin-top:2px;line-height:1.5}'+
-    '.msgs{margin:6px 0 0;padding-left:18px}.msgs li{font-size:12px;color:#6b4a1e;margin:2px 0}'+
-    '.banner{background:#fff;border:1px solid #e3ddd4;border-left:4px solid #4f7a48;border-radius:8px;padding:12px 14px;font-size:13px;line-height:1.55;margin-bottom:6px}</style></head>'+
-    '<body><h1>The Bridge to “I” — full snapshot</h1>'+
-    '<div class="banner"><b>Full current version.</b> Every tab’s swim lane as it stands now — the built-in steps with your edits applied, added rows included, deleted rows removed, and every message shown under its step. A readable record to keep or print. Exported '+escHtml(when)+'.</div>'+
-    snapshotReadable()+
-    '</body></html>';
-  const blob=new Blob([doc],{type:'text/html'});
+/* Full Snapshot = the ENTIRE real application + the latest state embedded, as one
+   standalone file that opens without Redis. (snapshotReadable() above is legacy/unused.) */
+async function exportFullSnapshot(){
+  // 1. Get the latest cloud/Redis state (fall back to whatever we already have).
+  try{
+    const r=await fetch('/api/prompts',{method:'GET',cache:'no-store'});
+    if(r.ok){const j=await r.json();if(j&&j.configured){STORE_MODE='cloud';NOTES={...(NOTES||lsRead()),...(j.prompts||{})};}}
+  }catch(e){/* offline — use current/local state */}
+  await ensureNotes();
+  const state=NOTES||lsRead();
+
+  // 2. Get the ORIGINAL application HTML (its own source), not a report.
+  let html;
+  try{const r=await fetch(location.href,{cache:'no-store'});html=await r.text();}
+  catch(e){html='<!doctype html>\n'+document.documentElement.outerHTML;}
+
+  // 3. Serialize state safely (JSON handles quotes/newlines/Unicode; escape < so a
+  //    message containing a closing script tag can never terminate the block early).
+  const json=JSON.stringify(state).replace(/</g,'\\u003c');
+  const idAttr='id="bridge-embedded-state"';
+  const openTag='<scr'+'ipt '+idAttr+' type="application/json">';
+  const closeTag='</scr'+'ipt>';
+  const tag=openTag+json+closeTag;
+
+  // 4. Inject the state block right before the app's own opening script tag so it
+  //    exists when the app boots (getElementById finds it). That tag is the first
+  //    bare one; our injected/backup blocks always carry an id= attribute, so this
+  //    only ever matches the real application script.
+  const marker='<'+'script>';
+  if(html.indexOf(marker)>=0){html=html.replace(marker,()=>tag+'\n'+marker);}
+  else{html=html.replace('</body>',()=>tag+'</body>');}
+
+  // 5. Download one standalone file.
+  const blob=new Blob([html],{type:'text/html'});
   const url=URL.createObjectURL(blob);const a=document.createElement('a');
-  a.href=url;a.download='bridge-swimlane-full-'+new Date().toISOString().slice(0,19).replace(/[:T]/g,'-')+'.html';
+  const ts=new Date().toISOString().slice(0,19).replace(/[:T]/g,'-');
+  a.href=url;a.download='bridge-full-snapshot-'+ts+'.html';
   document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);
 }
 
